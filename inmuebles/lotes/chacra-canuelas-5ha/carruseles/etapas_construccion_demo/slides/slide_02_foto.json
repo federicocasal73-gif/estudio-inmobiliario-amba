@@ -1,0 +1,17 @@
+{
+  "numero": 2,
+  "tipo": "foto",
+  "descripcion": "Etapa 2: Excavacion - Zanjas para fundaciones",
+  "prompt": "foundation trench excavation with retroexcavadora at suburban construction site in Cañuelas, Buenos Aires province, excavation of foundation trenches at construction site, small excavator digging, suburban lot pampas Buenos Aires province, dirt piles, professional construction photography",
+  "texto_overlay": "Etapa 2: Excavacion",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "excavacion_fundaciones",
+    "etapa": 2
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "numero": 4,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 3: Obra gruesa y estructura",
+  "prompt": "residential concrete structure construction, brick walls rising, rebar, scaffolding, professional construction photography",
+  "texto_overlay": "3. Obra gruesa y estructura",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Obra gruesa y estructura",
+    "orden": 3
+  }
+}

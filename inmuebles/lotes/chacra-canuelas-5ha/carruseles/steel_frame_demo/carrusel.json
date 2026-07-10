@@ -1,0 +1,142 @@
+{
+  "tema": "Steel Frame en Cañuelas",
+  "tipo": "steel_frame",
+  "municipio": "Cañuelas",
+  "tono": "educativo",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "foto",
+      "descripcion": "1. Diseño - Planos y renders",
+      "prompt": "architectural design phase, minimalista moderno country house for Cañuelas, Buenos Aires province, blueprints and 3d renders on architect desk, architectural blueprint sketch of a country house, hand-drawn architectural plans, paper rolls, technical drawing tools, professional architect studio, Buenos Aires Argentina, daylight photography",
+      "texto_overlay": "1. Diseño",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "anteproyecto_arquitectonico",
+        "etapa": 1
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "foto",
+      "descripcion": "2. Estructura - Perfiles de acero galvanizado",
+      "prompt": "steel frame house under construction with galvanized steel structure rising at Cañuelas, Buenos Aires province, steel frame house under construction, galvanized steel structure rising, metal beams and columns, modern construction method, Buenos Aires Argentina, professional photography",
+      "texto_overlay": "2. Estructura",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "steel_frame_estructura",
+        "etapa": 2
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "foto",
+      "descripcion": "3. Cerramiento - Placas cementicias",
+      "prompt": "steel frame house with exterior cement board panels being installed at Cañuelas, Buenos Aires province, steel frame house with exterior cement board panels being installed, modern construction, Buenos Aires Argentina, professional construction photography",
+      "texto_overlay": "3. Cerramiento",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "steel_frame_cerramiento",
+        "etapa": 3
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "foto",
+      "descripcion": "4. Instalaciones - Electricidad, sanitaria, gas",
+      "prompt": "aluminio DVH window frame installation at construction site in Cañuelas, Buenos Aires province, window frame installation, aluminum carpentry being placed in wall opening, construction worker, Buenos Aires Argentina, professional photography",
+      "texto_overlay": "4. Instalaciones",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "colocacion_aberturas",
+        "etapa": 4
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "foto",
+      "descripcion": "5. Terminaciones - Revoques y pintura",
+      "prompt": "construction worker applying rough plaster to interior walls at Cañuelas, Buenos Aires province, construction worker applying rough plaster to interior walls, trowel and bucket, traditional technique, Buenos Aires Argentina, professional construction photography",
+      "texto_overlay": "5. Terminaciones",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "revoque_grueso",
+        "etapa": 5
+      }
+    },
+    {
+      "numero": 6,
+      "tipo": "foto",
+      "descripcion": "6. Casa terminada - Lista para habitar",
+      "prompt": "newly completed country house front view, minimalista moderno style, manicured garden in Cañuelas, Buenos Aires province, newly completed country house front view, modern minimalist facade, manicured garden, Buenos Aires Argentina, real estate photography, golden hour",
+      "texto_overlay": "6. Casa terminada",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate",
+        "ads-luxury"
+      ],
+      "metadata": {
+        "tipo_prompt": "casa_terminada_frente",
+        "etapa": 6
+      }
+    }
+  ],
+  "caption_narrativo": "⚙️ Steel Frame: el sistema constructivo del futuro\n\nCasa de 120 m² en Cañuelas, Buenos Aires.\n\n✓ Plazo: 30% mas rapido que tradicional\n✓ Peso: 60% mas liviano\n✓ Aislacion termica y acustica superior\n✓ Resistente a sismos\n✓ Construccion en seco = menos humedad\n\nTe interesa construir en steel frame? Escribinos.",
+  "hashtags": [
+    "#proyectocalculista",
+    "#canuelasrealestate",
+    "#movimientodetierra",
+    "#arquitectura",
+    "#ingenieriaargentina",
+    "#canuelas",
+    "#diseño",
+    "#obraseca",
+    "#casasbonitas",
+    "#camposencanuelas",
+    "#obracivil",
+    "#casasmodernas",
+    "#casasminimalistas",
+    "#ingenieriadeobra",
+    "#calculoestructural",
+    "#casapropia",
+    "#canuelasinmobiliaria",
+    "#interiores",
+    "#casas",
+    "#steelframe"
+  ],
+  "fecha_creacion": "2026-07-10T17:35:20",
+  "metadata": {
+    "sistema": "steel_frame",
+    "metros_cuadrados": 120,
+    "n_slides": 6
+  },
+  "n_slides": 6,
+  "caption_completo": "⚙️ Steel Frame: el sistema constructivo del futuro\n\nCasa de 120 m² en Cañuelas, Buenos Aires.\n\n✓ Plazo: 30% mas rapido que tradicional\n✓ Peso: 60% mas liviano\n✓ Aislacion termica y acustica superior\n✓ Resistente a sismos\n✓ Construccion en seco = menos humedad\n\nTe interesa construir en steel frame? Escribinos.\n\n#proyectocalculista #canuelasrealestate #movimientodetierra #arquitectura #ingenieriaargentina #canuelas #diseño #obraseca #casasbonitas #camposencanuelas #obracivil #casasmodernas #casasminimalistas #ingenieriadeobra #calculoestructural #casapropia #canuelasinmobiliaria #interiores #casas #steelframe"
+}

@@ -1,0 +1,17 @@
+{
+  "numero": 2,
+  "tipo": "foto",
+  "descripcion": "2. Estudio de suelo - Garantizamos que tu casa no se hunde",
+  "prompt": "soil study and geotechnical sampling at construction site in Cañuelas, Buenos Aires province, soil study at construction site, geotechnical engineer taking samples, drilling equipment, suburban lot Buenos Aires province, technical documentation, professional photography",
+  "texto_overlay": "2. Estudio de suelo",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "estudio_de_suelo",
+    "etapa": 2
+  }
+}

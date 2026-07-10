@@ -1,0 +1,18 @@
+{
+  "numero": 5,
+  "tipo": "beneficio",
+  "descripcion": "Render de casa posible sobre el lote",
+  "prompt": "architectural rendering of casa de campo tradicional con galería on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+  "texto_overlay": "Tu casa acá · te la diseñamos llave en mano",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate",
+    "misc-architectural"
+  ],
+  "metadata": {
+    "tipo_prompt": "render_proyecto",
+    "municipio": "Cañuelas"
+  }
+}

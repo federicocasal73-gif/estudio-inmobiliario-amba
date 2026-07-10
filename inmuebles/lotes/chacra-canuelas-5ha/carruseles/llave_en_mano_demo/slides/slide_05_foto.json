@@ -1,0 +1,18 @@
+{
+  "numero": 5,
+  "tipo": "foto",
+  "descripcion": "5. Obra - Tradicional o steel frame",
+  "prompt": "newly completed country house front view, minimalista moderno style, manicured garden in Cañuelas, Buenos Aires province, newly completed country house front view, modern minimalist facade, manicured garden, Buenos Aires Argentina, real estate photography, golden hour",
+  "texto_overlay": "5. Obra",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate",
+    "ads-luxury"
+  ],
+  "metadata": {
+    "tipo_prompt": "casa_terminada_frente",
+    "etapa": 5
+  }
+}

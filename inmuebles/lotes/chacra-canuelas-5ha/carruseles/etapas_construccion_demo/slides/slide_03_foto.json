@@ -1,0 +1,17 @@
+{
+  "numero": 3,
+  "tipo": "foto",
+  "descripcion": "Etapa 3: Fundaciones - Hormigon visto con armadura",
+  "prompt": "concrete foundation being poured with rebar at construction site in Cañuelas, Buenos Aires province, concrete foundation being poured, rebar structure, workers with wheelbarrows, fresh concrete, Buenos Aires construction site, professional construction photography",
+  "texto_overlay": "Etapa 3: Fundaciones",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "fundaciones_hormigon",
+    "etapa": 3
+  }
+}

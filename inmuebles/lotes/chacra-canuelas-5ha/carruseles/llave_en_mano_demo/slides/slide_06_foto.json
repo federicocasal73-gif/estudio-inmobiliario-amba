@@ -1,0 +1,17 @@
+{
+  "numero": 6,
+  "tipo": "foto",
+  "descripcion": "6. Diseño de interiores - Asesoria de deco incluida",
+  "prompt": "0.013 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, golden hour, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+  "texto_overlay": "6. Diseño de interiores",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "tipo_prompt": "diseno_interior_acabados",
+    "etapa": 6
+  }
+}

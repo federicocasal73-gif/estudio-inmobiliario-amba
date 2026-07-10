@@ -1,0 +1,17 @@
+{
+  "numero": 6,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 5: Terminaciones e instalaciones",
+  "prompt": "luxury interior finishing work, drywall, painting, high-end details, professional photography",
+  "texto_overlay": "5. Terminaciones e instalaciones",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Terminaciones e instalaciones",
+    "orden": 5
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "numero": 6,
+  "tipo": "foto",
+  "descripcion": "Etapa 6: Cubierta - Techo y aislacion",
+  "prompt": "roof construction in progress with chapa covering at suburban construction site in Cañuelas, Buenos Aires province, roof construction in progress, wooden roof trusses being installed, suburban house Buenos Aires Argentina, blue sky, professional construction photography",
+  "texto_overlay": "Etapa 6: Cubierta",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "cubierta_techo",
+    "etapa": 6
+  }
+}

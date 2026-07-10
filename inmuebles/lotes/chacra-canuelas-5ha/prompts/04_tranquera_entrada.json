@@ -1,0 +1,18 @@
+{
+  "prompt": "rustic wooden gate entrance to farm in Cañuelas, Buenos Aires province, rustic wooden gate with wire fence, traditional Argentine countryside entrance, ombú trees in background, dirt road, photographic style",
+  "negative_prompt": "blurry, low quality, distorted, deformed, watermark, text, logo, oversaturated, underexposed, overexposed, noise, grain, cartoon, drawing, painting, illustration, 3d render, unrealistic, modern skyscrapers in background, tropical vegetation, beach",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "performance": "Speed",
+  "steps": 30,
+  "cfg_scale": 4.0,
+  "seed": -1,
+  "metadata": {
+    "tipo": "tranquera",
+    "municipio": "Cañuelas"
+  }
+}

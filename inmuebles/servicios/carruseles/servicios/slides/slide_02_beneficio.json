@@ -1,0 +1,17 @@
+{
+  "numero": 2,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 1: Diseño arquitectónico",
+  "prompt": "architect working on blueprints at desk, modern studio, renders on screen, professional photography",
+  "texto_overlay": "1. Diseño arquitectónico",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Diseño arquitectónico",
+    "orden": 1
+  }
+}

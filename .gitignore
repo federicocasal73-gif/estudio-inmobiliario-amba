@@ -1,0 +1,110 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Secrets y credenciales (CRITICO)
+auth.json
+*.token
+.env
+.env.local
+
+# Backups de auth
+auth_instagram_example.json.bak
+
+# Outputs generados pesados
+inmuebles/_test_*/
+inmuebles/_generados_ia/
+inmuebles/_historial_publicaciones.json
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.mp4
+*.mov
+
+# Excepciones: queremos los JSON y MD generados
+!inmuebles/**/*.json
+!inmuebles/**/*.md
+!inmuebles/**/*.txt
+
+# Pip / Poetry
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+*~
+*.bak
+*.tmp
+
+# Logs
+*.log
+logs/
+
+# Testing
+.tox/
+.nox/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Jupyter (si lo usamos)
+.ipynb_checkpoints/
+
+# Fooocus original (no commiteamos, es dependencia externa)
+fooocus_venv/
+fooocus_env/
+ldm_patched/
+modules/
+presets/
+sdxl_styles/
+wildcards/
+extras/
+update_log.md
+troubleshoot.md
+docker.md
+development.md
+readme.md
+auth-example.json
+experiments_*.py
+fooocus_version.py
+shared.py
+args_manager.py
+build_launcher.py
+entry_with_update.py
+launch.py
+webui.py
+requirements_docker.txt
+requirements_versions.txt
+notification.ogg
+notification.mp3
+Dockerfile
+docker-compose.yml
+entrypoint.sh
+.env
+ui-config.json
+webui.settings.bat
+webui.settings.sh
+webui-user.bat
+webui-user.sh
+update_log.md
+*.bat
+*.sh

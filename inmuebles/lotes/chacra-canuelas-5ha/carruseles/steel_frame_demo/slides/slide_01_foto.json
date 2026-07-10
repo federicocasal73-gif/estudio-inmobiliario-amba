@@ -1,0 +1,17 @@
+{
+  "numero": 1,
+  "tipo": "foto",
+  "descripcion": "1. Diseño - Planos y renders",
+  "prompt": "architectural design phase, minimalista moderno country house for Cañuelas, Buenos Aires province, blueprints and 3d renders on architect desk, architectural blueprint sketch of a country house, hand-drawn architectural plans, paper rolls, technical drawing tools, professional architect studio, Buenos Aires Argentina, daylight photography",
+  "texto_overlay": "1. Diseño",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "tipo_prompt": "anteproyecto_arquitectonico",
+    "etapa": 1
+  }
+}

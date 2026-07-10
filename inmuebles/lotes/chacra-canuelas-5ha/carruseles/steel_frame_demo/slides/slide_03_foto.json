@@ -1,0 +1,17 @@
+{
+  "numero": 3,
+  "tipo": "foto",
+  "descripcion": "3. Cerramiento - Placas cementicias",
+  "prompt": "steel frame house with exterior cement board panels being installed at Cañuelas, Buenos Aires province, steel frame house with exterior cement board panels being installed, modern construction, Buenos Aires Argentina, professional construction photography",
+  "texto_overlay": "3. Cerramiento",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "steel_frame_cerramiento",
+    "etapa": 3
+  }
+}

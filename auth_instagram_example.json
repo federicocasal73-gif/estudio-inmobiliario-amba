@@ -1,0 +1,14 @@
+{
+    "access_token": "EAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "instagram_user_id": "17841234567890123",
+    "username": "tu_cuenta_ig",
+    "app_id": "1234567890",
+    "expires_at": "2026-12-31T23:59:59",
+    "_comentarios": [
+        "access_token: lo generas en Graph API Explorer",
+        "instagram_user_id: lo encontras en /me/accounts despues de vincular IG",
+        "username: solo informativo, lo podes dejar vacio",
+        "app_id: el ID de tu app de developers.facebook.com",
+        "expires_at: fecha de expiracion del token (60 dias default)"
+    ]
+}

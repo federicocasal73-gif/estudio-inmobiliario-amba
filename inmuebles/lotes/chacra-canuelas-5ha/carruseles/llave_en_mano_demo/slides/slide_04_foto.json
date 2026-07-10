@@ -1,0 +1,17 @@
+{
+  "numero": 4,
+  "tipo": "foto",
+  "descripcion": "4. Movimiento de suelo - Maquinaria pesada propia",
+  "prompt": "retroexcavadora Komatsu working on earthworks at construction site in Cañuelas, Buenos Aires province, Argentina, professional construction photography, golden hour, dust, real estate development in progress",
+  "texto_overlay": "4. Movimiento de suelo",
+  "aspect_ratio": "1152*896",
+  "styles": {
+    "tipo": "movimiento_suelo",
+    "maquinaria": "retroexcavadora Komatsu",
+    "municipio": "Cañuelas"
+  },
+  "metadata": {
+    "tipo_prompt": "movimiento_suelo",
+    "etapa": 4
+  }
+}

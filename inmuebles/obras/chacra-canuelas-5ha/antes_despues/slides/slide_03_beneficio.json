@@ -1,0 +1,17 @@
+{
+  "numero": 3,
+  "tipo": "beneficio",
+  "descripcion": "Render del proyecto terminado (prompt para img2img)",
+  "prompt": "architectural rendering of casa de campo tradicional con galería on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+  "texto_overlay": "Y esto es lo que viene",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance"
+  ],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo_prompt": "render_despues",
+    "workflow": "img2img con foto del antes"
+  }
+}

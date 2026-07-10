@@ -1,0 +1,16 @@
+{
+  "numero": 5,
+  "tipo": "cta",
+  "descripcion": "Slide final: contacto",
+  "prompt": "",
+  "texto_overlay": "¿Arrancamos tu proyecto?\nDM o link en bio",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance"
+  ],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "cta"
+  }
+}

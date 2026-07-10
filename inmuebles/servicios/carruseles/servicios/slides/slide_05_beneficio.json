@@ -1,0 +1,17 @@
+{
+  "numero": 5,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 4: Construcción en seco · Steel Frame",
+  "prompt": "steel frame house under construction, metal structure, panels, modern construction method, professional photography",
+  "texto_overlay": "4. Construcción en seco · Steel Frame",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Construcción en seco · Steel Frame",
+    "orden": 4
+  }
+}

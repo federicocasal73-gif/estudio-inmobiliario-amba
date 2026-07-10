@@ -1,0 +1,105 @@
+{
+  "semana_numero": 1,
+  "fecha_inicio": "2026-07-06",
+  "fecha_fin": "2026-07-12",
+  "n_slots": 5,
+  "carruseles_generados": [
+    "lote_premium_chacra-canuelas-5ha_sem01_viernes"
+  ],
+  "mejoras_aplicadas": [],
+  "publicaciones": [
+    {
+      "modo": "dry-run",
+      "exito": false,
+      "tipo": "lote_venta",
+      "caption_length": 493,
+      "n_imagenes": 0,
+      "media_ids": [],
+      "instagram_post_id": null,
+      "permalink": null,
+      "error": "Sin imagenes generadas todavia. Dry-run del caption.",
+      "fecha": "2026-07-10T16:49:40",
+      "metadata": {
+        "caption_preview": "Imaginate esto todos los fines de semana 🌽\n\nLote en Cañuelas\n\nA 65 km de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento.",
+        "n_hashtags": 20,
+        "municipio": "Cañuelas",
+        "fecha": "2026-07-06"
+      }
+    },
+    {
+      "modo": "dry-run",
+      "exito": false,
+      "tipo": "country",
+      "caption_length": 476,
+      "n_imagenes": 0,
+      "media_ids": [],
+      "instagram_post_id": null,
+      "permalink": null,
+      "error": "Sin imagenes generadas todavia. Dry-run del caption.",
+      "fecha": "2026-07-10T16:49:40",
+      "metadata": {
+        "caption_preview": "Country Premium\n\nLote de 1000 m², orientación norte.\n\nAmenities que marcan la diferencia:\n✨ Club house, pileta, canchas de tenis, golf\n\nÚnicas 3 unidades en esta ubicación.",
+        "n_hashtags": 20,
+        "municipio": "Cañuelas",
+        "fecha": "2026-07-08"
+      }
+    },
+    {
+      "modo": "dry-run",
+      "exito": false,
+      "tipo": "carrusel",
+      "caption_length": 545,
+      "n_imagenes": 0,
+      "media_ids": [],
+      "instagram_post_id": null,
+      "permalink": null,
+      "error": "Sin imagenes generadas todavia. Dry-run del caption.",
+      "fecha": "2026-07-10T16:49:40",
+      "metadata": {
+        "caption_preview": "🌾 Una historia que vale la pena contar\n\nEn Cañuelas hay un lugar que estamos armando con mucho amor. Te mostramos todo en este carrusel.\n\nEmpeza por el primer slide →\n\n📍 Cañuelas, Buenos Aires\n\n_Este ",
+        "n_hashtags": 20,
+        "municipio": "Cañuelas",
+        "fecha": "2026-07-10"
+      }
+    },
+    {
+      "modo": "dry-run",
+      "exito": false,
+      "tipo": "render_proyecto",
+      "caption_length": 538,
+      "n_imagenes": 0,
+      "media_ids": [],
+      "instagram_post_id": null,
+      "permalink": null,
+      "error": "Sin imagenes generadas todavia. Dry-run del caption.",
+      "fecha": "2026-07-10T16:49:40",
+      "metadata": {
+        "caption_preview": "🏡 Asi podria quedar tu casa en Cañuelas\n\nRender conceptual basado en uno de nuestros proyectos en la zona.\n\nCada terreno tiene su casa ideal. Te ayudamos a diseñarla y construirla.\n\n📍 Cañuelas, Buenos",
+        "n_hashtags": 20,
+        "municipio": "Cañuelas",
+        "fecha": "2026-07-11"
+      }
+    },
+    {
+      "modo": "dry-run",
+      "exito": false,
+      "tipo": "fecha_especial",
+      "caption_length": 460,
+      "n_imagenes": 0,
+      "media_ids": [],
+      "instagram_post_id": null,
+      "permalink": null,
+      "error": "Sin imagenes generadas todavia. Dry-run del caption.",
+      "fecha": "2026-07-10T16:49:40",
+      "metadata": {
+        "caption_preview": "🇦🇷 Feliz 9 de Julio\n\nArgentina es campo, es familia, es trabajo.\n\nDesde Cañuelas seguimos construyendo el pais lote por lote, casa por casa.\n\nSalud a todos los que eligen vivir en esta tierra.",
+        "n_hashtags": 20,
+        "municipio": "Cañuelas",
+        "fecha": "2026-07-09"
+      }
+    }
+  ],
+  "errores": [],
+  "resumen": "Semana 1 (2026-07-06 → 2026-07-12): 5 slots, 1 carruseles generados, 0/5 publicaciones OK",
+  "fecha_ejecucion": "2026-07-10T16:49:40"
+}

@@ -1,0 +1,298 @@
+{
+    "version": "2.0-amba-rioplatense",
+    "mercado": "Argentina - Zona Metropolitana Buenos Aires",
+    "plantillas": {
+        "lote_venta": [
+            {
+                "tono": "emotivo",
+                "texto": "Imaginate esto todos los fines de semana 🌽\n\n{tema}\n\nA {distancia_caba} de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento."
+            },
+            {
+                "tono": "practico",
+                "texto": "{tema}\n\n✓ {hectareas}\n✓ A {distancia_caba} de CABA\n✓ {servicios_disponibles}\n✓ Listo para escriturar\n\n¿Lo vemos este finde?"
+            },
+            {
+                "tono": "inversion",
+                "texto": "Inversión inteligente en tierra bonaernse 📉\n\n{tema}\n\nLa tierra en el AMBA viene subiendo 12-18% anual en zonas con servicios. Esta unidad está a precio de hace 18 meses.\n\nCayeron las oportunidades, no la demanda."
+            },
+            {
+                "tono": "premium",
+                "texto": "Lo que estábamos esperando.\n\n{tema}\n\nSólo {unidades_disponibles} unidades en esta etapa. Amanece distinto cuando tenés 5 ha para vos."
+            }
+        ],
+        "country": [
+            {
+                "tono": "premium",
+                "texto": "{nombre_country}\n\nLote de {metros_cuadrados} m², orientación {orientacion}.\n\nAmenities que marcan la diferencia:\n✨ {amenities_lista}\n\nÚnicas {unidades_disponibles} unidades en esta ubicación."
+            },
+            {
+                "tono": "familia",
+                "texto": "Donde tus hijos van a crecer 🌼\n\nLote en {nombre_country}, {metros_cuadrados} m². Seguridad 24 hs, club house, cancha de tenis, pileta.\n\nY todo a {distancia_caba} de CABA."
+            },
+            {
+                "tono": "inversion",
+                "texto": "{nombre_country} — Etapa {etapa}\n\nLotes desde USD {precio_desde}.\n\nFinanciación en {cuotas} cuotas. Entrega {fecha_entrega}.\n\n¿Vemos números? Te paso la proyección."
+            }
+        ],
+        "campo": [
+            {
+                "tono": "inversion",
+                "texto": "{hectareas} en {municipio}\n\nCampo {rubro}. Aptitud: {aptitud}.\n\nPrecio: USD {precio_usd}/ha\nHoy pagás en soja, maíz o dólares."
+            },
+            {
+                "tono": "productor",
+                "texto": "Para el que sabe lo que vale la tierra buena 🌾\n\n{hectareas} en {municipio}. Alambrado perimetral nuevo, dos molinos, casa de casero, galpón de 300 m².\n\nA {distancia_caba} de CABA."
+            }
+        ],
+        "preventa_loteo": [
+            {
+                "tono": "oportunidad",
+                "texto": "🚀 Pre-venta exclusiva — Etapa {etapa}\n\n{nombre_loteo}, {municipio}\nLotes desde {metros_cuadrados} m²\n\nPrecio lanzamiento: USD {precio_lanzamiento}\nDespués de la entrega: USD {precio_postentrega}\n\nApartá el tuyo con USD {seña}."
+            },
+            {
+                "tono": "urgencia",
+                "texto": "Última semana a precio pre-lanzamiento 🚨\n\nQuedan {unidades_disponibles} lotes en {nombre_loteo}.\n\nDespués de este viernes, subimos de cartel."
+            }
+        ],
+        "lote_periurbano": [
+            {
+                "tono": "practico",
+                "texto": "Terreno en {municipio}, {metros_cuadrados} m².\n\nApto para vivienda unifamiliar. Todos los servicios en la puerta.\n\n✓ Luz\n✓ Gas natural\n✓ Agua corriente\n✓ Asfalto a {metros_asfalto} m\n\nListo para arrancar a construir."
+            }
+        ],
+        "testimonial_cliente": [
+            {
+                "tono": "emotivo",
+                "texto": "Hoy les contamos la historia de {cliente}.\n\n{historia}\n\nCuando nos eligieron, {tema} era solo un proyecto en papel. Hoy es {resultado}.\n\nGracias por confiar. Cada casa que construimos nos enseña algo nuevo.\n\n📸 Si querés ver más fotos del proceso, pedinos en DM.\n\n✍️ Etiquetá a alguien que esté por empezar su proyecto."
+            },
+            {
+                "tono": "profesional",
+                "texto": "Caso de éxito ✨\n\nCliente: {cliente}\nProyecto: {tema}\nResultado: {resultado}\nTiempo: {tiempo}\n\nEstos son los números que nos llenan de orgullo. Cuando el cliente vuelve a联系我们 por el segundo proyecto, sabemos que hicimos las cosas bien.\n\n👏 Te gustaría que trabajemos juntos? Escribinos."
+            }
+        ],
+        "preguntas_frecuentes": [
+            {
+                "tono": "practico",
+                "texto": "❓ Las 5 preguntas que más nos hacen sobre {tema}\n\n1️⃣ {pregunta_1}\n👉 {respuesta_1}\n\n2️⃣ {pregunta_2}\n👉 {respuesta_2}\n\n3️⃣ {pregunta_3}\n👉 {respuesta_3}\n\n4️⃣ {pregunta_4}\n👉 {respuesta_4}\n\n5️⃣ {pregunta_5}\n👉 {respuesta_5}\n\nGuardá este post si te sirvió 👎"
+            },
+            {
+                "tono": "emotivo",
+                "texto": "¿Estás pensando en tu primera casa en el campo?\n\nEstas son las preguntas que nos hacía TODO el mundo al empezar:\n\n• {pregunta_1}\n• {pregunta_2}\n• {pregunta_3}\n\nLas respondemos todas en este post ⬇️"
+            }
+        ],
+        "campo_productivo": [
+            {
+                "tono": "inversion",
+                "texto": "🌾 {hectareas} en {municipio}\n\nTipo: {rubro}\nAptitud: {aptitud}\nPrecio: USD {precio_usd}/ha\n\n📈 Rendimiento anual esperado: {rendimiento}%\n📉 Plazo de recupero: {recupero} años\n\n👍 Te paso la proyección completa por DM."
+            }
+        ],
+        "obra_avance_semanal": [
+            {
+                "tono": "practico",
+                "texto": "Semana {semana} de obra en {municipio}\n\nEtapa actual: {etapa}\nAvance: {avance}%\n\n📝 Esta semana:\n✅ {tarea_1}\n✅ {tarea_2}\n✅ {tarea_3}\n\n🚀 Próxima semana: {proxima_etapa}\n\nTe contamos cómo viene cada lunes 📅"
+            }
+        ],
+        "reel_hook_corto": [
+            {
+                "tono": "emotivo",
+                "texto": "Tu casa en el campo existe.\nSolo que todavía no la viste.\n\nDesliza ➡️"
+            },
+            {
+                "tono": "premium",
+                "texto": "5 hectáreas.\nA 65 km de Obelisco.\nA precio de hace 18 meses.\n\nLink en bio 👉"
+            }
+        ],
+        "presupuesto_obra": [
+            {
+                "tono": "practico",
+                "texto": "📊 Cuánto sale construir en {zona} hoy\n\nTe lo desglosamos por etapa:\n\n🔨 Obra gruesa: USD {obra_gruesa}/m²\n🔧 Instalaciones: USD {instalaciones}/m²\n🎨 Terminaciones: USD {terminaciones}/m²\n🏠 Llave en mano: USD {llave_en_mano}/m²\n\nPara una casa de {metros_cuadrados} m², el rango total está entre USD {rango_min} y USD {rango_max}.\n\n💡 Estos son valores promedio 2026. Para tu proyecto específico, escribinos."
+            },
+            {
+                "tono": "profesional",
+                "texto": "Cómo se compone el costo de tu casa 🧮\n\nMateriales: {porcentaje_materiales}%\nMano de obra: {porcentaje_mano_obra}%\nMaquinaria: {porcentaje_maquinaria}%\nHonorarios: {porcentaje_honorarios}%\nOtros: {porcentaje_otros}%\n\nEstos % pueden cambiar según la zona y la época del año. Si querés un presupuesto ajustado para tu proyecto, te lo armamos sin compromiso."
+            }
+        ],
+        "etapas_obra": [
+            {
+                "tono": "educativo",
+                "texto": "🔨 Las {n_etapas} etapas de una obra explicadas una por una\n\n1️⃣ {etapa_1}\n2️⃣ {etapa_2}\n3️⃣ {etapa_3}\n4️⃣ {etapa_4}\n5️⃣ {etapa_5}\n6️⃣ {etapa_6}\n7️⃣ {etapa_7}\n8️⃣ {etapa_8}\n\n⏱ Plazo total estimado: {plazo_total} meses para una casa de {metros_cuadrados} m².\n\n💬 Te interesa saber más en detalle? Pedinos el post extendido en DM."
+            },
+            {
+                "tono": "practico",
+                "texto": "¿En qué etapa está tu obra? 📝\n\n0️⃣ {etapa_0}\n1️⃣ {etapa_1}\n2️⃣ {etapa_2}\n3️⃣ {etapa_3}\n4️⃣ {etapa_4}\n5️⃣ {etapa_5}\n6️⃣ {etapa_6}\n7️⃣ {etapa_7}\n8️⃣ {etapa_8}\n9️⃣ {etapa_9}\n\nDecime en qué número estás y te cuento qué viene ahora."
+            }
+        ],
+        "steel_frame_vs_tradicional": [
+            {
+                "tono": "educativo",
+                "texto": "Steel Frame vs Tradicional 💊\n\n⚙️ Steel Frame:\n✓ Plazo: 30% más rápido\n✓ Peso: 60% más liviano\n✓ Aislamiento: superior\n✓ Costo: similar o menor\n✓ Resistente a sismos\n\n🧱 Tradicional (ladrillo + hormigón):\n✓ Solidez térmica\n✓ Aislamiento acústico\n✓ Mayor inercia térmica\n✓ Tradición constructiva\n\nCada sistema tiene sus ventajas. Te ayudamos a elegir según tu proyecto, presupuesto y tiempos."
+            }
+        ],
+        "planos_render": [
+            {
+                "tono": "aspiracional",
+                "texto": "📐 Plano vs realidad\n\nA la izquierda: el plano que firmaste con tu arquitecto.\nA la derecha: tu casa terminada, a la medida de tu familia.\n\nEn el medio: {meses} meses de obra, miles de decisiones, un equipo que no se rinde hasta que estés conforme.\n\n¿Querés ver tu proyecto así? Arranca con el render → escribinos."
+            }
+        ],
+        "aberturas_instalaciones": [
+            {
+                "tono": "educativo",
+                "texto": "🔧 Detalles que no se ven pero importan\n\nLas instalaciones son la diferencia entre una casa que funciona y una que te da problemas:\n\n⚡ {puntos_electricos} puntos eléctricos con disyuntor diferencial\n🚿 {puntos_sanitarios} puntos sanitarios con termotanque {tipo_termotanque}\n🔥 Cañería de gas con prueba de hermeticidad\n🌬️ Ventilación cruzada para evitar humedad\n\nTodo esto va DENTRO de la pared, antes del revoque. Por eso importa elegir bien los materiales."
+            }
+        ],
+        "pisos_revestimientos": [
+            {
+                "tono": "aspiracional",
+                "texto": "✨ El piso cambia todo\n\nUna casa con piso nuevo se siente otra.\n\nOpción 1: {opcion_1} ({costo_1}/m²)\nOpción 2: {opcion_2} ({costo_2}/m²)\nOpción 3: {opcion_3} ({costo_3}/m²)\n\n💡 Tip: en zonas húmedas evitá madera maciza, mejor porcelanato o vinílico de alta densidad."
+            }
+        ],
+        "obra_terminada_entrega": [
+            {
+                "tono": "emotivo",
+                "texto": "🏡 Llave en mano: ese momento mágico\n\n{cliente} recibió las llaves de su casa después de {meses} meses de obra.\n\nNo es solo entregar una propiedad. Es entregar:\n• La casa donde van a crecer los chicos\n• El techo donde se van a juntar los amigos\n• El lugar donde van a vivir sus años dorados\n\nEso es lo que hacemos. 👏"
+            },
+            {
+                "tono": "profesional",
+                "texto": "✅ Hito: obra {nombre_obra} entregada\n\nEtapa cumplida: {etapa_cumplida}\nTiempo total: {tiempo_total}\nMetros cuadrados: {metros_cuadrados} m²\nCliente: {cliente}\n\nCuando entregamos una obra, no termina la relación: arrancamos la garantía postventa."
+            }
+        ],
+        "plazo_construccion": [
+            {
+                "tono": "practico",
+                "texto": "⏱ Cuánto tarda construir una casa?\n\nCasa de {metros_cuadrados} m² ({plantas} plantas):\n\n📅 Tradicional: {plazo_tradicional} meses\n📅 Steel Frame: {plazo_steel_frame} meses\n📅 Llave en mano (todo incluido): {plazo_llave} meses\n\nSuma de etapas:\n• Replanteo: 1 semana\n• Obra gruesa: 60% del plazo\n• Instalaciones: 15% del plazo\n• Terminaciones: 25% del plazo\n\nDepende del clima, época del año y tipo de obra. Te lo confirmamos en el presupuesto."
+            }
+        ],
+        "garantia_postventa": [
+            {
+                "tono": "profesional",
+                "texto": "🛡️ Qué pasa después de entregar la obra?\n\nNuestra garantía postventa cubre:\n\n✓ Estructura: 10 años\n✓ Instalaciones: 3 años\n✓ Terminaciones: 1 año\n✓ Aberturas: 1 año\n\nAnte cualquier problema, respondemos en menos de 48 hs.\n\nEso es lo que diferencia a una constructora responsable de un maestro albañil suelto."
+            }
+        ],
+        "materiales_premium": [
+            {
+                "tono": "aspiracional",
+                "texto": "🔍 La diferencia está en los materiales\n\nEsto es lo que NO se ve a simple vista, pero importa:\n\n🧱 Ladrillo {tipo_ladrillo} vs cerámico hueco\n⚡ Cable {tipo_cable} vs económico\n🚿 Cañería {tipo_cañeria} vs económica\n🪟 Aberturas DVH vs simple vidrio\n\nLa diferencia de precio es 15-20%. La diferencia de calidad, te dura toda la vida."
+            }
+        ],
+        "errores_comunes_construccion": [
+            {
+                "tono": "educativo",
+                "texto": "⚠️ Los 5 errores más comunes al construir\n\n1️⃣ No hacer estudio de suelo → grietas a los 2 años\n2️⃣ Ahorrar en instalaciones → problemas eléctricos y plomería\n3️⃣ No contratar dirección de obra → obra fuera de norma\n4️⃣ Elegir presupuesto más barato sin revisar antecedentes\n5️⃣ No firmar contrato con plazos y multas claras\n\nEn nuestro proceso, cada uno de estos puntos está cubierto. Por eso no somos los más baratos, pero tampoco los más caros."
+            }
+        ],
+        "equipo_trabajo_maquinaria": [
+            {
+                "tono": "profesional",
+                "texto": "🚜 Nuestro equipo pesado\n\nEn {zona} operamos con:\n\n• {n_excavadoras} retroexcavadoras {marca}\n• {n_bulldozers} bulldozers para movimiento de suelo\n• {n_camiones} camiones volcadores\n• {n_hormigoneras} mixer para hormigón elaborado\n• {n_andamios} módulos de andamios normalizados\n\nMaquinarias propias = disponibilidad inmediata = no parar la obra por falta de equipo."
+            }
+        ],
+        "permisos_tramites": [
+            {
+                "tono": "practico",
+                "texto": "📋 Trámites municipales que hacemos por vos\n\nAl construir en {zona}:\n\n1️⃣ Permiso de obra (plano aprobado)\n2️⃣ Conexión de luz, agua y gas\n3️⃣ Cumplimiento de normativa municipal\n4️⃣ Habilitación final\n5️⃣ Inscripción catastral\n\nEsto toma entre {plazo_min} y {plazo_max} meses según el municipio. Te lo gestionamos nosotros."
+            }
+        ],
+        "diseno_interior_acabados": [
+            {
+                "tono": "aspiracional",
+                "texto": "🎨 Diseño de interiores: la diferencia entre una casa y TU casa\n\nUna casa sin diseño de interiores es una caja con paredes.\n\nCon diseño:\n✓ Iluminación planificada por ambiente\n✓ Paleta de colores coherente\n✓ Pisos y revestimientos que dialogan\n✓ Mobiliario a medida\n✓ Decoración que refleja tu estilo\n\nInversión en diseño: 8-12% del costo de obra. Impacto: ∞."
+            }
+        ]
+    },
+    "hashtags_por_nicho": {
+        "general": [
+            "#lotesenventa", "#terrenos", "#chacras", "#campos", "#hectareas", "#lotes",
+            "#bienesraices", "#inmobiliaria", "#realestateargentina", "#inmuebles",
+            "#inversion", "#inversioninmobiliaria", "#patrimonio"
+        ],
+        "country": [
+            "#country", "#barriocerrado", "#barrioserrado", "#barrioprivado",
+            "#nordelta", "#pilar", "#escobar", "#countries",
+            "#lotesencountry", "#lotespremium", "#casasencountry"
+        ],
+        "campo": [
+            "#campo", "#camposenventa", "#estancia", "#chacra", "#pampas",
+            "#agro", "#inversionagro", "#feedlot", "#agricultura", "#ganaderia",
+            "#tierrasenventa", "#tierrabuena"
+        ],
+        "construccion": [
+            "#construccion", "#obras", "#obrasencurso", "#constructoradeconfianza",
+            "#movimientodesuelo", "#movimientodetierra", "#topografia",
+            "#casasllaveenmano", "#llaveenmano", "#steelframe", "#steelframing",
+            "#construccionenseco", "#obraseca", "#obracivil", "#ingenieria"
+        ],
+        "casas": [
+            "#casasdecampo", "#casarural", "#casapropia", "#dreamhome",
+            "#casas", "#casasmodernas", "#casasminimalistas", "#casasbonitas",
+            "#arquitectura", "#diseño", "#decoracion", "#interiores"
+        ],
+        "inversion": [
+            "#inversioninmobiliaria", "#invertirenlotes", "#rendimientoinmobiliario",
+            "#inversiones", "#lotesdeinversion", "#tierracomoinversion",
+            "#patrimonio", "#rentabilidad", "#negociosinmobiliarios"
+        ],
+        "turismo_rural": [
+            "#turismorural", "#agroturismo", "#escapadas", "#findesemana",
+            "#naturaleza", "#caballos", "#campoargentino", "#vidasimple",
+            "#turismoruralargentina", "#experienciasrurales"
+        ],
+        "agroturismo": [
+            "#agroturismo", "#bodegas", "#viñedos", "#olivares",
+            "#cosecha", "#degustacion", "#rutadelvino", "#enoturismo",
+            "#agroturismoargentino", "#turismorural"
+        ],
+        "emprendimiento": [
+            "#emprendimiento", "#emprendimientoinmobiliario", "#lotesdeservir",
+            "#desarrolloinmobiliario", "#rendimientoinmobiliario", "#negocios",
+            "#emprendimientoinversion", "#lotesparainversion", "#capital",
+            "#desarrollourbano"
+        ],
+        "lote_rentado": [
+            "#lotesrentados", "#rentainmobiliaria", "#alquilerdelotes",
+            "#campoenrenta", "#inversionrentable", "#pasivo", "#ingresospasivos",
+            "#rentaagricola", "#rentaganadera", "#capitalrentado"
+        ],
+        "arquitectura": [
+            "#arquitectura", "#arquitecto", "#arquitecturamoderna", "#disenoarquitectonico",
+            "#arquitecturaresidencial", "#proyectoresidencial", "#casasmodernas",
+            "#disenosustentable", "#arquitecturaargentina", "#renderarquitectonico"
+        ],
+        "ingenieria": [
+            "#ingenieria", "#ingenierocivil", "#ingenieriaestructural", "#calculoestructural",
+            "#hormigonarmado", "#estructuras", "#fundaciones", "#ingenieriaargentina",
+            "#proyectocalculista", "#ingenieriadeobra"
+        ],
+        "decoracion": [
+            "#decoracion", "#deco", "#interiores", "#disenodeinteriores", "#homestyling",
+            "#decoraciondeinteriores", "#ambientacion", "#decoracionminimalista",
+            "#decoracionmoderna", "#decoraciondecasas"
+        ],
+        "reformas": [
+            "#reformas", "#refaccion", "#remodelacion", "#ampliacion", "#restauracion",
+            "#renovacion", "#refaccionesdecasas", "#reformascasas", "#remodelaciones",
+            "#refaccionar"
+        ],
+        "diseno_interior": [
+            "#disenodeinteriores", "#interiordesign", "#disenointerior", "#decorador",
+            "#disenoresidencial", "#interiores", "#disenocontemporaneo", "#ambientacion",
+            "#disenoargentina", "#decoradordeinteriores"
+        ],
+        "permisos": [
+            "#permisodeobra", "#permisosmunicipales", "#tramites", "#habilitaciones",
+            "#permisosdeconstruccion", "#tramitesmunicipales", "#regularizacion",
+            "#permisomunicipal", "#obralegal", "#tramitesdeobra"
+        ],
+        "reparaciones": [
+            "#reparaciones", "#arreglos", "#mantenimiento", "#refacciones",
+            "#reparaciondecasas", "#arreglosdecasas", "#mantenimientodecasas",
+            "#reparacionesdelhogar", "#arregloshogares", "#serviciosdomesticos"
+        ]
+    },
+    "hashtags_zona_template": [
+        "#{municipio_sin_espacios}", "#{municipio_sin_espacios}inmobiliaria",
+        "#lotesen{municipio_sin_espacios}", "#chacrasen{municipio_sin_espacios}",
+        "#terrenosen{municipio_sin_espacios}", "#camposen{municipio_sin_espacios}",
+        "#casasen{municipio_sin_espacios}", "#realestate{municipio_sin_espacios}",
+        "#inmobiliaria{municipio_sin_espacios}", "#{municipio_sin_espacios}realestate"
+    ]
+}

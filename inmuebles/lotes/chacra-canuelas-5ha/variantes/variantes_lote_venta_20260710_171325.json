@@ -1,0 +1,152 @@
+{
+  "tipo": "lote_venta",
+  "tema": "5 ha en Cañuelas",
+  "n_variantes": 3,
+  "variantes": [
+    {
+      "variante_id": "v1_emotivo",
+      "tipo": "lote_venta",
+      "tono": "emotivo",
+      "nicho": [
+        "general",
+        "campo",
+        "inversion"
+      ],
+      "tema": "5 ha en Cañuelas",
+      "caption": "Imaginate esto todos los fines de semana 🌽\n\n5 ha en Cañuelas\n\nA 65 km de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento.",
+      "hashtags": [
+        "#tierrasenventa",
+        "#chacras",
+        "#inversionagro",
+        "#canuelasinmobiliaria",
+        "#inmobiliaria",
+        "#lotesencanuelas",
+        "#chacra",
+        "#hectareas",
+        "#lotesdeinversion",
+        "#inmuebles",
+        "#realestateargentina",
+        "#ganaderia",
+        "#tierracomoinversion",
+        "#invertirenlotes",
+        "#inversion",
+        "#inversioninmobiliaria",
+        "#rendimientoinmobiliario",
+        "#inmobiliariacanuelas",
+        "#tierrabuena",
+        "#feedlot"
+      ],
+      "caption_completo": "Imaginate esto todos los fines de semana 🌽\n\n5 ha en Cañuelas\n\nA 65 km de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento.\n\n#tierrasenventa #chacras #inversionagro #canuelasinmobiliaria #inmobiliaria #lotesencanuelas #chacra #hectareas #lotesdeinversion #inmuebles #realestateargentina #ganaderia #tierracomoinversion #invertirenlotes #inversion #inversioninmobiliaria #rendimientoinmobiliario #inmobiliariacanuelas #tierrabuena #feedlot",
+      "metadata": {
+        "kwargs": {
+          "tema": "5 ha en Cañuelas",
+          "hectareas": "5 ha",
+          "distancia_caba": "65 km"
+        },
+        "nicho": [
+          "general",
+          "campo",
+          "inversion"
+        ]
+      },
+      "fecha_creacion": "2026-07-10T17:13:25"
+    },
+    {
+      "variante_id": "v2_inversion",
+      "tipo": "lote_venta",
+      "tono": "inversion",
+      "nicho": [
+        "general",
+        "campo",
+        "inversion"
+      ],
+      "tema": "5 ha en Cañuelas",
+      "caption": "Inversión inteligente en tierra bonaernse 📉\n\n5 ha en Cañuelas\n\nLa tierra en el AMBA viene subiendo 12-18% anual en zonas con servicios. Esta unidad está a precio de hace 18 meses.\n\nCayeron las oportunidades, no la demanda.",
+      "hashtags": [
+        "#tierrasenventa",
+        "#chacras",
+        "#inmobiliaria",
+        "#rentabilidad",
+        "#canuelasrealestate",
+        "#hectareas",
+        "#inversiones",
+        "#realestateargentina",
+        "#lotesencanuelas",
+        "#invertirenlotes",
+        "#casasencanuelas",
+        "#lotesenventa",
+        "#pampas",
+        "#inmuebles",
+        "#terrenosencanuelas",
+        "#chacra",
+        "#patrimonio",
+        "#inversioninmobiliaria",
+        "#inmobiliariacanuelas",
+        "#canuelasinmobiliaria"
+      ],
+      "caption_completo": "Inversión inteligente en tierra bonaernse 📉\n\n5 ha en Cañuelas\n\nLa tierra en el AMBA viene subiendo 12-18% anual en zonas con servicios. Esta unidad está a precio de hace 18 meses.\n\nCayeron las oportunidades, no la demanda.\n\n#tierrasenventa #chacras #inmobiliaria #rentabilidad #canuelasrealestate #hectareas #inversiones #realestateargentina #lotesencanuelas #invertirenlotes #casasencanuelas #lotesenventa #pampas #inmuebles #terrenosencanuelas #chacra #patrimonio #inversioninmobiliaria #inmobiliariacanuelas #canuelasinmobiliaria",
+      "metadata": {
+        "kwargs": {
+          "tema": "5 ha en Cañuelas",
+          "hectareas": "5 ha",
+          "distancia_caba": "65 km"
+        },
+        "nicho": [
+          "general",
+          "campo",
+          "inversion"
+        ]
+      },
+      "fecha_creacion": "2026-07-10T17:13:25"
+    },
+    {
+      "variante_id": "v3_premium",
+      "tipo": "lote_venta",
+      "tono": "premium",
+      "nicho": [
+        "general",
+        "campo",
+        "inversion"
+      ],
+      "tema": "5 ha en Cañuelas",
+      "caption": "Lo que estábamos esperando.\n\n{tema}\n\nSólo {unidades_disponibles} unidades en esta etapa. Amanece distinto cuando tenés 5 ha para vos.",
+      "hashtags": [
+        "#terrenos",
+        "#campo",
+        "#realestatecanuelas",
+        "#camposenventa",
+        "#canuelas",
+        "#patrimonio",
+        "#canuelasrealestate",
+        "#inversioninmobiliaria",
+        "#tierracomoinversion",
+        "#inversionagro",
+        "#estancia",
+        "#lotesencanuelas",
+        "#chacras",
+        "#lotesenventa",
+        "#agro",
+        "#lotesdeinversion",
+        "#invertirenlotes",
+        "#rendimientoinmobiliario",
+        "#terrenosencanuelas",
+        "#hectareas"
+      ],
+      "caption_completo": "Lo que estábamos esperando.\n\n{tema}\n\nSólo {unidades_disponibles} unidades en esta etapa. Amanece distinto cuando tenés 5 ha para vos.\n\n#terrenos #campo #realestatecanuelas #camposenventa #canuelas #patrimonio #canuelasrealestate #inversioninmobiliaria #tierracomoinversion #inversionagro #estancia #lotesencanuelas #chacras #lotesenventa #agro #lotesdeinversion #invertirenlotes #rendimientoinmobiliario #terrenosencanuelas #hectareas",
+      "metadata": {
+        "kwargs": {
+          "tema": "5 ha en Cañuelas",
+          "hectareas": "5 ha",
+          "distancia_caba": "65 km"
+        },
+        "nicho": [
+          "general",
+          "campo",
+          "inversion"
+        ]
+      },
+      "fecha_creacion": "2026-07-10T17:13:25"
+    }
+  ],
+  "fecha": "2026-07-10T17:13:25"
+}

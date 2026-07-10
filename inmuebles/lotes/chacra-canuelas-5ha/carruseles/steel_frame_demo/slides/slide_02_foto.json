@@ -1,0 +1,17 @@
+{
+  "numero": 2,
+  "tipo": "foto",
+  "descripcion": "2. Estructura - Perfiles de acero galvanizado",
+  "prompt": "steel frame house under construction with galvanized steel structure rising at Cañuelas, Buenos Aires province, steel frame house under construction, galvanized steel structure rising, metal beams and columns, modern construction method, Buenos Aires Argentina, professional photography",
+  "texto_overlay": "2. Estructura",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "steel_frame_estructura",
+    "etapa": 2
+  }
+}

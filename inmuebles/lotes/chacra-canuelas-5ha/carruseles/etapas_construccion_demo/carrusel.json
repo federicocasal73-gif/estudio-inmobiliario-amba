@@ -1,0 +1,175 @@
+{
+  "tema": "Etapas de construcción en Cañuelas",
+  "tipo": "etapas_construccion",
+  "municipio": "Cañuelas",
+  "tono": "educativo",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "foto",
+      "descripcion": "Etapa 1: Replanteo - Marcamos ejes y limites en {municipio}",
+      "prompt": "construction site survey and staking with stakes and string lines in Cañuelas, Buenos Aires province, construction site survey and staking, marked lot with stakes and string lines, surveyor checking measurements, pampas suburban lot, professional construction photography, daylight",
+      "texto_overlay": "Etapa 1: Replanteo",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "replanteo_obra",
+        "etapa": 1
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "foto",
+      "descripcion": "Etapa 2: Excavacion - Zanjas para fundaciones",
+      "prompt": "foundation trench excavation with retroexcavadora at suburban construction site in Cañuelas, Buenos Aires province, excavation of foundation trenches at construction site, small excavator digging, suburban lot pampas Buenos Aires province, dirt piles, professional construction photography",
+      "texto_overlay": "Etapa 2: Excavacion",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "excavacion_fundaciones",
+        "etapa": 2
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "foto",
+      "descripcion": "Etapa 3: Fundaciones - Hormigon visto con armadura",
+      "prompt": "concrete foundation being poured with rebar at construction site in Cañuelas, Buenos Aires province, concrete foundation being poured, rebar structure, workers with wheelbarrows, fresh concrete, Buenos Aires construction site, professional construction photography",
+      "texto_overlay": "Etapa 3: Fundaciones",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "fundaciones_hormigon",
+        "etapa": 3
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "foto",
+      "descripcion": "Etapa 4: Estructura - Columnas y vigas H°A°",
+      "prompt": "reinforced concrete structure rising, columns and beams with formwork at construction site in Cañuelas, Buenos Aires province, reinforced concrete structure rising, columns and beams, construction formwork, multi-story building skeleton, Buenos Aires construction site, professional photography",
+      "texto_overlay": "Etapa 4: Estructura",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "estructura_hormigon",
+        "etapa": 4
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "foto",
+      "descripcion": "Etapa 5: Mamposteria - Paredes de ladrillo",
+      "prompt": "bricklayer laying bricks on rising exterior wall at construction site in Cañuelas, Buenos Aires province, bricklayer laying bricks on rising exterior wall, traditional brick masonry, mortar, suburban construction site, Buenos Aires Argentina, professional construction photography",
+      "texto_overlay": "Etapa 5: Mamposteria",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "mamposteria_ladrillo",
+        "etapa": 5
+      }
+    },
+    {
+      "numero": 6,
+      "tipo": "foto",
+      "descripcion": "Etapa 6: Cubierta - Techo y aislacion",
+      "prompt": "roof construction in progress with chapa covering at suburban construction site in Cañuelas, Buenos Aires province, roof construction in progress, wooden roof trusses being installed, suburban house Buenos Aires Argentina, blue sky, professional construction photography",
+      "texto_overlay": "Etapa 6: Cubierta",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "cubierta_techo",
+        "etapa": 6
+      }
+    },
+    {
+      "numero": 7,
+      "tipo": "foto",
+      "descripcion": "Etapa 7: Revoques - Grueso y fino",
+      "prompt": "construction worker applying rough plaster to interior walls at Cañuelas, Buenos Aires province, construction worker applying rough plaster to interior walls, trowel and bucket, traditional technique, Buenos Aires Argentina, professional construction photography",
+      "texto_overlay": "Etapa 7: Revoques",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "revoque_grueso",
+        "etapa": 7
+      }
+    },
+    {
+      "numero": 8,
+      "tipo": "foto",
+      "descripcion": "Etapa 8: Aberturas - Ventanas DVH",
+      "prompt": "aluminio DVH window frame installation at construction site in Cañuelas, Buenos Aires province, window frame installation, aluminum carpentry being placed in wall opening, construction worker, Buenos Aires Argentina, professional photography",
+      "texto_overlay": "Etapa 8: Aberturas",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "colocacion_aberturas",
+        "etapa": 8
+      }
+    }
+  ],
+  "caption_narrativo": "🔨 Como se construye una casa en 8 pasos\n\nTe mostramos el proceso completo de una casa de 130 m² en Cañuelas, desde el replanteo hasta la entrega de llaves.\n\n⏱ Plazo total: 8-12 meses dependiendo del sistema constructivo.\n💬 Te interesa saber mas? Pedinos el desglose por etapa.",
+  "hashtags": [
+    "#canuelasinmobiliaria",
+    "#construccionenseco",
+    "#arquitecto",
+    "#obrasencurso",
+    "#casasencanuelas",
+    "#constructoradeconfianza",
+    "#obracivil",
+    "#ingenieria",
+    "#canuelas",
+    "#renderarquitectonico",
+    "#proyectoresidencial",
+    "#llaveenmano",
+    "#realestatecanuelas",
+    "#disenoarquitectonico",
+    "#topografia",
+    "#movimientodesuelo",
+    "#casasmodernas",
+    "#ingenieria",
+    "#estructuras",
+    "#steelframe"
+  ],
+  "fecha_creacion": "2026-07-10T17:35:20",
+  "metadata": {
+    "formato": "carrusel_etapas",
+    "n_etapas": 8,
+    "metros_cuadrados": 130
+  },
+  "n_slides": 8,
+  "caption_completo": "🔨 Como se construye una casa en 8 pasos\n\nTe mostramos el proceso completo de una casa de 130 m² en Cañuelas, desde el replanteo hasta la entrega de llaves.\n\n⏱ Plazo total: 8-12 meses dependiendo del sistema constructivo.\n💬 Te interesa saber mas? Pedinos el desglose por etapa.\n\n#canuelasinmobiliaria #construccionenseco #arquitecto #obrasencurso #casasencanuelas #constructoradeconfianza #obracivil #ingenieria #canuelas #renderarquitectonico #proyectoresidencial #llaveenmano #realestatecanuelas #disenoarquitectonico #topografia #movimientodesuelo #casasmodernas #ingenieria #estructuras #steelframe"
+}

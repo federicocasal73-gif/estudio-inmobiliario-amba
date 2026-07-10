@@ -1,0 +1,18 @@
+{
+  "numero": 1,
+  "tipo": "portada",
+  "descripcion": "Portada: obra Casa López semana 3",
+  "prompt": "residential construction site in mampostería stage, Escobar, Buenos Aires province, concrete structure, brick walls rising, professional construction photography, daylight",
+  "texto_overlay": "Casa López\nSemana 3 · mampostería",
+  "aspect_ratio": "1024*1024",
+  "styles": {
+    "tipo": "obra_gruesa",
+    "etapa": "mampostería",
+    "municipio": "Escobar"
+  },
+  "metadata": {
+    "nombre_obra": "Casa López",
+    "semana": 3,
+    "etapa": "mampostería"
+  }
+}

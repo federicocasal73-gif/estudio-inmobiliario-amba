@@ -1,0 +1,17 @@
+{
+  "numero": 1,
+  "tipo": "foto",
+  "descripcion": "Etapa 1: Replanteo - Marcamos ejes y limites en {municipio}",
+  "prompt": "construction site survey and staking with stakes and string lines in Cañuelas, Buenos Aires province, construction site survey and staking, marked lot with stakes and string lines, surveyor checking measurements, pampas suburban lot, professional construction photography, daylight",
+  "texto_overlay": "Etapa 1: Replanteo",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "replanteo_obra",
+    "etapa": 1
+  }
+}

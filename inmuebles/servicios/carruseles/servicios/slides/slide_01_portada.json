@@ -1,0 +1,16 @@
+{
+  "numero": 1,
+  "tipo": "portada",
+  "descripcion": "Portada: ¿Qué hace Construcciones Pampeanas?",
+  "prompt": "modern construction company logo wall, Construcciones Pampeanas, construction equipment background, professional photography, Buenos Aires Argentina, blue hour, corporate branding",
+  "texto_overlay": "¿Qué hace Construcciones Pampeanas?\nDel plano a la llave",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "empresa": "Construcciones Pampeanas"
+  }
+}

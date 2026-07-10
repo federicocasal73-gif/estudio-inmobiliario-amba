@@ -1,0 +1,17 @@
+{
+  "numero": 5,
+  "tipo": "foto",
+  "descripcion": "Etapa 5: Mamposteria - Paredes de ladrillo",
+  "prompt": "bricklayer laying bricks on rising exterior wall at construction site in Cañuelas, Buenos Aires province, bricklayer laying bricks on rising exterior wall, traditional brick masonry, mortar, suburban construction site, Buenos Aires Argentina, professional construction photography",
+  "texto_overlay": "Etapa 5: Mamposteria",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "mamposteria_ladrillo",
+    "etapa": 5
+  }
+}

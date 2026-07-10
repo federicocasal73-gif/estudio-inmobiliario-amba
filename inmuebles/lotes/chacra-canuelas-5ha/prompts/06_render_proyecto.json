@@ -1,0 +1,21 @@
+{
+  "prompt": "architectural rendering of casa de campo tradicional argentina con galería on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+  "negative_prompt": "blurry, low quality, distorted, deformed, watermark, text, logo, oversaturated, underexposed, overexposed, noise, grain, cartoon, drawing, painting, illustration, 3d render, unrealistic, modern skyscrapers in background, tropical vegetation, beach",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate",
+    "misc-architectural"
+  ],
+  "performance": "Speed",
+  "steps": 30,
+  "cfg_scale": 4.0,
+  "seed": -1,
+  "metadata": {
+    "tipo": "render_proyecto",
+    "estilo": "casa de campo tradicional argentina con galería",
+    "hectareas": 5,
+    "municipio": "Cañuelas"
+  }
+}

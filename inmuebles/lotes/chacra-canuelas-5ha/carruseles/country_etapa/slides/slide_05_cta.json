@@ -1,0 +1,13 @@
+{
+  "numero": 5,
+  "tipo": "cta",
+  "descripcion": "Slide final con datos para reservar",
+  "prompt": "",
+  "texto_overlay": "Últimas unidades\nDesde USD 85.000\nA 45 km de CABA\nSolo 12 lotes · apartá con señal",
+  "aspect_ratio": "896*1152",
+  "styles": [],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "cta"
+  }
+}

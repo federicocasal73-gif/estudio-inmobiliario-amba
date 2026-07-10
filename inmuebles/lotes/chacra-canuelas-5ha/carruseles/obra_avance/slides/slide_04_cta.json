@@ -1,0 +1,14 @@
+{
+  "numero": 4,
+  "tipo": "cta",
+  "descripcion": "Próximos pasos + contacto",
+  "prompt": "",
+  "texto_overlay": "Próxima semana: losas y techos\n\nTe contamos más por DM",
+  "aspect_ratio": "896*1152",
+  "styles": [],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "cta",
+    "etapa_actual": "mampostería"
+  }
+}

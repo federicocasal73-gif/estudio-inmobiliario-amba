@@ -1,0 +1,17 @@
+{
+  "numero": 4,
+  "tipo": "foto",
+  "descripcion": "4. Instalaciones - Electricidad, sanitaria, gas",
+  "prompt": "aluminio DVH window frame installation at construction site in Cañuelas, Buenos Aires province, window frame installation, aluminum carpentry being placed in wall opening, construction worker, Buenos Aires Argentina, professional photography",
+  "texto_overlay": "4. Instalaciones",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "colocacion_aberturas",
+    "etapa": 4
+  }
+}

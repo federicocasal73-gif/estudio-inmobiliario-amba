@@ -1,0 +1,17 @@
+{
+  "numero": 7,
+  "tipo": "foto",
+  "descripcion": "7. Entrega - Te damos las llaves",
+  "prompt": "homeowner couple receiving keys to their new country house, doorway of new construction in Cañuelas, Buenos Aires province, homeowner couple receiving keys to their new country house, smiling, doorway with new construction, Buenos Aires Argentina, lifestyle photography, warm light",
+  "texto_overlay": "7. Entrega",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "tipo_prompt": "entrega_llaves",
+    "etapa": 7
+  }
+}

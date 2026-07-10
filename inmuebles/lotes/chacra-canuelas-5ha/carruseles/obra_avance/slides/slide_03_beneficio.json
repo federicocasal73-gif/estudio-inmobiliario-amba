@@ -1,0 +1,18 @@
+{
+  "numero": 3,
+  "tipo": "beneficio",
+  "descripcion": "Render objetivo: casa moderna minimalista",
+  "prompt": "architectural rendering of casa moderna minimalista on 1 hectares pampas lot in Escobar, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+  "texto_overlay": "Hacia dónde vamos · casa moderna minimalista",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate",
+    "misc-architectural"
+  ],
+  "metadata": {
+    "tipo_prompt": "render_proyecto",
+    "estilo": "casa moderna minimalista"
+  }
+}

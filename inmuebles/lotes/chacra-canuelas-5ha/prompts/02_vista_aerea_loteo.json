@@ -1,0 +1,19 @@
+{
+  "prompt": "aerial drone view of 24 lot subdivision in Cañuelas, Buenos Aires province, aerial drone shot, subdivision of rectangular lots, dirt streets forming grid, countryside around, green pastures, pampas horizon, ultra realistic, sharp focus, 8k",
+  "negative_prompt": "blurry, low quality, distorted, deformed, watermark, text, logo, oversaturated, underexposed, overexposed, noise, grain, cartoon, drawing, painting, illustration, 3d render, unrealistic, modern skyscrapers in background, tropical vegetation, beach",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "performance": "Speed",
+  "steps": 30,
+  "cfg_scale": 4.0,
+  "seed": -1,
+  "metadata": {
+    "tipo": "aerea",
+    "n_lotes": 24,
+    "municipio": "Cañuelas"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "numero": 4,
+  "tipo": "foto",
+  "descripcion": "Obra de movimiento de suelo en etapa actual",
+  "prompt": "Etapa 2 real estate development in Pilar, Buenos Aires province, earthworks in progress, real estate development under construction, bulldozers clearing land, marked lots with stakes, signage, dirt roads being leveled, pampas landscape, progress photography",
+  "texto_overlay": "Etapa 2 · obra en curso",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "loteo_en_desarrollo"
+  }
+}

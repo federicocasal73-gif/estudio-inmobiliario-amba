@@ -1,0 +1,18 @@
+{
+  "numero": 1,
+  "tipo": "foto",
+  "descripcion": "1. Diseño 3D - Ves tu casa antes de construirla",
+  "prompt": "photorealistic exterior render, moderna minimalista country house, Cañuelas, Buenos Aires province, photorealistic architectural rendering of a country house exterior, modern minimalist, manicured garden, swimming pool, sunset golden hour lighting, professional 3d visualization, sharp focus, 8k",
+  "texto_overlay": "1. Diseño 3D",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate",
+    "misc-architectural"
+  ],
+  "metadata": {
+    "tipo_prompt": "render_exterior_casa",
+    "etapa": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "numero": 4,
+  "tipo": "dato",
+  "descripcion": "Tiempo y proceso",
+  "prompt": "",
+  "texto_overlay": "⏱ 8 meses de obra",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance"
+  ],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "dato",
+    "fecha_inicio": null,
+    "fecha_entrega": null,
+    "meses": 8
+  }
+}

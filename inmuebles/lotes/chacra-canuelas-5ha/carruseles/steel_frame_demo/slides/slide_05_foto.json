@@ -1,0 +1,17 @@
+{
+  "numero": 5,
+  "tipo": "foto",
+  "descripcion": "5. Terminaciones - Revoques y pintura",
+  "prompt": "construction worker applying rough plaster to interior walls at Cañuelas, Buenos Aires province, construction worker applying rough plaster to interior walls, trowel and bucket, traditional technique, Buenos Aires Argentina, professional construction photography",
+  "texto_overlay": "5. Terminaciones",
+  "aspect_ratio": "1024*1024",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "revoque_grueso",
+    "etapa": 5
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "numero": 2,
+  "tipo": "placeholder_foto",
+  "descripcion": "Placeholder: foto real del avance de semana 3",
+  "prompt": "",
+  "texto_overlay": "Semana 3 · así viene avanzando",
+  "aspect_ratio": "896*1152",
+  "styles": [],
+  "metadata": {
+    "placeholder_foto_path": "inmuebles/obras/casa-lópez/inputs/semana-03.jpg",
+    "requiere_foto_real": true,
+    "semana": 3
+  }
+}

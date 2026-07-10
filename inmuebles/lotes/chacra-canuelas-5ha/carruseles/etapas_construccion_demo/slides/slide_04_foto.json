@@ -1,0 +1,17 @@
+{
+  "numero": 4,
+  "tipo": "foto",
+  "descripcion": "Etapa 4: Estructura - Columnas y vigas H°A°",
+  "prompt": "reinforced concrete structure rising, columns and beams with formwork at construction site in Cañuelas, Buenos Aires province, reinforced concrete structure rising, columns and beams, construction formwork, multi-story building skeleton, Buenos Aires construction site, professional photography",
+  "texto_overlay": "Etapa 4: Estructura",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "tipo_prompt": "estructura_hormigon",
+    "etapa": 4
+  }
+}

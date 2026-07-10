@@ -1,0 +1,30 @@
+{
+  "proyecto": "chacra-canuelas-5ha",
+  "municipio": "Cañuelas",
+  "ubicacion": "Cañuelas, Buenos Aires",
+  "distancia_caba_km": 65,
+  "hectareas": 5,
+  "precio_referencia_usd": "USD 12.000/ha",
+  "total_estimado_usd": "USD 60.000",
+  "servicios_incluidos": [
+    "luz eléctrica",
+    "alambrado perimetral nuevo (7 hilos)",
+    "calle de tierra mejorada (400 m)",
+    "molino y tanque australiano",
+    "tranquera de madera"
+  ],
+  "prompts_generados": [
+    "01_chacra_atardecer",
+    "02_vista_aerea_loteo",
+    "03_amanecer_pampa",
+    "04_tranquera_entrada",
+    "05_molino_tanque",
+    "06_render_proyecto"
+  ],
+  "posts_generados": [
+    "post_01_venta_emotivo",
+    "post_02_inversion",
+    "post_03_premium"
+  ],
+  "carpeta": "inmuebles/lotes/chacra-canuelas-5ha"
+}

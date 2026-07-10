@@ -1,0 +1,17 @@
+{
+  "numero": 7,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 6: Llave en mano",
+  "prompt": "beautiful finished country house with family at entrance, keys handoff moment, sunset, professional photography",
+  "texto_overlay": "6. Llave en mano",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Llave en mano",
+    "orden": 6
+  }
+}

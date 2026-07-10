@@ -1,0 +1,178 @@
+{
+  "tema": "Llave en mano en Cañuelas",
+  "tipo": "llave_en_mano",
+  "municipio": "Cañuelas",
+  "tono": "premium",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "foto",
+      "descripcion": "1. Diseño 3D - Ves tu casa antes de construirla",
+      "prompt": "photorealistic exterior render, moderna minimalista country house, Cañuelas, Buenos Aires province, photorealistic architectural rendering of a country house exterior, modern minimalist, manicured garden, swimming pool, sunset golden hour lighting, professional 3d visualization, sharp focus, 8k",
+      "texto_overlay": "1. Diseño 3D",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate",
+        "misc-architectural"
+      ],
+      "metadata": {
+        "tipo_prompt": "render_exterior_casa",
+        "etapa": 1
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "foto",
+      "descripcion": "2. Estudio de suelo - Garantizamos que tu casa no se hunde",
+      "prompt": "soil study and geotechnical sampling at construction site in Cañuelas, Buenos Aires province, soil study at construction site, geotechnical engineer taking samples, drilling equipment, suburban lot Buenos Aires province, technical documentation, professional photography",
+      "texto_overlay": "2. Estudio de suelo",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "estudio_de_suelo",
+        "etapa": 2
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "foto",
+      "descripcion": "3. Permisos - Gestion municipal completa",
+      "prompt": "0.013 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, golden hour, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+      "texto_overlay": "3. Permisos",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "permisos_tramites",
+        "etapa": 3
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "foto",
+      "descripcion": "4. Movimiento de suelo - Maquinaria pesada propia",
+      "prompt": "retroexcavadora Komatsu working on earthworks at construction site in Cañuelas, Buenos Aires province, Argentina, professional construction photography, golden hour, dust, real estate development in progress",
+      "texto_overlay": "4. Movimiento de suelo",
+      "aspect_ratio": "1152*896",
+      "styles": {
+        "tipo": "movimiento_suelo",
+        "maquinaria": "retroexcavadora Komatsu",
+        "municipio": "Cañuelas"
+      },
+      "metadata": {
+        "tipo_prompt": "movimiento_suelo",
+        "etapa": 4
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "foto",
+      "descripcion": "5. Obra - Tradicional o steel frame",
+      "prompt": "newly completed country house front view, minimalista moderno style, manicured garden in Cañuelas, Buenos Aires province, newly completed country house front view, modern minimalist facade, manicured garden, Buenos Aires Argentina, real estate photography, golden hour",
+      "texto_overlay": "5. Obra",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate",
+        "ads-luxury"
+      ],
+      "metadata": {
+        "tipo_prompt": "casa_terminada_frente",
+        "etapa": 5
+      }
+    },
+    {
+      "numero": 6,
+      "tipo": "foto",
+      "descripcion": "6. Diseño de interiores - Asesoria de deco incluida",
+      "prompt": "0.013 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, golden hour, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+      "texto_overlay": "6. Diseño de interiores",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "diseno_interior_acabados",
+        "etapa": 6
+      }
+    },
+    {
+      "numero": 7,
+      "tipo": "foto",
+      "descripcion": "7. Entrega - Te damos las llaves",
+      "prompt": "homeowner couple receiving keys to their new country house, doorway of new construction in Cañuelas, Buenos Aires province, homeowner couple receiving keys to their new country house, smiling, doorway with new construction, Buenos Aires Argentina, lifestyle photography, warm light",
+      "texto_overlay": "7. Entrega",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "entrega_llaves",
+        "etapa": 7
+      }
+    },
+    {
+      "numero": 8,
+      "tipo": "foto",
+      "descripcion": "8. Postventa - 10 años garantia estructura",
+      "prompt": "0.013 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, golden hour, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+      "texto_overlay": "8. Postventa",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "garantia_postventa",
+        "etapa": 8
+      }
+    }
+  ],
+  "caption_narrativo": "🔑 Llave en mano: que incluye?\n\nCasa de 130 m² en Cañuelas, Buenos Aires.\nDesde USD 95.000.\n\nNOSOTROS nos ocupamos de TODO:\n✓ Diseño arquitectonico\n✓ Tramites municipales\n✓ Movimiento de suelo y fundaciones\n✓ Obra gruesa y terminaciones\n✓ Instalaciones completas\n✓ Diseño de interiores\n✓ Entrega llave en mano\n✓ Garantia postventa\n\nUn solo equipo. Un solo presupuesto. Una sola llamada.",
+  "hashtags": [
+    "#lotesenventa",
+    "#interiores",
+    "#casarural",
+    "#decoracion",
+    "#steelframing",
+    "#construccionenseco",
+    "#constructoradeconfianza",
+    "#lotes",
+    "#obrasencurso",
+    "#casasdecampo",
+    "#ingenieria",
+    "#realestateargentina",
+    "#inmobiliariacanuelas",
+    "#inmuebles",
+    "#casasencanuelas",
+    "#hectareas",
+    "#obraseca",
+    "#chacrasencanuelas",
+    "#casasmodernas",
+    "#canuelasinmobiliaria"
+  ],
+  "fecha_creacion": "2026-07-10T17:35:20",
+  "metadata": {
+    "modalidad": "llave_en_mano",
+    "precio_desde": "USD 95.000",
+    "metros_cuadrados": 130,
+    "n_slides": 8
+  },
+  "n_slides": 8,
+  "caption_completo": "🔑 Llave en mano: que incluye?\n\nCasa de 130 m² en Cañuelas, Buenos Aires.\nDesde USD 95.000.\n\nNOSOTROS nos ocupamos de TODO:\n✓ Diseño arquitectonico\n✓ Tramites municipales\n✓ Movimiento de suelo y fundaciones\n✓ Obra gruesa y terminaciones\n✓ Instalaciones completas\n✓ Diseño de interiores\n✓ Entrega llave en mano\n✓ Garantia postventa\n\nUn solo equipo. Un solo presupuesto. Una sola llamada.\n\n#lotesenventa #interiores #casarural #decoracion #steelframing #construccionenseco #constructoradeconfianza #lotes #obrasencurso #casasdecampo #ingenieria #realestateargentina #inmobiliariacanuelas #inmuebles #casasencanuelas #hectareas #obraseca #chacrasencanuelas #casasmodernas #canuelasinmobiliaria"
+}

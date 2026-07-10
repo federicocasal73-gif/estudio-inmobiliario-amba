@@ -1,0 +1,158 @@
+{
+  "version": "2.0-amba",
+  "mercado": "Argentina - Zona Metropolitana Buenos Aires",
+  "plantillas_base": {
+    "chacra_pampeana": "wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k",
+    "country_premium": "luxury gated community entrance, paved roads, manicured common areas, modern security booth, country club amenities, golf course background, real estate photography, blue hour",
+    "lote_periurbano": "flat suburban building lot, wire perimeter fence, mature trees on boundary, rural residential context, clear sky, Buenos Aires province, real estate photography, daylight",
+    "vista_aerea_loteo": "aerial drone shot, subdivision of rectangular lots, dirt streets forming grid, countryside around, green pastures, pampas horizon, ultra realistic, sharp focus, 8k",
+    "loteo_en_desarrollo": "real estate development under construction, bulldozers clearing land, marked lots with stakes, signage, dirt roads being leveled, pampas landscape, progress photography",
+    "campo_mediano": "extensive cattle ranch landscape, rolling pampas, wire fences dividing paddocks, distant farmhouse, grazing cattle, traditional estancia buildings, golden hour light, photographic realism",
+    "amanecer_pampa": "early morning fog over flat pampas fields, golden sunrise light, lone ombú tree silhouette, dew on grass, peaceful rural atmosphere, cinematic photography",
+    "atardecer_campo": "dramatic sunset over pampas grassland, cumulus clouds, golden orange light, silhouette of wire fence and windmill, photography, vivid colors, 8k",
+    "tranquera_argentina": "rustic wooden gate with wire fence, traditional Argentine countryside entrance, ombú trees in background, dirt road, photographic style",
+    "molino_tanque": "classic Argentine windmill next to round water tank, pampas landscape, blue sky with clouds, traditional rural icon, photography",
+    "casco_estancia": "old traditional Argentine estancia main house, white walls, tile roof, gallery with columns, centenarian ombú trees, manicured entrance, golden hour",
+    "lote_inversion_chico": "small urban-suburban building lot, Buenos Aires province, wire fence on boundary, paved road nearby, mature trees, affordable starter property, real estate photography, daylight, sharp focus",
+    "campo_grande": "vast pampas farmland aerial view, hundreds of hectares of flat agricultural land, distant farmhouse cluster, eucalyptus windbreaks dividing fields, Buenos Aires province, agricultural investment, professional photography, golden hour",
+    "pileta_quinta": "quinta with swimming pool in Buenos Aires province, large country house, manicured lawn, mature trees, weekend retreat aesthetic, summer day, professional real estate photography",
+    "estancia_productiva": "productive Argentine estancia working farm, cattle pens, main house with gallery, worker houses, galpon for machinery, agricultural silos in distance, traditional pampas operation, documentary photography",
+    "emprendimiento_agroturistico": "agritourism estate, vineyards or olive groves, rustic lodge buildings, horseback riders, farm-to-table dining area, rural tourism concept, Buenos Aires province, lifestyle photography",
+    "lote_comercial_ruta": "commercial lot on Argentine highway, paved road frontage, flat terrain, industrial corridor, Buenos Aires province outskirts, investment opportunity, real estate photography, overcast sky",
+    "anteproyecto_arquitectonico": "architectural blueprint sketch of a country house, hand-drawn architectural plans, paper rolls, technical drawing tools, professional architect studio, Buenos Aires Argentina, daylight photography",
+    "render_exterior_casa": "photorealistic architectural rendering of a country house exterior, modern minimalist, manicured garden, swimming pool, sunset golden hour lighting, professional 3d visualization, sharp focus, 8k",
+    "render_interior_casa": "photorealistic interior architectural rendering, modern living room with panoramic windows, designer furniture, warm lighting, minimalist decoration, professional 3d visualization, sharp focus, 8k",
+    "estudio_de_suelo": "soil study at construction site, geotechnical engineer taking samples, drilling equipment, suburban lot Buenos Aires province, technical documentation, professional photography",
+    "relevamiento_topografico": "land surveyor with theodolite equipment at rural construction site, topographic measurement, suburban Buenos Aires province, professional documentary photography, daylight",
+    "replanteo_obra": "construction site survey and staking, marked lot with stakes and string lines, surveyor checking measurements, pampas suburban lot, professional construction photography, daylight",
+    "excavacion_fundaciones": "excavation of foundation trenches at construction site, small excavator digging, suburban lot pampas Buenos Aires province, dirt piles, professional construction photography",
+    "fundaciones_hormigon": "concrete foundation being poured, rebar structure, workers with wheelbarrows, fresh concrete, Buenos Aires construction site, professional construction photography",
+    "estructura_hormigon": "reinforced concrete structure rising, columns and beams, construction formwork, multi-story building skeleton, Buenos Aires construction site, professional photography",
+    "mamposteria_ladrillo": "bricklayer laying bricks on rising exterior wall, traditional brick masonry, mortar, suburban construction site, Buenos Aires Argentina, professional construction photography",
+    "steel_frame_estructura": "steel frame house under construction, galvanized steel structure rising, metal beams and columns, modern construction method, Buenos Aires Argentina, professional photography",
+    "steel_frame_cerramiento": "steel frame house with exterior cement board panels being installed, modern construction, Buenos Aires Argentina, professional construction photography",
+    "cubierta_techo": "roof construction in progress, wooden roof trusses being installed, suburban house Buenos Aires Argentina, blue sky, professional construction photography",
+    "revoque_grueso": "construction worker applying rough plaster to interior walls, trowel and bucket, traditional technique, Buenos Aires Argentina, professional construction photography",
+    "colocacion_aberturas": "window frame installation, aluminum carpentry being placed in wall opening, construction worker, Buenos Aires Argentina, professional photography",
+    "colocacion_pisos": "ceramic floor tiles being installed by worker, adhesive application, modern interior, Buenos Aires Argentina, professional construction photography",
+    "pintura_interior": "interior painter applying white paint to wall with roller, drop cloth, modern house under construction, Buenos Aires Argentina, professional photography",
+    "casa_terminada_frente": "newly completed country house front view, modern minimalist facade, manicured garden, Buenos Aires Argentina, real estate photography, golden hour",
+    "entrega_llaves": "homeowner couple receiving keys to their new country house, smiling, doorway with new construction, Buenos Aires Argentina, lifestyle photography, warm light",
+    "equipo_pesado_construccion": "heavy construction equipment at suburban building site, excavator and loader, Buenos Aires Argentina, professional documentary photography",
+    "equipo_humano_obra": "construction team of workers posing at construction site, helmets and vests, Buenos Aires Argentina, documentary photography, warm afternoon light",
+    "grua_obra": "tower crane at construction site, lifting materials, multi-story building under construction, Buenos Aires Argentina, professional photography",
+    "retroexcavadora": "excavator digging at suburban construction site, muddy terrain, pampas landscape Buenos Aires Argentina, professional construction photography, daylight",
+    "motoniveladora": "motor grader leveling dirt road at rural construction site, dust cloud, Buenos Aires Argentina, professional construction photography",
+    "fachada_moderna_minimalista": "modern minimalist house facade, large glass windows, clean lines, white walls, manicured landscape, Buenos Aires Argentina, architectural photography, golden hour",
+    "detalle_madera_arquitectonico": "architectural detail closeup, wooden beams meeting concrete, modern rustic construction, Buenos Aires Argentina, architectural photography, soft light"
+  },
+  "negativos_default": "blurry, low quality, distorted, deformed, watermark, text, logo, oversaturated, underexposed, overexposed, noise, grain, cartoon, drawing, painting, illustration, 3d render, unrealistic, modern skyscrapers in background, tropical vegetation, beach",
+  "extras_utiles": {
+    "epoca": [
+      "verano pampeano",
+      "otoño con hojas",
+      "invierno cálido",
+      "primavera florida"
+    ],
+    "momento_dia": [
+      "amanecer",
+      "mediodía",
+      "golden hour",
+      "atardecer",
+      "blue hour",
+      "noche estrellada"
+    ],
+    "clima": [
+      "cielo despejado",
+      "cielo con cumulus",
+      "día nublado",
+      "llovizna ligera"
+    ],
+    "vegetacion": [
+      "pampa verde",
+      "pampa dorada",
+      "monte de tala",
+      "cortina de eucaliptos",
+      "pastura segada"
+    ],
+    "estilo_lote": [
+      "rural residencial",
+      "agro-residencial",
+      "country premium",
+      "periurbano accesible",
+      "inversión productive"
+    ],
+    "estilo_arquitectonico": [
+      "minimalista moderno",
+      "campo tradicional argentino",
+      "campo contemporaneo",
+      "nordico escandinavo",
+      "industrial loft",
+      "colonial",
+      "mediterraneo",
+      "toscano",
+      "marbella",
+      "tropical moderno"
+    ],
+    "tipo_construccion": [
+      "steel frame",
+      "tradicional ladrillo",
+      "hormigon armado",
+      "mixto ladrillo + steel frame",
+      "wood frame",
+      "container reciclado",
+      "prefabricado"
+    ]
+  },
+  "municipios_amba": {
+    "norte": [
+      "Pilar",
+      "Escobar",
+      "Campana",
+      "Zárate",
+      "Capilla del Señor",
+      "Exaltación de la Cruz",
+      "San Fernando",
+      "Tigre",
+      "José C. Paz",
+      "Malvinas Argentinas"
+    ],
+    "oeste": [
+      "Moreno",
+      "Merlo",
+      "Ituzaingó",
+      "General Rodríguez",
+      "Luján",
+      "Mercedes",
+      "Suipacha",
+      "Navarro",
+      "La Matanza (periurbano)"
+    ],
+    "sur": [
+      "Cañuelas",
+      "San Vicente",
+      "Brandsen",
+      "Lobos",
+      "Roque Pérez",
+      "General Paz",
+      "Chascomús",
+      "Ranchos",
+      "Monte",
+      "La Plata (periurbano)"
+    ],
+    "sudoeste": [
+      "Lobos",
+      "Roque Pérez",
+      "General Alvear",
+      "25 de Mayo",
+      "9 de Julio",
+      "Saladillo"
+    ]
+  },
+  "distancias_caba_referencia": {
+    "0-30km": "CABA + primer cordón + Tigre/San Fernando/Avellaneda",
+    "30-60km": "Pilar, Escobar, Cañuelas, La Plata, Berazategui",
+    "60-100km": "Luján, Mercedes, Zárate, Chascomús, Lobos",
+    "100-200km": "Brandsen, Roque Pérez, Saladillo, 25 de Mayo, San Antonio de Areco"
+  }
+}

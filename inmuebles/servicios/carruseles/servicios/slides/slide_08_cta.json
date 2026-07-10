@@ -1,0 +1,13 @@
+{
+  "numero": 8,
+  "tipo": "cta",
+  "descripcion": "Slide final: cómo empezar tu proyecto",
+  "prompt": "",
+  "texto_overlay": "¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 Cañuelas, Buenos Aires",
+  "aspect_ratio": "896*1152",
+  "styles": [],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "cta"
+  }
+}

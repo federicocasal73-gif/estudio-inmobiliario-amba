@@ -1,0 +1,9 @@
+# Dependencias del estudio inmobiliario AMBA
+#
+# Requeridas para funcionamiento basico:
+Pillow>=10.0.0
+
+# Opcionales (solo necesarias si vas a usar el cliente real de Fooocus):
+# gradio-client>=2.0.0
+
+# No requiere otras dependencias: usa solo stdlib + Pillow.

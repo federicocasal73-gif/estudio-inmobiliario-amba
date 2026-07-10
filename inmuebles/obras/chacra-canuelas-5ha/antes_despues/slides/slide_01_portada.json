@@ -1,0 +1,16 @@
+{
+  "numero": 1,
+  "tipo": "portada",
+  "descripcion": "Portada: chacra-canuelas-5ha",
+  "prompt": "",
+  "texto_overlay": "Familia Pérez\nAntes · Después",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance"
+  ],
+  "metadata": {
+    "requiere_foto_real": false,
+    "tipo": "portada"
+  }
+}

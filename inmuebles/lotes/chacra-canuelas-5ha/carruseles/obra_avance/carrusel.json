@@ -1,0 +1,105 @@
+{
+  "tema": "Obra Casa López · Semana 3",
+  "tipo": "obra_avance",
+  "municipio": "Escobar",
+  "tono": "practico",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "portada",
+      "descripcion": "Portada: obra Casa López semana 3",
+      "prompt": "residential construction site in mampostería stage, Escobar, Buenos Aires province, concrete structure, brick walls rising, professional construction photography, daylight",
+      "texto_overlay": "Casa López\nSemana 3 · mampostería",
+      "aspect_ratio": "1024*1024",
+      "styles": {
+        "tipo": "obra_gruesa",
+        "etapa": "mampostería",
+        "municipio": "Escobar"
+      },
+      "metadata": {
+        "nombre_obra": "Casa López",
+        "semana": 3,
+        "etapa": "mampostería"
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "placeholder_foto",
+      "descripcion": "Placeholder: foto real del avance de semana 3",
+      "prompt": "",
+      "texto_overlay": "Semana 3 · así viene avanzando",
+      "aspect_ratio": "896*1152",
+      "styles": [],
+      "metadata": {
+        "placeholder_foto_path": "inmuebles/obras/casa-lópez/inputs/semana-03.jpg",
+        "requiere_foto_real": true,
+        "semana": 3
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "beneficio",
+      "descripcion": "Render objetivo: casa moderna minimalista",
+      "prompt": "architectural rendering of casa moderna minimalista on 1 hectares pampas lot in Escobar, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+      "texto_overlay": "Hacia dónde vamos · casa moderna minimalista",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate",
+        "misc-architectural"
+      ],
+      "metadata": {
+        "tipo_prompt": "render_proyecto",
+        "estilo": "casa moderna minimalista"
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "cta",
+      "descripcion": "Próximos pasos + contacto",
+      "prompt": "",
+      "texto_overlay": "Próxima semana: losas y techos\n\nTe contamos más por DM",
+      "aspect_ratio": "896*1152",
+      "styles": [],
+      "metadata": {
+        "requiere_foto_real": false,
+        "tipo": "cta",
+        "etapa_actual": "mampostería"
+      }
+    }
+  ],
+  "caption_narrativo": "Obra Casa López · Semana 3\n\nAhora esto →\n\nSlide 1: Casa López\nSemana 3 · mampostería\n\nLo que viene →\n\nSlide 2: Semana 3 · así viene avanzando\n\nSeguimos →\n\nSlide 3: Hacia dónde vamos · casa moderna minimalista\n\nPero esperá, hay más →\n\nSlide 4: Próxima semana: losas y techos\n\nTe contamos más por DM\n\n📍 Escobar, Buenos Aires\n\nLink en bio para más info.",
+  "hashtags": [
+    "#obrasencurso",
+    "#movimientodesuelo",
+    "#steelframing",
+    "#casasdecampo",
+    "#ingenieria",
+    "#constructoradeconfianza",
+    "#chacrasenescobar",
+    "#llaveenmano",
+    "#diseño",
+    "#obraseca",
+    "#escobarinmobiliaria",
+    "#casasbonitas",
+    "#casasmodernas",
+    "#camposenescobar",
+    "#movimientodetierra",
+    "#obracivil",
+    "#casasllaveenmano",
+    "#decoracion",
+    "#dreamhome",
+    "#realestateescobar"
+  ],
+  "fecha_creacion": "2026-07-10T16:26:05",
+  "metadata": {
+    "nombre_obra": "Casa López",
+    "semana": 3,
+    "etapa": "mampostería",
+    "hectareas": 1,
+    "n_slides": 4
+  },
+  "n_slides": 4,
+  "caption_completo": "Obra Casa López · Semana 3\n\nAhora esto →\n\nSlide 1: Casa López\nSemana 3 · mampostería\n\nLo que viene →\n\nSlide 2: Semana 3 · así viene avanzando\n\nSeguimos →\n\nSlide 3: Hacia dónde vamos · casa moderna minimalista\n\nPero esperá, hay más →\n\nSlide 4: Próxima semana: losas y techos\n\nTe contamos más por DM\n\n📍 Escobar, Buenos Aires\n\nLink en bio para más info.\n\n#obrasencurso #movimientodesuelo #steelframing #casasdecampo #ingenieria #constructoradeconfianza #chacrasenescobar #llaveenmano #diseño #obraseca #escobarinmobiliaria #casasbonitas #casasmodernas #camposenescobar #movimientodetierra #obracivil #casasllaveenmano #decoracion #dreamhome #realestateescobar"
+}

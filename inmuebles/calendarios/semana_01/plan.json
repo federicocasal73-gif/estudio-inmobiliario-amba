@@ -1,0 +1,268 @@
+{
+  "numero": 1,
+  "fecha_inicio": "2026-07-06",
+  "fecha_fin": "2026-07-12",
+  "proyectos_disponibles": [
+    "chacra-canuelas-5ha"
+  ],
+  "municipio_principal": "Cañuelas",
+  "slots": [
+    {
+      "fecha": "2026-07-06",
+      "dia_semana": "lunes",
+      "hora_sugerida": "19:00",
+      "tipo_post": "lote_venta",
+      "tono": "emotivo",
+      "nicho": [
+        "general",
+        "inversion"
+      ],
+      "municipio": "Cañuelas",
+      "proyecto": "chacra-canuelas-5ha",
+      "notas": "Distribucion default para lunes",
+      "es_fecha_clave": false,
+      "fecha_clave_nombre": null,
+      "post": {
+        "fecha_creacion": "2026-07-10T16:57:53",
+        "tema": "Lote en Cañuelas",
+        "tipo": "lote_venta",
+        "municipio": "Cañuelas",
+        "tono": "emotivo",
+        "caption": "Imaginate esto todos los fines de semana 🌽\n\nLote en Cañuelas\n\nA 65 km de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento.",
+        "hashtags": [
+          "#chacras",
+          "#tierracomoinversion",
+          "#inmobiliaria",
+          "#lotesenventa",
+          "#inmuebles",
+          "#inversioninmobiliaria",
+          "#canuelasrealestate",
+          "#terrenosencanuelas",
+          "#inversioninmobiliaria",
+          "#bienesraices",
+          "#terrenos",
+          "#patrimonio",
+          "#canuelas",
+          "#rendimientoinmobiliario",
+          "#hectareas",
+          "#canuelasinmobiliaria",
+          "#lotesencanuelas",
+          "#campos",
+          "#inmobiliariacanuelas",
+          "#realestatecanuelas"
+        ],
+        "caption_completo": "Imaginate esto todos los fines de semana 🌽\n\nLote en Cañuelas\n\nA 65 km de CABA, pero con la paz del campo. Donde tus hijos crecen sabiendo de dónde viene lo que comen.\n\nEscribime y te cuento.\n\n#chacras #tierracomoinversion #inmobiliaria #lotesenventa #inmuebles #inversioninmobiliaria #canuelasrealestate #terrenosencanuelas #inversioninmobiliaria #bienesraices #terrenos #patrimonio #canuelas #rendimientoinmobiliario #hectareas #canuelasinmobiliaria #lotesencanuelas #campos #inmobiliariacanuelas #realestatecanuelas"
+      }
+    },
+    {
+      "fecha": "2026-07-08",
+      "dia_semana": "miercoles",
+      "hora_sugerida": "19:00",
+      "tipo_post": "country",
+      "tono": "premium",
+      "nicho": [
+        "country"
+      ],
+      "municipio": "Cañuelas",
+      "proyecto": "chacra-canuelas-5ha",
+      "notas": "Distribucion default para miercoles",
+      "es_fecha_clave": false,
+      "fecha_clave_nombre": null,
+      "post": {
+        "fecha_creacion": "2026-07-10T16:57:53",
+        "tema": "Lote en Country Premium",
+        "tipo": "country",
+        "municipio": "Cañuelas",
+        "tono": "premium",
+        "caption": "Country Premium\n\nLote de 1000 m², orientación norte.\n\nAmenities que marcan la diferencia:\n✨ Club house, pileta, canchas de tenis, golf\n\nÚnicas 3 unidades en esta ubicación.",
+        "hashtags": [
+          "#barríocerrado",
+          "#rendimientoinmobiliario",
+          "#patrimonio",
+          "#canuelas",
+          "#escobar",
+          "#realestatecanuelas",
+          "#countries",
+          "#rentabilidad",
+          "#camposencanuelas",
+          "#inversioninmobiliaria",
+          "#inversiones",
+          "#tierracomoinversion",
+          "#canuelasinmobiliaria",
+          "#invertirenlotes",
+          "#canuelasrealestate",
+          "#lotesdeinversion",
+          "#lotespremium",
+          "#lotesencountry",
+          "#nordelta",
+          "#inmobiliariacanuelas"
+        ],
+        "caption_completo": "Country Premium\n\nLote de 1000 m², orientación norte.\n\nAmenities que marcan la diferencia:\n✨ Club house, pileta, canchas de tenis, golf\n\nÚnicas 3 unidades en esta ubicación.\n\n#barríocerrado #rendimientoinmobiliario #patrimonio #canuelas #escobar #realestatecanuelas #countries #rentabilidad #camposencanuelas #inversioninmobiliaria #inversiones #tierracomoinversion #canuelasinmobiliaria #invertirenlotes #canuelasrealestate #lotesdeinversion #lotespremium #lotesencountry #nordelta #inmobiliariacanuelas"
+      }
+    },
+    {
+      "fecha": "2026-07-10",
+      "dia_semana": "viernes",
+      "hora_sugerida": "18:30",
+      "tipo_post": "carrusel",
+      "tono": "emotivo",
+      "nicho": [
+        "servicios",
+        "casas"
+      ],
+      "municipio": "Cañuelas",
+      "proyecto": "chacra-canuelas-5ha",
+      "notas": "Distribucion default para viernes",
+      "es_fecha_clave": false,
+      "fecha_clave_nombre": null,
+      "post": {
+        "fecha_creacion": "2026-07-10T16:57:53",
+        "tema": "Carrusel (pendiente de generar)",
+        "tipo": "carrusel",
+        "municipio": "Cañuelas",
+        "tono": "emotivo",
+        "caption": "🌾 Una historia que vale la pena contar\n\nEn Cañuelas hay un lugar que estamos armando con mucho amor. Te mostramos todo en este carrusel.\n\nEmpeza por el primer slide →\n\n📍 Cañuelas, Buenos Aires\n\n_Este caption es provisorio: se regenera cuando produzcas el carrusel._",
+        "hashtags": [
+          "#terrenosencanuelas",
+          "#camposencanuelas",
+          "#canuelas",
+          "#casas",
+          "#interiores",
+          "#casasbonitas",
+          "#canuelasrealestate",
+          "#lotesencanuelas",
+          "#decoracion",
+          "#diseño",
+          "#arquitectura",
+          "#casarural",
+          "#casasmodernas",
+          "#casasencanuelas",
+          "#canuelasinmobiliaria",
+          "#casapropia",
+          "#casasdecampo",
+          "#casasminimalistas",
+          "#realestatecanuelas",
+          "#inmobiliariacanuelas"
+        ],
+        "caption_completo": "🌾 Una historia que vale la pena contar\n\nEn Cañuelas hay un lugar que estamos armando con mucho amor. Te mostramos todo en este carrusel.\n\nEmpeza por el primer slide →\n\n📍 Cañuelas, Buenos Aires\n\n_Este caption es provisorio: se regenera cuando produzcas el carrusel._\n\n#terrenosencanuelas #camposencanuelas #canuelas #casas #interiores #casasbonitas #canuelasrealestate #lotesencanuelas #decoracion #diseño #arquitectura #casarural #casasmodernas #casasencanuelas #canuelasinmobiliaria #casapropia #casasdecampo #casasminimalistas #realestatecanuelas #inmobiliariacanuelas",
+        "placeholder": true,
+        "accion_requerida": "Generar carrusel con CarruselFactory.lote_premium / country_etapa / obra_avance / servicios"
+      }
+    },
+    {
+      "fecha": "2026-07-11",
+      "dia_semana": "sabado",
+      "hora_sugerida": "11:00",
+      "tipo_post": "render_proyecto",
+      "tono": "aspiracional",
+      "nicho": [
+        "casas"
+      ],
+      "municipio": "Cañuelas",
+      "proyecto": "chacra-canuelas-5ha",
+      "notas": "Distribucion default para sabado",
+      "es_fecha_clave": false,
+      "fecha_clave_nombre": null,
+      "post": {
+        "fecha_creacion": "2026-07-10T16:57:53",
+        "tema": "Render de proyecto",
+        "tipo": "render_proyecto",
+        "municipio": "Cañuelas",
+        "tono": "aspiracional",
+        "caption": "🏡 Asi podria quedar tu casa en Cañuelas\n\nRender conceptual basado en uno de nuestros proyectos en la zona.\n\nCada terreno tiene su casa ideal. Te ayudamos a diseñarla y construirla.\n\n📍 Cañuelas, Buenos Aires\n\n_Caption provisorio: se regenera cuando generes la imagen del render._",
+        "hashtags": [
+          "#casas",
+          "#casasmodernas",
+          "#dreamhome",
+          "#casasencanuelas",
+          "#casasdecampo",
+          "#inmobiliaria",
+          "#realestatecanuelas",
+          "#canuelas",
+          "#casarural",
+          "#campos",
+          "#terrenos",
+          "#inmobiliariacanuelas",
+          "#inmuebles",
+          "#diseño",
+          "#canuelasinmobiliaria",
+          "#canuelasrealestate",
+          "#patrimonio",
+          "#inversioninmobiliaria",
+          "#bienesraices",
+          "#interiores"
+        ],
+        "caption_completo": "🏡 Asi podria quedar tu casa en Cañuelas\n\nRender conceptual basado en uno de nuestros proyectos en la zona.\n\nCada terreno tiene su casa ideal. Te ayudamos a diseñarla y construirla.\n\n📍 Cañuelas, Buenos Aires\n\n_Caption provisorio: se regenera cuando generes la imagen del render._\n\n#casas #casasmodernas #dreamhome #casasencanuelas #casasdecampo #inmobiliaria #realestatecanuelas #canuelas #casarural #campos #terrenos #inmobiliariacanuelas #inmuebles #diseño #canuelasinmobiliaria #canuelasrealestate #patrimonio #inversioninmobiliaria #bienesraices #interiores",
+        "prompt": "architectural rendering of casa de campo tradicional on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+        "aspect_ratio": "1152*896",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance",
+          "ads-real estate",
+          "misc-architectural"
+        ],
+        "placeholder": true,
+        "accion_requerida": "Generar imagen del prompt en Fooocus/Midjourney y reemplazar placeholder"
+      }
+    },
+    {
+      "fecha": "2026-07-09",
+      "dia_semana": "jueves",
+      "hora_sugerida": "10:00",
+      "tipo_post": "fecha_especial",
+      "tono": "emotivo",
+      "nicho": [
+        "general"
+      ],
+      "municipio": "Cañuelas",
+      "proyecto": null,
+      "notas": "Post para Dia de la Independencia: orgullo nacional, campo argentino, identidad",
+      "es_fecha_clave": true,
+      "fecha_clave_nombre": "Dia de la Independencia",
+      "post": {
+        "fecha_creacion": "2026-07-10T16:57:53",
+        "tema": "Dia de la Independencia",
+        "tipo": "fecha_especial",
+        "municipio": "Cañuelas",
+        "tono": "emotivo",
+        "caption": "🇦🇷 Feliz 9 de Julio\n\nArgentina es campo, es familia, es trabajo.\n\nDesde Cañuelas seguimos construyendo el pais lote por lote, casa por casa.\n\nSalud a todos los que eligen vivir en esta tierra.",
+        "hashtags": [
+          "#canuelas",
+          "#hectareas",
+          "#inmuebles",
+          "#bienesraices",
+          "#camposencanuelas",
+          "#casasencanuelas",
+          "#inmobiliariacanuelas",
+          "#realestateargentina",
+          "#terrenos",
+          "#campos",
+          "#terrenosencanuelas",
+          "#inversion",
+          "#lotesenventa",
+          "#chacrasencanuelas",
+          "#inmobiliaria",
+          "#lotes",
+          "#lotesencanuelas",
+          "#patrimonio",
+          "#canuelasinmobiliaria",
+          "#inversioninmobiliaria"
+        ],
+        "caption_completo": "🇦🇷 Feliz 9 de Julio\n\nArgentina es campo, es familia, es trabajo.\n\nDesde Cañuelas seguimos construyendo el pais lote por lote, casa por casa.\n\nSalud a todos los que eligen vivir en esta tierra.\n\n#canuelas #hectareas #inmuebles #bienesraices #camposencanuelas #casasencanuelas #inmobiliariacanuelas #realestateargentina #terrenos #campos #terrenosencanuelas #inversion #lotesenventa #chacrasencanuelas #inmobiliaria #lotes #lotesencanuelas #patrimonio #canuelasinmobiliaria #inversioninmobiliaria"
+      }
+    }
+  ],
+  "fechas_clave_cubiertas": [
+    "Dia de la Independencia"
+  ],
+  "metadata": {
+    "posts_por_semana": 5,
+    "dias_elegidos": [
+      "lunes",
+      "miercoles",
+      "viernes",
+      "sabado",
+      "jueves"
+    ]
+  }
+}

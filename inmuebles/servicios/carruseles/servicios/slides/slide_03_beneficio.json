@@ -1,0 +1,17 @@
+{
+  "numero": 3,
+  "tipo": "beneficio",
+  "descripcion": "Servicio 2: Movimiento de suelo y topografía",
+  "prompt": "heavy machinery doing earthworks, bulldozer, retroexcavadora, professional construction photography, dust, golden hour",
+  "texto_overlay": "2. Movimiento de suelo y topografía",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-real estate"
+  ],
+  "metadata": {
+    "servicio": "Movimiento de suelo y topografía",
+    "orden": 2
+  }
+}

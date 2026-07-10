@@ -1,0 +1,16 @@
+{
+  "numero": 2,
+  "tipo": "placeholder_foto",
+  "descripcion": "Foto del antes: lote baldío / obra temprana",
+  "prompt": "",
+  "texto_overlay": "Esto era antes",
+  "aspect_ratio": "896*1152",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance"
+  ],
+  "metadata": {
+    "requiere_foto_real": true,
+    "placeholder_foto_path": "/home/fede/Desktop/Proyecto/Fooocus/inmuebles/lotes/chacra-canuelas-5ha/inputs/lote_baldio.jpg"
+  }
+}

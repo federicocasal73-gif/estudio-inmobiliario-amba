@@ -1,0 +1,177 @@
+{
+  "tema": "Construcciones Pampeanas · Servicios",
+  "tipo": "servicios",
+  "municipio": "Cañuelas",
+  "tono": "premium",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "portada",
+      "descripcion": "Portada: ¿Qué hace Construcciones Pampeanas?",
+      "prompt": "modern construction company logo wall, Construcciones Pampeanas, construction equipment background, professional photography, Buenos Aires Argentina, blue hour, corporate branding",
+      "texto_overlay": "¿Qué hace Construcciones Pampeanas?\nDel plano a la llave",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "empresa": "Construcciones Pampeanas"
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 1: Diseño arquitectónico",
+      "prompt": "architect working on blueprints at desk, modern studio, renders on screen, professional photography",
+      "texto_overlay": "1. Diseño arquitectónico",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Diseño arquitectónico",
+        "orden": 1
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 2: Movimiento de suelo y topografía",
+      "prompt": "heavy machinery doing earthworks, bulldozer, retroexcavadora, professional construction photography, dust, golden hour",
+      "texto_overlay": "2. Movimiento de suelo y topografía",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Movimiento de suelo y topografía",
+        "orden": 2
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 3: Obra gruesa y estructura",
+      "prompt": "residential concrete structure construction, brick walls rising, rebar, scaffolding, professional construction photography",
+      "texto_overlay": "3. Obra gruesa y estructura",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Obra gruesa y estructura",
+        "orden": 3
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 4: Construcción en seco · Steel Frame",
+      "prompt": "steel frame house under construction, metal structure, panels, modern construction method, professional photography",
+      "texto_overlay": "4. Construcción en seco · Steel Frame",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Construcción en seco · Steel Frame",
+        "orden": 4
+      }
+    },
+    {
+      "numero": 6,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 5: Terminaciones e instalaciones",
+      "prompt": "luxury interior finishing work, drywall, painting, high-end details, professional photography",
+      "texto_overlay": "5. Terminaciones e instalaciones",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Terminaciones e instalaciones",
+        "orden": 5
+      }
+    },
+    {
+      "numero": 7,
+      "tipo": "beneficio",
+      "descripcion": "Servicio 6: Llave en mano",
+      "prompt": "beautiful finished country house with family at entrance, keys handoff moment, sunset, professional photography",
+      "texto_overlay": "6. Llave en mano",
+      "aspect_ratio": "896*1152",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "servicio": "Llave en mano",
+        "orden": 6
+      }
+    },
+    {
+      "numero": 8,
+      "tipo": "cta",
+      "descripcion": "Slide final: cómo empezar tu proyecto",
+      "prompt": "",
+      "texto_overlay": "¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 Cañuelas, Buenos Aires",
+      "aspect_ratio": "896*1152",
+      "styles": [],
+      "metadata": {
+        "requiere_foto_real": false,
+        "tipo": "cta"
+      }
+    }
+  ],
+  "caption_narrativo": "✨ Construcciones Pampeanas · qué hacemos\n\nLas cosas que importan, en 8 slides. Y esto es lo que más nos gusta →\n\nSlide 1: ¿Qué hace Construcciones Pampeanas?\nDel plano a la llave\n\nLo que viene →\n\nSlide 2: 1. Diseño arquitectónico\n\nDeslizá →\n\nSlide 3: 2. Movimiento de suelo y topografía\n\nMirá esto →\n\nSlide 4: 3. Obra gruesa y estructura\n\nPero esperá, hay más →\n\nSlide 5: 4. Construcción en seco · Steel Frame\n\nSeguimos →\n\nSlide 6: 5. Terminaciones e instalaciones\n\nSeguimos →\n\nSlide 7: 6. Llave en mano\n\nDeslizá →\n\nSlide 8: ¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 Cañuelas, Buenos Aires\n\n📍 Cañuelas, Buenos Aires\n\nEscribinos al DM, te contamos.",
+  "hashtags": [
+    "#casasbonitas",
+    "#campos",
+    "#movimientodesuelo",
+    "#dreamhome",
+    "#arquitectura",
+    "#obracivil",
+    "#constructoradeconfianza",
+    "#canuelasinmobiliaria",
+    "#casasencanuelas",
+    "#casasmodernas",
+    "#topografia",
+    "#hectareas",
+    "#diseño",
+    "#lotes",
+    "#bienesraices",
+    "#casapropia",
+    "#chacrasencanuelas",
+    "#ingenieria",
+    "#terrenos",
+    "#casasllaveenmano"
+  ],
+  "fecha_creacion": "2026-07-10T16:26:05",
+  "metadata": {
+    "empresa": "Construcciones Pampeanas",
+    "servicios": [
+      "Diseño arquitectónico",
+      "Movimiento de suelo y topografía",
+      "Obra gruesa y estructura",
+      "Construcción en seco · Steel Frame",
+      "Terminaciones e instalaciones",
+      "Llave en mano"
+    ],
+    "n_slides": 8
+  },
+  "n_slides": 8,
+  "caption_completo": "✨ Construcciones Pampeanas · qué hacemos\n\nLas cosas que importan, en 8 slides. Y esto es lo que más nos gusta →\n\nSlide 1: ¿Qué hace Construcciones Pampeanas?\nDel plano a la llave\n\nLo que viene →\n\nSlide 2: 1. Diseño arquitectónico\n\nDeslizá →\n\nSlide 3: 2. Movimiento de suelo y topografía\n\nMirá esto →\n\nSlide 4: 3. Obra gruesa y estructura\n\nPero esperá, hay más →\n\nSlide 5: 4. Construcción en seco · Steel Frame\n\nSeguimos →\n\nSlide 6: 5. Terminaciones e instalaciones\n\nSeguimos →\n\nSlide 7: 6. Llave en mano\n\nDeslizá →\n\nSlide 8: ¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 Cañuelas, Buenos Aires\n\n📍 Cañuelas, Buenos Aires\n\nEscribinos al DM, te contamos.\n\n#casasbonitas #campos #movimientodesuelo #dreamhome #arquitectura #obracivil #constructoradeconfianza #canuelasinmobiliaria #casasencanuelas #casasmodernas #topografia #hectareas #diseño #lotes #bienesraices #casapropia #chacrasencanuelas #ingenieria #terrenos #casasllaveenmano"
+}

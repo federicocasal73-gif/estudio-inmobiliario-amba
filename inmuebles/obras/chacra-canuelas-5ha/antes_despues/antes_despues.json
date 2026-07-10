@@ -1,0 +1,147 @@
+{
+  "nombre_obra": "chacra-canuelas-5ha",
+  "municipio": "Cañuelas",
+  "proyecto": "chacra-canuelas-5ha",
+  "modo": "ia",
+  "estilo_casa": "casa de campo tradicional con galería",
+  "hectareas": 5,
+  "foto_antes_path": "/home/fede/Desktop/Proyecto/Fooocus/inmuebles/lotes/chacra-canuelas-5ha/inputs/lote_baldio.jpg",
+  "foto_despues_path": null,
+  "cliente": "Familia Pérez",
+  "fecha_inicio": null,
+  "fecha_entrega": null,
+  "tiempo_construccion_meses": 8,
+  "prompt_despues": "architectural rendering of casa de campo tradicional con galería on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+  "instrucciones_img2img": [
+    "1. Subir foto del antes a Midjourney/DALL-E/Flux: inmuebles/lotes/chacra-canuelas-5ha/inputs/lote_baldio.jpg",
+    "2. Usar modo img2img / image variation / image edit",
+    "3. Prompt recomendado (variante del que genera el estudio):",
+    "   'architectural rendering of a country house on this lot, traditional Argentine style, golden hour, photorealistic, preserve the same camera angle and horizon'",
+    "4. Strength 0.45-0.60 para que mantenga la composición del lote",
+    "5. Iterar 3-4 veces, elegir el que mejor conserve la tranquera / alambrados / horizonte",
+    "6. (Opcional) Pasar el resultado por el módulo de mejora de fotos para sharpening y color grading"
+  ],
+  "carrusel": {
+    "tema": "Antes/Después: chacra-canuelas-5ha",
+    "tipo": "antes_despues",
+    "municipio": "Cañuelas",
+    "tono": "emotivo",
+    "slides": [
+      {
+        "numero": 1,
+        "tipo": "portada",
+        "descripcion": "Portada: chacra-canuelas-5ha",
+        "prompt": "",
+        "texto_overlay": "Familia Pérez\nAntes · Después",
+        "aspect_ratio": "896*1152",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance"
+        ],
+        "metadata": {
+          "requiere_foto_real": false,
+          "tipo": "portada"
+        }
+      },
+      {
+        "numero": 2,
+        "tipo": "placeholder_foto",
+        "descripcion": "Foto del antes: lote baldío / obra temprana",
+        "prompt": "",
+        "texto_overlay": "Esto era antes",
+        "aspect_ratio": "896*1152",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance"
+        ],
+        "metadata": {
+          "requiere_foto_real": true,
+          "placeholder_foto_path": "/home/fede/Desktop/Proyecto/Fooocus/inmuebles/lotes/chacra-canuelas-5ha/inputs/lote_baldio.jpg"
+        }
+      },
+      {
+        "numero": 3,
+        "tipo": "beneficio",
+        "descripcion": "Render del proyecto terminado (prompt para img2img)",
+        "prompt": "architectural rendering of casa de campo tradicional con galería on 5 hectares pampas lot in Cañuelas, Buenos Aires province, photorealistic visualization, golden hour, dramatic sky",
+        "texto_overlay": "Y esto es lo que viene",
+        "aspect_ratio": "896*1152",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance"
+        ],
+        "metadata": {
+          "requiere_foto_real": false,
+          "tipo_prompt": "render_despues",
+          "workflow": "img2img con foto del antes"
+        }
+      },
+      {
+        "numero": 4,
+        "tipo": "dato",
+        "descripcion": "Tiempo y proceso",
+        "prompt": "",
+        "texto_overlay": "⏱ 8 meses de obra",
+        "aspect_ratio": "896*1152",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance"
+        ],
+        "metadata": {
+          "requiere_foto_real": false,
+          "tipo": "dato",
+          "fecha_inicio": null,
+          "fecha_entrega": null,
+          "meses": 8
+        }
+      },
+      {
+        "numero": 5,
+        "tipo": "cta",
+        "descripcion": "Slide final: contacto",
+        "prompt": "",
+        "texto_overlay": "¿Arrancamos tu proyecto?\nDM o link en bio",
+        "aspect_ratio": "896*1152",
+        "styles": [
+          "Fooocus V2",
+          "Fooocus Enhance"
+        ],
+        "metadata": {
+          "requiere_foto_real": false,
+          "tipo": "cta"
+        }
+      }
+    ],
+    "n_slides": 5
+  },
+  "caption_narrativo": "🌱 Antes era un lote baldío en Cañuelas.\n\nDespués puede ser lo que vos quieras construir.\n\nTe acompañamos de punta a punta: diseño, movimiento de suelo, obra gruesa, terminaciones, llave en mano. 5 ha en una zona que va a explotar.\n\nDeslizá para ver el proyecto conceptual ↓\n\n📍 Cañuelas, Buenos Aires",
+  "hashtags": [
+    "#inversioninmobiliaria",
+    "#casasllaveenmano",
+    "#casasbonitas",
+    "#steelframe",
+    "#topografia",
+    "#chacras",
+    "#casas",
+    "#interiores",
+    "#decoracion",
+    "#inmuebles",
+    "#realestatecanuelas",
+    "#movimientodesuelo",
+    "#realestateargentina",
+    "#casasencanuelas",
+    "#inversion",
+    "#casarural",
+    "#lotesenventa",
+    "#patrimonio",
+    "#diseño",
+    "#casasminimalistas"
+  ],
+  "caption_completo": "🌱 Antes era un lote baldío en Cañuelas.\n\nDespués puede ser lo que vos quieras construir.\n\nTe acompañamos de punta a punta: diseño, movimiento de suelo, obra gruesa, terminaciones, llave en mano. 5 ha en una zona que va a explotar.\n\nDeslizá para ver el proyecto conceptual ↓\n\n📍 Cañuelas, Buenos Aires\n\n#inversioninmobiliaria #casasllaveenmano #casasbonitas #steelframe #topografia #chacras #casas #interiores #decoracion #inmuebles #realestatecanuelas #movimientodesuelo #realestateargentina #casasencanuelas #inversion #casarural #lotesenventa #patrimonio #diseño #casasminimalistas",
+  "metadata": {
+    "modo": "ia",
+    "tiene_foto_despues_real": false,
+    "requiere_generar_despues": true
+  },
+  "fecha_creacion": "2026-07-10T16:57:51"
+}

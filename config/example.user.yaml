@@ -1,0 +1,37 @@
+# Plantilla de configuracion del USUARIO.
+#
+# COMO USAR:
+#   1. Copiar este archivo a config/user.yaml (NO se commitea)
+#   2. Editar config/user.yaml con tus valores
+#   3. El usuario tiene prioridad sobre default/dev/production
+#
+# EJEMPLO:
+#   studio:
+#     debug: true
+#   instagram:
+#     enabled: true
+#     default_mode: "dry-run"
+
+studio:
+  debug: false
+
+# Tu zona horaria (default: "America/Buenos_Aires")
+# timezone: "America/Mexico_City"
+
+# Si queres logs en archivo, descomenta:
+# logging:
+#   file: "logs/mi-estudio.log"
+
+# Si queres que tus municipios custom no se validen estricto:
+# validators:
+#   strict_municipio: false
+
+# Tu cuenta de Instagram si vas a publicar de verdad:
+# instagram:
+#   enabled: true
+#   default_mode: "real"
+
+# Si tenes tu propio Fooocus en otra IP/puerto:
+# image_generator:
+#   backend: "fooocus"
+#   fooocus_url: "http://192.168.1.50:7865"

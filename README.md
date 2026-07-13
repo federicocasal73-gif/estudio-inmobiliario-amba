@@ -5,6 +5,8 @@
 [![Pillow](https://img.shields.io/badge/Pillow-required-green.svg)](https://python-pillow.org/)
 [![Fooocus](https://img.shields.io/badge/Fooocus-optional-orange.svg)](https://github.com/lllyasviel/Fooocus)
 [![gradio-client](https://img.shields.io/badge/gradio--client-optional-orange.svg)](https://gradio.app/)
+[![Tests](https://img.shields.io/badge/tests-97%20passed-brightgreen.svg)](tests/)
+[![Coverage](https://img.shields.io/badge/coverage-25%25-yellow.svg)](tests/)
 [![Argentina](https://img.shields.io/badge/Argentina-AMBBA-blue.svg)](https://github.com/)
 [![Vertical: real estate](https://img.shields.io/badge/vertical-real%20estate-lightgrey.svg)]()
 [![Vertical: rural](https://img.shields.io/badge/vertical-rural-lightgrey.svg)]()

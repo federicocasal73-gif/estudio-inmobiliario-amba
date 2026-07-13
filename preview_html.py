@@ -28,11 +28,10 @@ y se pueden abrir directamente con doble-click en el navegador.
 from __future__ import annotations
 
 import html
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent
 
@@ -568,8 +567,8 @@ def _color_para_pla(idx: int) -> tuple[str, str]:
 
 def demo() -> None:
     """Demo: genera preview de un carrusel."""
-    from realestate_studio import RealestateStudio
     from carruseles import CarruselFactory
+    from realestate_studio import RealestateStudio
 
     studio = RealestateStudio()
     factory = CarruselFactory(studio)

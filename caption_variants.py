@@ -24,11 +24,10 @@ Uso:
 from __future__ import annotations
 
 import json
-import random
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from realestate_studio import RealestateStudio
@@ -56,7 +55,7 @@ class VarianteCaption:
 class CaptionVariants:
     """Genera N variantes de un mismo post."""
 
-    def __init__(self, studio: "RealestateStudio"):
+    def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
     def generar(self, tipo: str, n: int = 3,
@@ -192,9 +191,9 @@ class CaptionVariants:
             "",
         ]
         for v in variantes:
-            lineas.append(f"=" * 60)
+            lineas.append("=" * 60)
             lineas.append(f"VARIANTE {v.variante_id} (tono: {v.tono})")
-            lineas.append(f"=" * 60)
+            lineas.append("=" * 60)
             lineas.append(v.caption_completo)
             lineas.append("")
         txt_path.write_text("\n".join(lineas), encoding="utf-8")

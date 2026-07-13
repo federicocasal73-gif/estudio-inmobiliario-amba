@@ -6,6 +6,10 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Skills de autoskills (solo local, no en SaaS comercial)
+.agents/
+skills-lock.json
+
 # Secrets y credenciales (CRITICO)
 auth.json
 *.token

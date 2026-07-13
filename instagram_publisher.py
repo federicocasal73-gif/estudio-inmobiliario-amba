@@ -33,8 +33,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from instagram_auth import InstagramAuth
 from cloudinary_upload import CloudinaryUploader
+from instagram_auth import InstagramAuth
 
 GRAPH_API_VERSION = "v19.0"
 GRAPH_API_BASE = f"https://graph.facebook.com/{GRAPH_API_VERSION}"

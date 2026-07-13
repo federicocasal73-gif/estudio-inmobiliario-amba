@@ -78,7 +78,7 @@ class CloudinaryUploader:
         # Construir firma
         params_to_sign = f"folder={carpeta}&public_id={public_id}&timestamp={timestamp}"
         signature = hashlib.sha1(
-            f"{params_to_sign}{self.api_secret}".encode("utf-8")
+            f"{params_to_sign}{self.api_secret}".encode()
         ).hexdigest()
 
         # Construir body multipart

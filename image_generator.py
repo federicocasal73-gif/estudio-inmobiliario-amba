@@ -336,8 +336,8 @@ def get_generator(prefer_real: bool = True) -> ImageGenerator:
 def demo() -> None:
     gen = get_generator()
     print("=" * 60)
-    print(f"IMAGE GENERATOR - Demo")
-    print(f"=" * 60)
+    print("IMAGE GENERATOR - Demo")
+    print("=" * 60)
     print(f"Clase: {type(gen).__name__}")
     print(f"Fooocus URL: {gen.fooocus_url}")
     print(f"Fooocus disponible: {gen.fooocus_disponible}")
@@ -351,17 +351,17 @@ def demo() -> None:
         output_path=Path("/tmp/test_generated.jpg"),
     )
 
-    print(f"--- Resultado ---")
+    print("--- Resultado ---")
     print(f"Stub: {resultado.stub}")
     print(f"Output esperado: {resultado.output_path}")
     if resultado.exito if hasattr(resultado, 'exito') else True:
         print(f"Imagen: {resultado.output_path}")
-    print(f"Mensaje (primeras lineas):")
+    print("Mensaje (primeras lineas):")
     for linea in resultado.mensaje.split("\n")[:6]:
         print(f"  {linea}")
 
     print()
-    print(f"--- Factory get_generator() ---")
+    print("--- Factory get_generator() ---")
     g = get_generator()
     print(f"Tipo: {type(g).__name__}")
     print(f"Real disponible: {not isinstance(g, StubImageGenerator)}")

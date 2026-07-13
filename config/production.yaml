@@ -1,0 +1,25 @@
+# Overrides para produccion (despliegue cloud / SaaS comercial).
+
+studio:
+  debug: false
+
+logging:
+  level: "WARNING"            # solo errores en prod por default
+  format: "json"              # parseable por herramientas externas
+  file: "logs/prod.log"
+
+image_generator:
+  backend: "auto"
+  retry_attempts: 5
+  retry_backoff_seconds: 10
+
+calendar:
+  posts_per_week: 7           # maximo en prod
+
+instagram:
+  enabled: true
+  default_mode: "real"        # en prod publicamos de verdad
+  rate_limit:
+    max_posts_per_day: 20      # dejar margen
+    max_carousels_per_day: 4
+    delay_between_posts_seconds: 600  # 10 min entre posts

@@ -1,0 +1,173 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "estudio-inmobiliario-amba"
+version = "0.1.0"
+description = "Sistema completo para crear contenido de Instagram inmobiliario rural (lotes, chacras, construccion) en Argentina AMBA."
+readme = "MANUAL.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Estudio Inmobiliario AMBA" },
+]
+keywords = [
+    "instagram",
+    "real-estate",
+    "argentina",
+    "inmobiliaria",
+    "content-generation",
+    "stable-diffusion",
+    "sdxl",
+    "fooocus",
+    "social-media",
+    "automation",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Office/Business",
+]
+
+dependencies = [
+    "Pillow>=10.0.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+fooocus = [
+    "gradio-client>=2.0.0",
+]
+instagram = [
+    # Sin deps externas extra (urllib + json de stdlib)
+]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "freezegun>=1.5.0",
+    "ruff>=0.6.0",
+]
+
+[project.urls]
+"Documentation" = "https://github.com/federicocasal73-gif/estudio-inmobiliario-amba/blob/main/MANUAL.md"
+"Source" = "https://github.com/federicocasal73-gif/estudio-inmobiliario-amba"
+"Bug Tracker" = "https://github.com/federicocasal73-gif/estudio-inmobiliario-amba/issues"
+
+# Entry points de scripts ejecutables (consistente con `python3 studio.py` etc)
+[project.scripts]
+estudio = "studio:main"
+studio-carousel = "carruseles:main"
+studio-calendario = "calendario_editorial:main"
+studio-mejora = "mejora_fotos:main"
+studio-antes-despues = "antes_despues:main"
+studio-validators = "validators:main"
+
+[tool.setuptools]
+packages = [
+    "studio",
+    "carruseles",
+    "calendario_editorial",
+    "antes_despues",
+    "mejora_fotos",
+    "validators",
+    "image_generator",
+    "preview_html",
+    "caption_variants",
+    "historial_publicaciones",
+    "instagram_auth",
+    "instagram_publisher",
+    "cloudinary_upload",
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.json", "*.yaml", "*.yml"]
+
+# Configuracion de pytest
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--showlocals",
+    "--tb=short",
+    "--cov=.",  # coverage de todo el codigo fuente del repo
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml:coverage.xml",
+    "--cov-fail-under=20",
+]
+markers = [
+    "slow: marca tests que tardan mas de 1 segundo",
+    "integration: marca tests que requieren servicios externos (Fooocus, IG, Cloudinary)",
+    "unit: marca tests unitarios puros",
+]
+filterwarnings = [
+    "error",  # trata warnings como errores en tests
+    "ignore::DeprecationWarning:gradio_client",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    "manual/*",
+    "**/__pycache__/*",
+    "**/test_*.py",
+    "**/*.json",
+    "**/*.md",
+    "**/*.yaml",
+]
+
+# Configuracion de ruff
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = [
+    "__pycache__",
+    ".git",
+    "build",
+    "dist",
+    "htmlcov",
+    "manual",
+    "inmuebles",
+    "tests/fixtures",
+]
+
+[tool.ruff.lint]
+# E: pycodestyle errors
+# W: pycodestyle warnings
+# F: pyflakes
+# I: isort
+# B: flake8-bugbear
+# C4: flake8-comprehensions
+# UP: pyupgrade
+select = ["E", "W", "F", "I", "B", "C4", "UP"]
+ignore = [
+    "E501",  # line-too-long (ya manejado por line-length)
+    "B008",  # function call in default argument (comun en dataclasses)
+    "E402",  # module level import not at top (necesario para compatibilidad)
+    "F401",  # imported but unused (TODO limpiar)
+    "E722",  # bare except (TODO limpiar)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["E402"]  # imports flexibles en tests
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

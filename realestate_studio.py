@@ -22,7 +22,7 @@ import os
 import random
 import urllib.error
 import urllib.request
-from dataclasses import dataclass, asdict, field
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -987,7 +987,7 @@ class CaptionFactory:
                                     etapa_8=etapa_8, plazo_total=plazo_total)
         hashtags = self.hashtags(["construccion", "ingenieria"])
         return self._armar_post(
-            f"Etapas de una obra", "etapas_obra", "", tono,
+            "Etapas de una obra", "etapas_obra", "", tono,
             caption_text, hashtags)
 
     def post_steel_frame_vs_tradicional(self, tono: str = "educativo") -> dict[str, Any]:

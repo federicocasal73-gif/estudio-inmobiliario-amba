@@ -35,17 +35,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from realestate_studio import RealestateStudio
-from carruseles import CarruselFactory
-from calendario_editorial import CalendarioEditorial
 from antes_despues import AntesDespuesFactory
-from mejora_fotos import MejoraFotos
+from calendario_editorial import CalendarioEditorial
+from carruseles import CarruselFactory
+from historial_publicaciones import HistorialPublicaciones, RotadorProyectos
+from image_generator import ImageGenerator, get_generator
 from instagram_auth import InstagramAuth
 from instagram_publisher import InstagramPublisher, ModoPublicacion, PublicacionResultado
-from validators import validate_post, ResultadoValidacion
+from mejora_fotos import MejoraFotos
 from preview_html import PreviewHTML
-from image_generator import get_generator, ImageGenerator
-from historial_publicaciones import HistorialPublicaciones, RotadorProyectos
+from realestate_studio import RealestateStudio
+from validators import validate_post
 
 ROOT = Path(__file__).resolve().parent
 
@@ -462,7 +462,7 @@ class Studio:
         data = json.loads(ruta_carrusel.read_text(encoding="utf-8"))
 
         # Reconstruir objeto Carrusel-like para el preview
-        from carruseles import Slide, Carrusel
+        from carruseles import Carrusel, Slide
         slides = []
         for s in data.get("slides", []):
             slides.append(Slide(
@@ -559,7 +559,6 @@ class Studio:
 
     def generar_imagenes_pipeline(self, resultado: PipelineResultado) -> dict[str, Any]:
         """Genera imagenes para todos los carruseles generados en el pipeline."""
-        from carruseles import CarruselFactory
         reporte: dict[str, Any] = {
             "fooocus_disponible": not self.image_generator.stub,
             "carruseles": [],

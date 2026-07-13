@@ -1,0 +1,18 @@
+# Overrides para desarrollo local.
+# Activado cuando STUDIO_ENV=development (default si no se especifica).
+
+studio:
+  debug: true
+
+logging:
+  level: "DEBUG"
+  format: "text"              # humano, con colores
+  file: "logs/dev.log"
+
+image_generator:
+  backend: "stub"             # forzar stub en dev (no consumir Fooocus local)
+  retry_attempts: 1
+
+instagram:
+  enabled: false              # en dev no publicamos a IG
+  default_mode: "dry-run"

@@ -27,7 +27,7 @@ def run(cmd: str, cwd: Path = ROOT) -> tuple[int, str, str]:
 def check_git() -> bool:
     rc, out, err = run("git status")
     if rc != 0:
-        print(f"ERROR: este directorio no es un repo git. cd al directorio del estudio.")
+        print("ERROR: este directorio no es un repo git. cd al directorio del estudio.")
         return False
     print("OK: es un repo git valido")
     return True
@@ -88,14 +88,14 @@ def main() -> int:
         print("2. Copiar la URL del repo (HTTPS o SSH)")
         print()
         print("3. Ejecutar este script con la URL:")
-        print(f"   python setup_git_remote.py --url https://github.com/TU_USUARIO/estudio-inmobiliario-amba.git")
+        print("   python setup_git_remote.py --url https://github.com/TU_USUARIO/estudio-inmobiliario-amba.git")
         print()
         print("Alternativa con SSH:")
-        print(f"   python setup_git_remote.py --url git@github.com:TU_USUARIO/estudio-inmobiliario-amba.git")
+        print("   python setup_git_remote.py --url git@github.com:TU_USUARIO/estudio-inmobiliario-amba.git")
         print()
         print("O manualmente:")
-        print(f"   git remote add origin URL")
-        print(f"   git push -u origin main")
+        print("   git remote add origin URL")
+        print("   git push -u origin main")
         return 0
 
     if not add_remote(url):

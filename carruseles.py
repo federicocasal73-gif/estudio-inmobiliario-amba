@@ -21,11 +21,10 @@ from __future__ import annotations
 
 import json
 import random
-import shutil
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from realestate_studio import RealestateStudio
@@ -152,7 +151,7 @@ class CaptionNarrativo:
 class CarruselFactory:
     """Factory de los 4 tipos principales de carrusel."""
 
-    def __init__(self, studio: "RealestateStudio"):
+    def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
     # ---------------- 1) LOTE PREMIUM ----------------
@@ -553,28 +552,28 @@ class CarruselFactory:
         # Slides de servicios (1 por servicio)
         prompts_servicios = {
             "Diseño arquitectónico": (
-                f"architect working on blueprints at desk, modern studio, "
-                f"renders on screen, professional photography"
+                "architect working on blueprints at desk, modern studio, "
+                "renders on screen, professional photography"
             ),
             "Movimiento de suelo y topografía": (
-                f"heavy machinery doing earthworks, bulldozer, retroexcavadora, "
-                f"professional construction photography, dust, golden hour"
+                "heavy machinery doing earthworks, bulldozer, retroexcavadora, "
+                "professional construction photography, dust, golden hour"
             ),
             "Obra gruesa y estructura": (
-                f"residential concrete structure construction, brick walls rising, "
-                f"rebar, scaffolding, professional construction photography"
+                "residential concrete structure construction, brick walls rising, "
+                "rebar, scaffolding, professional construction photography"
             ),
             "Construcción en seco · Steel Frame": (
-                f"steel frame house under construction, metal structure, panels, "
-                f"modern construction method, professional photography"
+                "steel frame house under construction, metal structure, panels, "
+                "modern construction method, professional photography"
             ),
             "Terminaciones e instalaciones": (
-                f"luxury interior finishing work, drywall, painting, "
-                f"high-end details, professional photography"
+                "luxury interior finishing work, drywall, painting, "
+                "high-end details, professional photography"
             ),
             "Llave en mano": (
-                f"beautiful finished country house with family at entrance, "
-                f"keys handoff moment, sunset, professional photography"
+                "beautiful finished country house with family at entrance, "
+                "keys handoff moment, sunset, professional photography"
             ),
         }
 
@@ -801,16 +800,16 @@ class CarruselFactory:
             n_slides = 8
 
         etapas = [
-            ("replanteo_obra", f"Etapa 1: Replanteo", "Marcamos ejes y limites en {municipio}"),
-            ("excavacion_fundaciones", f"Etapa 2: Excavacion", "Zanjas para fundaciones"),
-            ("fundaciones_hormigon", f"Etapa 3: Fundaciones", "Hormigon visto con armadura"),
-            ("estructura_hormigon", f"Etapa 4: Estructura", "Columnas y vigas H°A°"),
-            ("mamposteria_ladrillo", f"Etapa 5: Mamposteria", "Paredes de ladrillo"),
-            ("cubierta_techo", f"Etapa 6: Cubierta", "Techo y aislacion"),
-            ("revoque_grueso", f"Etapa 7: Revoques", "Grueso y fino"),
-            ("colocacion_aberturas", f"Etapa 8: Aberturas", "Ventanas DVH"),
-            ("colocacion_pisos", f"Etapa 9: Pisos", "Porcelanato o vinilico"),
-            ("pintura_interior", f"Etapa 10: Pintura", "Interior y exterior"),
+            ("replanteo_obra", "Etapa 1: Replanteo", "Marcamos ejes y limites en {municipio}"),
+            ("excavacion_fundaciones", "Etapa 2: Excavacion", "Zanjas para fundaciones"),
+            ("fundaciones_hormigon", "Etapa 3: Fundaciones", "Hormigon visto con armadura"),
+            ("estructura_hormigon", "Etapa 4: Estructura", "Columnas y vigas H°A°"),
+            ("mamposteria_ladrillo", "Etapa 5: Mamposteria", "Paredes de ladrillo"),
+            ("cubierta_techo", "Etapa 6: Cubierta", "Techo y aislacion"),
+            ("revoque_grueso", "Etapa 7: Revoques", "Grueso y fino"),
+            ("colocacion_aberturas", "Etapa 8: Aberturas", "Ventanas DVH"),
+            ("colocacion_pisos", "Etapa 9: Pisos", "Porcelanato o vinilico"),
+            ("pintura_interior", "Etapa 10: Pintura", "Interior y exterior"),
         ]
         etapas_usar = etapas[:n_slides]
 

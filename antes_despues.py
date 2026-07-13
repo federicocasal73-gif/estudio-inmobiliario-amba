@@ -42,7 +42,7 @@ import shutil
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from realestate_studio import RealestateStudio
@@ -92,7 +92,7 @@ class AntesDespuesFactory:
         "toscana": "casa estilo toscano con piedra y tejados",
     }
 
-    def __init__(self, studio: "RealestateStudio"):
+    def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
     # ---------------- API principal ----------------
@@ -175,7 +175,7 @@ class AntesDespuesFactory:
 
     def _carrusel_antes_despues(self, ad: AntesDespues) -> dict[str, Any]:
         """Empaqueta el carrusel de 3-5 slides segun modo."""
-        from carruseles import Slide, CaptionNarrativo
+        from carruseles import Slide
         slides: list[Slide] = []
         n = 1
 

@@ -167,4 +167,4 @@ if __name__ == "__main__":
             print("✗ Token inválido o expirado")
     else:
         print("✗ auth.json no existe")
-        print(f"  Seguir instrucciones en README_PUBLICACION_IG.md")
+        print("  Seguir instrucciones en README_PUBLICACION_IG.md")

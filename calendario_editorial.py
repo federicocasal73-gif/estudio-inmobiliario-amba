@@ -26,7 +26,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from realestate_studio import RealestateStudio
@@ -146,7 +146,7 @@ class SemanaEditorial:
 class CalendarioEditorial:
     """Generador de planificacion semanal + posts completos para IG."""
 
-    def __init__(self, studio: "RealestateStudio"):
+    def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
     def generar_semana(self, semana_n: int = 1,

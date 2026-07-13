@@ -1,0 +1,58 @@
+# Configuracion por defecto del estudio.
+# Este archivo es parte del repo y NO se debe editar para uso personal.
+# Para overrides, copiar a config/user.yaml (no commiteado) o usar env vars.
+
+# Nombre y version del estudio
+studio:
+  name: "Estudio Inmobiliario AMBA"
+  version: "0.1.0"
+  debug: false
+  timezone: "America/Buenos_Aires"
+  locale: "es_AR"
+
+# Logging estructurado
+logging:
+  level: "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "json"              # json (produccion) o text (desarrollo)
+  file: null                  # null = solo stderr; "logs/estudio.log" para archivo
+  rotation: "10 MB"           # rota cuando llegue a este tamano
+  backup_count: 5
+
+# Directorios
+paths:
+  inmuebles: "inmuebles"
+  outputs: "inmuebles/outputs"
+  logs: "logs"
+  cache: ".cache"
+
+# Datos (cargados al inicio del estudio, fallar si no existen)
+data:
+  prompts_file: "prompts_inmobiliarios.json"
+  captions_file: "captions_instagram.json"
+
+# Generacion de imagenes
+image_generator:
+  backend: "auto"             # "auto" detecta Fooocus y usa real si esta disponible; "stub" fuerza stub; "fooocus" fuerza real
+  fooocus_url: "http://127.0.0.1:7865"
+  fooocus_timeout_seconds: 600
+  cache_results: true         # evitar regenerar mismo prompt
+  retry_attempts: 3
+  retry_backoff_seconds: 5
+
+# Calendario editorial
+calendar:
+  posts_per_week: 5           # 1-7
+  distribute_by_day: true     # respeta el dia optimo por tipo de post
+  rotate_projects: true       # usa historial_publicaciones para rotar
+  include_date_keys: true     # incluye fechas clave argentinas
+
+# Publicacion Instagram
+instagram:
+  enabled: false              # true requiere auth.json + Cloudinary configurados
+  default_mode: "dry-run"     # "dry-run" | "interactivo" | "real"
+  rate_limit:
+    max_posts_per_day: 25
+    max_carousels_per_day: 5
+    delay_between_posts_seconds: 300
+  cloudinary:
+    folder: "estudio-inmobiliario-amba"

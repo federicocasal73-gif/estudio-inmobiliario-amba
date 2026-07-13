@@ -1,0 +1,11 @@
+# CODEOWNERS para estudio-inmobiliario-amba
+#
+# Cuando alguien abre un PR, GitHub asigna automaticamente los reviewers
+# segun las reglas de aca. Cambiar @tu-usuario por tu usuario real.
+
+# Por defecto, el dueno del repo aprueba todo
+* @federicocasal73-gif
+
+# Cuando agregues colaboradores:
+# /api/        @federicocasal73-gif @colaborador-backend
+# /integraciones/  @federicocasal73-gif @colaborador-backup

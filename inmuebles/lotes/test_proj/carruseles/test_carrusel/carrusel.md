@@ -4,7 +4,7 @@
 **Municipio:** Cañuelas  
 **Tono:** emotivo  
 **Slides:** 5  
-**Fecha:** 2026-07-15T10:13:27  
+**Fecha:** 2026-07-15T10:15:21  
 
 ## Slides
 
@@ -59,7 +59,7 @@ DM o link en bio`
 ```
 🌾 test
 
-Una historia en 5 imágenes. Seguimos →
+Una historia en 5 imágenes. Mirá esto →
 
 Slide 1: 5 ha · Cañuelas
 
@@ -67,34 +67,34 @@ Mirá esto →
 
 Slide 2: Vista aérea · 360° de horizonte pampeano
 
-Deslizá →
+Y esto es lo que más nos gusta →
 
 Slide 3: Tu próxima tranquera · ingreso sobre calle mejorada
 
-Deslizá →
+Ahora esto →
 
 Slide 4: Agua propia · molino + tanque australiano
 
-Mirá esto →
+Y esto es lo que más nos gusta →
 
 Slide 5: ¿Lo vemos?
 DM o link en bio
 
 📍 Cañuelas, Buenos Aires
 
-Te esperamos.
+Link en bio para más info.
 ```
 
 ## Hashtags
 
-#inversionagro #inversioninmobiliaria #inmobiliariacanuelas #inmuebles #canuelasrealestate #terrenos #inversiones #chacrasencanuelas #camposenventa #rendimientoinmobiliario #tierrasenventa #patrimonio #inmobiliaria #ganaderia #estancia #bienesraices #lotesencanuelas #tierracomoinversion #invertirenlotes #chacras
+#canuelas #tierrabuena #chacras #inversion #lotesencanuelas #campo #realestatecanuelas #canuelasrealestate #patrimonio #bienesraices #hectareas #chacra #inversioninmobiliaria #inversiones #inversionagro #patrimonio #invertirenlotes #estancia #inmobiliaria #negociosinmobiliarios
 
 ## Caption completo para IG
 
 ```
 🌾 test
 
-Una historia en 5 imágenes. Seguimos →
+Una historia en 5 imágenes. Mirá esto →
 
 Slide 1: 5 ha · Cañuelas
 
@@ -102,22 +102,22 @@ Mirá esto →
 
 Slide 2: Vista aérea · 360° de horizonte pampeano
 
-Deslizá →
+Y esto es lo que más nos gusta →
 
 Slide 3: Tu próxima tranquera · ingreso sobre calle mejorada
 
-Deslizá →
+Ahora esto →
 
 Slide 4: Agua propia · molino + tanque australiano
 
-Mirá esto →
+Y esto es lo que más nos gusta →
 
 Slide 5: ¿Lo vemos?
 DM o link en bio
 
 📍 Cañuelas, Buenos Aires
 
-Te esperamos.
+Link en bio para más info.
 
-#inversionagro #inversioninmobiliaria #inmobiliariacanuelas #inmuebles #canuelasrealestate #terrenos #inversiones #chacrasencanuelas #camposenventa #rendimientoinmobiliario #tierrasenventa #patrimonio #inmobiliaria #ganaderia #estancia #bienesraices #lotesencanuelas #tierracomoinversion #invertirenlotes #chacras
+#canuelas #tierrabuena #chacras #inversion #lotesencanuelas #campo #realestatecanuelas #canuelasrealestate #patrimonio #bienesraices #hectareas #chacra #inversioninmobiliaria #inversiones #inversionagro #patrimonio #invertirenlotes #estancia #inmobiliaria #negociosinmobiliarios
 ```

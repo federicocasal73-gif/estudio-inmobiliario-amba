@@ -8,20 +8,16 @@ htmlcov/
 
 # Cache de generacion de imagenes (regenerable, no se commitea)
 .cache/
-
 # Skills de autoskills (solo local, no en SaaS comercial)
 .agents/
 skills-lock.json
-
 # Secrets y credenciales (CRITICO)
 auth.json
 *.token
 .env
 .env.local
-
 # Backups de auth
 auth_instagram_example.json.bak
-
 # Outputs generados pesados
 inmuebles/_test_*/
 inmuebles/_generados_ia/
@@ -33,12 +29,10 @@ inmuebles/_historial_publicaciones.json
 *.webp
 *.mp4
 *.mov
-
 # Excepciones: queremos los JSON y MD generados
 !inmuebles/**/*.json
 !inmuebles/**/*.md
 !inmuebles/**/*.txt
-
 # Pip / Poetry
 *.egg-info/
 build/
@@ -46,7 +40,6 @@ dist/
 .venv/
 venv/
 env/
-
 # Editors / IDEs
 .vscode/
 .idea/
@@ -56,26 +49,17 @@ env/
 *~
 *.bak
 *.tmp
-
 # Logs
 *.log
 logs/
-
 # Testing
 .tox/
 .nox/
-.pytest_cache/
-htmlcov/
-.coverage
 coverage.xml
-
 # OS
 Thumbs.db
-.DS_Store
-
 # Jupyter (si lo usamos)
 .ipynb_checkpoints/
-
 # Fooocus original (no commiteamos, es dependencia externa)
 fooocus_venv/
 fooocus_env/
@@ -106,12 +90,12 @@ notification.mp3
 Dockerfile
 docker-compose.yml
 entrypoint.sh
-.env
 ui-config.json
 webui.settings.bat
 webui.settings.sh
 webui-user.bat
 webui-user.sh
-update_log.md
 *.bat
 *.sh
+inmuebles/lotes/test_proj/
+inmuebles/lotes/_test_proj/

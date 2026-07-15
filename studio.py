@@ -50,6 +50,15 @@ from generation_pipeline import (
     RetryPolicy,
     estimate_time,
 )
+from publishing import (
+    DMTemplates,
+    InstagramInsightsClient,
+    Monitor,
+    PostInsights,
+    ScheduledPost,
+    Scheduler,
+    procesar_programadas,
+)
 from mejora_fotos import MejoraFotos
 from preview_html import PreviewHTML
 from realestate_studio import RealestateStudio
@@ -698,6 +707,131 @@ class Studio:
         return resultados
 
 
+# ==================== HELPERS DE PUBLICACION (Fase 3) ====================
+
+def _programar_publicacion(args: Any) -> None:
+    """Programa una publicacion para fecha futura."""
+    from datetime import datetime
+
+    scheduler = Scheduler()
+    carrusel_path = Path(args.carrusel)
+    if not carrusel_path.exists():
+        print(f"ERROR: No existe {carrusel_path}")
+        return
+
+    # Si no se pasa caption/hashtags custom, los lee del carrusel.json
+    caption = args.caption
+    hashtags = args.hashtags
+    if caption is None or hashtags is None:
+        data = json.loads(carrusel_path.read_text(encoding="utf-8"))
+        if caption is None:
+            caption = data.get("caption_narrativo", "")
+        if hashtags is None:
+            hashtags = data.get("hashtags", [])
+
+    # Validar formato de fecha
+    try:
+        fecha = datetime.fromisoformat(args.scheduled_at)
+    except ValueError:
+        print(f"ERROR: scheduled-at '{args.scheduled_at}' no es ISO 8601 valido")
+        print("       Ejemplo: 2026-07-20T19:00:00")
+        return
+
+    scheduler.programar(
+        id=args.id,
+        carrusel_path=str(carrusel_path.resolve()),
+        caption=caption,
+        hashtags=hashtags,
+        scheduled_at=fecha,
+        mode=args.mode,
+    )
+    print(f"Programado: {args.id}")
+    print(f"  Carrusel: {carrusel_path}")
+    print(f"  Fecha: {fecha.isoformat()}")
+    print(f"  Modo: {args.mode}")
+    stats = scheduler.stats()
+    print(f"\nScheduler total: {stats}")
+
+
+def _procesar_programadas_cli(args: Any) -> None:
+    """Procesa items pendientes y las publica."""
+    scheduler = Scheduler()
+    items_pre = scheduler.pendientes_a_procesar()
+    print(f"Items pendientes a procesar: {len(items_pre)}")
+    for it in items_pre[:10]:  # mostrar primeros 10
+        print(f"  - {it.id} ({it.scheduled_at}): {Path(it.carrusel_path).name}")
+
+    if not items_pre:
+        return
+
+    resultados = procesar_programadas(scheduler)
+    print(f"\nResultado: {resultados['publicados']} publicados, "
+          f"{resultados['errores']} errores, "
+          f"de {resultados['procesados']} procesados")
+
+
+def _listar_publicaciones(args: Any) -> None:
+    """Lista publicaciones programadas."""
+    scheduler = Scheduler()
+
+    if args.cancel:
+        if scheduler.cancelar(args.cancel):
+            print(f"Cancelada: {args.cancel}")
+        else:
+            print(f"No encontrada: {args.cancel}")
+        return
+
+    items = scheduler.listar(status=args.status)
+    if not items:
+        print("Sin publicaciones programadas.")
+        return
+
+    print(f"{len(items)} publicaciones:")
+    for it in items:
+        marca = "🎉" if it.status == "published" else "⏰" if it.status == "pending" else "❌"
+        print(f"  {marca} [{it.status:10}] {it.id} → {it.scheduled_at}")
+
+
+def _generar_reporte_semanal(args: Any) -> None:
+    """Genera reporte semanal de insights."""
+    monitor = Monitor()
+    if args.fetch:
+        # Intentar conectar con IG si esta configurado
+        try:
+            from instagram_auth import InstagramAuth
+            auth = InstagramAuth()
+            if auth.configurado() and auth.data:
+                monitor.set_client(InstagramInsightsClient(
+                    access_token=auth.data.access_token,
+                    instagram_user_id=auth.data.instagram_user_id,
+                ))
+        except Exception as e:
+            print(f"No pude conectar con IG, usando cache local: {e}")
+
+    report = monitor.weekly_report(days=args.days)
+    md = monitor.render_markdown(report)
+    if args.output:
+        Path(args.output).write_text(md, encoding="utf-8")
+        print(f"Reporte guardado en: {args.output}")
+    else:
+        print(md)
+
+
+def _responder_dm_cli(args: Any) -> None:
+    """Responde un DM del cliente usando templates."""
+    import json as json_mod
+    templates = DMTemplates()
+    data = json_mod.loads(args.data) if args.data else {}
+    resultado = templates.responder(
+        cliente=args.cliente,
+        mensaje=args.mensaje,
+        data=data,
+    )
+    print(f"Template usado: {resultado['template_id'] or '(fallback)'}")
+    print(f"\nRespuesta sugerida:")
+    print(resultado["respuesta"])
+
+
 # ==================== HELPERS DE GENERACION (Fase 2) ====================
 
 
@@ -1022,6 +1156,53 @@ def cli() -> int:
         "procesar-cola", help="Procesa la cola de generacion (usa cache + retry)"
     )
 
+    # subcomando: programar
+    p_prog = sub.add_parser("programar",
+                             help="Programa una publicacion para fecha futura")
+    p_prog.add_argument("--id", required=True,
+                         help="ID unico del post (ej: 'lunes-lote-canuelas')")
+    p_prog.add_argument("--carrusel", required=True,
+                         help="Path al carrusel.json")
+    p_prog.add_argument("--caption", default=None,
+                         help="Caption custom (default: leer del carrusel)")
+    p_prog.add_argument("--hashtags", nargs="+", default=None,
+                         help="Hashtags custom (default: leer del carrusel)")
+    p_prog.add_argument("--scheduled-at", required=True,
+                         help="Fecha/hora ISO 8601 (ej: 2026-07-20T19:00:00)")
+    p_prog.add_argument("--mode", choices=["dry-run", "interactivo", "real"],
+                         default="real")
+
+    # subcomando: procesar-programadas
+    p_pprog = sub.add_parser("procesar-programadas",
+                               help="Procesa items cuya fecha ya paso")
+
+    # subcomando: publicaciones (listar)
+    p_pubs = sub.add_parser("publicaciones",
+                             help="Lista publicaciones programadas")
+    p_pubs.add_argument("--status", default=None,
+                         choices=["pending", "published", "error", "cancelled"],
+                         help="Filtrar por status")
+    p_pubs.add_argument("--cancel", metavar="ID",
+                         help="Cancelar publicacion por ID")
+
+    # subcomando: reporte-semanal
+    p_rep = sub.add_parser("reporte-semanal",
+                            help="Lee insights de IG y genera reporte")
+    p_rep.add_argument("--days", type=int, default=7,
+                        help="Periodo en dias (default 7)")
+    p_rep.add_argument("--output", default=None,
+                        help="Path de salida del .md (default: stdout)")
+    p_rep.add_argument("--fetch", action="store_true",
+                        help="Refrescar insights desde IG (no solo del cache local)")
+
+    # subcomando: responder-dm
+    p_dm = sub.add_parser("responder-dm",
+                           help="Procesa un DM del cliente y devuelve respuesta sugerida")
+    p_dm.add_argument("--cliente", required=True, help="Nombre o ID del cliente")
+    p_dm.add_argument("--mensaje", required=True, help="Mensaje del cliente")
+    p_dm.add_argument("--data", default="{}",
+                       help="Datos del template en JSON (ej: '{\"precio\": \"USD 50000\"}')")
+
     # subcomando: listar
     p_list = sub.add_parser("listar", help="Lista carruseles disponibles")
     p_list.add_argument("--proyecto", default=None, help="Filtrar por proyecto")
@@ -1131,6 +1312,21 @@ def cli() -> int:
     elif args.comando == "procesar-cola":
         resultados = _procesar_cola(studio)
         print(f"Procesados: {resultados['exitos']}/{resultados['total']} OK")
+
+    elif args.comando == "programar":
+        _programar_publicacion(args)
+
+    elif args.comando == "procesar-programadas":
+        _procesar_programadas_cli(args)
+
+    elif args.comando == "publicaciones":
+        _listar_publicaciones(args)
+
+    elif args.comando == "reporte-semanal":
+        _generar_reporte_semanal(args)
+
+    elif args.comando == "responder-dm":
+        _responder_dm_cli(args)
 
     elif args.comando == "listar":
         carruseles = studio.listar_carruseles(args.proyecto)

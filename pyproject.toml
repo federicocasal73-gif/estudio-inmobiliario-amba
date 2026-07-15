@@ -118,6 +118,7 @@ filterwarnings = [
     "error",  # trata warnings como errores en tests
     "ignore::DeprecationWarning:gradio_client",
     "ignore::PendingDeprecationWarning",
+    "ignore::ResourceWarning",
 ]
 
 [tool.coverage.run]

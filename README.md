@@ -5,9 +5,8 @@
 [![Pillow](https://img.shields.io/badge/Pillow-required-green.svg)](https://python-pillow.org/)
 [![Fooocus](https://img.shields.io/badge/Fooocus-optional-orange.svg)](https://github.com/lllyasviel/Fooocus)
 [![gradio-client](https://img.shields.io/badge/gradio--client-optional-orange.svg)](https://gradio.app/)
-[![Tests](https://img.shields.io/badge/tests-154%20passed-brightgreen.svg)](../../actions)
-[![Coverage](https://img.shields.io/badge/coverage-41%25-yellow.svg)](../../actions)
-[![Coverage](https://img.shields.io/badge/coverage-41%25-yellow.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-235%20passed-brightgreen.svg)](../../actions)
+[![Coverage](https://img.shields.io/badge/coverage-45%25-yellow.svg)](../../actions)
 [![Argentina](https://img.shields.io/badge/Argentina-AMBBA-blue.svg)](https://github.com/)
 [![Vertical: real estate](https://img.shields.io/badge/vertical-real%20estate-lightgrey.svg)]()
 [![Vertical: rural](https://img.shields.io/badge/vertical-rural-lightgrey.svg)]()
@@ -29,6 +28,10 @@ y **publicación automática en Instagram** via Graph API.
 Incluye **43 plantillas rurales pampeanas**, **24 tipos de caption**,
 **17 nichos de hashtags**, **11 tipos de carruseles**, y un manual completo
 distribuido en 11 archivos `markdown`.
+
+**Fase 4 (integraciones externas):** publicación en MercadoLibre y Zonaprop,
+notificaciones por email (leads, reportes, alertas de errores), programación
+de publicaciones con scheduler persistente, y monitoreo de métricas Instagram.
 
 ---
 

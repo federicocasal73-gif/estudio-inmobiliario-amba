@@ -56,3 +56,22 @@ instagram:
     delay_between_posts_seconds: 300
   cloudinary:
     folder: "estudio-inmobiliario-amba"
+
+# Integraciones externas (Fase 4)
+mercadolibre:
+  enabled: false              # true requiere auth.json con credenciales ML
+  default_mode: "dry-run"     # "dry-run" | "interactivo" | "real"
+  categoria_default: "terreno"  # terreno | casa | lote | chacra | campo
+  moneda_default: "USD"
+
+zonaprop:
+  enabled: false              # true requiere auth.json con credenciales ZP
+  default_mode: "dry-run"     # "dry-run" | "interactivo" | "real"
+  tipo_default: "terreno"     # terreno | casa | lote | chacra | campo
+  operacion_default: "venta"  # venta | alquiler
+
+email:
+  enabled: false              # true requiere auth.json con SMTP config
+  alertas_leads: true         # notificar leads nuevos
+  reporte_semanal: true       # enviar reporte semanal
+  alertas_errores: true       # notificar errores criticos

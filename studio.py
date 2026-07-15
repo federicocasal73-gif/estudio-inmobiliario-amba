@@ -42,6 +42,13 @@ from historial_publicaciones import HistorialPublicaciones, RotadorProyectos
 from image_generator import ImageGenerator, get_generator
 from instagram_auth import InstagramAuth
 from instagram_publisher import InstagramPublisher, ModoPublicacion, PublicacionResultado
+from generation_pipeline import (
+    BatchGenerator,
+    BatchItem,
+    ImageCache,
+    RetryPolicy,
+    estimate_time,
+)
 from mejora_fotos import MejoraFotos
 from preview_html import PreviewHTML
 from realestate_studio import RealestateStudio
@@ -634,6 +641,217 @@ class Studio:
         return resultados
 
 
+# ==================== HELPERS DE GENERACION (Fase 2) ====================
+
+def _build_batch_items_from_carrusel(carrusel_path: Path,
+                                      batch_variants: int = 1) -> list[BatchItem]:
+    """Lee carrusel.json y construye los BatchItems a generar."""
+    data = json.loads(carrusel_path.read_text(encoding="utf-8"))
+    slides = data.get("slides", [])
+    carpeta_slides = carrusel_path.parent / "slides"
+
+    items: list[BatchItem] = []
+    for slide in slides:
+        numero = slide.get("numero", 0)
+        tipo = slide.get("tipo", "")
+        prompt = slide.get("prompt", "")
+        aspect = slide.get("aspect_ratio", "896*1152")
+        styles = slide.get("styles", [])
+
+        if tipo == "placeholder_foto":
+            continue
+        if not prompt:
+            continue
+
+        for variante in range(batch_variants):
+            suffix = f"_v{variante + 1}" if batch_variants > 1 else ""
+            output_path = carpeta_slides / f"slide_{numero:02d}_{tipo}{suffix}.jpg"
+            items.append(BatchItem(
+                id=f"slide_{numero:02d}_v{variante + 1}",
+                prompt=prompt,
+                params={
+                    "aspect_ratio": aspect,
+                    "styles": styles,
+                    "negative_prompt": "",
+                    "steps": 30,
+                    "cfg_scale": 4.0,
+                },
+                output_path=output_path,
+                max_retries=3,
+            ))
+    return items
+
+
+def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
+                                 carrusel_path: str | Path,
+                                 batch: int = 1,
+                                 workers: int = 3,
+                                 retries: int = 3,
+                                 use_cache: bool = True,
+                                 force: bool = False,
+                                 skip_confirm: bool = False,
+                                 seconds_per_image: float = 25.0) -> dict[str, Any]:
+    """Logica central del comando generar-carousel."""
+    from generation_pipeline import BatchGenerator
+
+    ruta = Path(carrusel_path)
+    if not ruta.exists():
+        return {"success": False, "error": f"No existe: {ruta}"}
+
+    items = _build_batch_items_from_carrusel(ruta, batch_variants=batch)
+    if not items:
+        return {"success": False, "error": "Carrusel sin slides con prompt"}
+
+    # Estimacion
+    cache_path = Path(".cache") / "generation_cache.json"
+    cache = ImageCache(cache_path)
+    cache_hits = sum(
+        1 for it in items
+        if cache.get(it.prompt, it.hash_key_params())
+    )
+    cache_hit_rate = cache_hits / len(items) if items else 0
+
+    estimacion = estimate_time(
+        num_items=len(items),
+        seconds_per_image=seconds_per_image,
+        max_workers=workers,
+        cache_hit_rate=cache_hit_rate,
+    )
+
+    print(f"Carrusel: {ruta}")
+    print(f"Slides a generar: {len(items)} (batch={batch}, workers={workers}, "
+          f"retries={retries}, cache={'on' if use_cache else 'off'})")
+    print(f"  - Cache hits esperados: {cache_hits}/{len(items)} "
+          f"({int(cache_hit_rate * 100)}%)")
+    print(f"  - Tiempo estimado: {estimacion['human_readable']} "
+          f"({estimacion['total_seconds']}s)")
+
+    if not skip_confirm and not force:
+        if not items:
+            return {"success": False, "error": "Sin items"}
+        print()
+        try:
+            r = input("Continuar? [s/N] ").strip().lower()
+            if r not in ("s", "si", "y", "yes"):
+                return {"success": False, "error": "cancelado por el usuario"}
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return {"success": False, "error": "cancelado por el usuario"}
+
+    # Ejecutar batch
+    retry_policy = RetryPolicy(max_attempts=retries, initial_delay_seconds=5.0)
+    batch_gen = BatchGenerator(
+        generator=studio.image_generator,
+        cache=cache,
+        max_workers=workers,
+        retry_policy=retry_policy,
+        on_progress=lambda c, t, r: print(
+            f"  [{c}/{t}] slide {r.item_id}: "
+            f"{'OK (cache)' if r.cache_hit else 'OK' if r.success else 'FAIL'}"),
+    )
+    for it in items:
+        it.use_cache = use_cache
+    results = batch_gen.generate_all(items)
+
+    # Reporte
+    ok = sum(1 for r in results if r.success)
+    cache_h = sum(1 for r in results if r.cache_hit)
+    fail = sum(1 for r in results if not r.success)
+    print()
+    print(f"Resultado: {ok}/{len(results)} OK ({cache_h} cache hits, {fail} fallaron)")
+
+    # Estadisticas de cache
+    cache_stats = cache.stats()
+    print(f"Cache total: {cache_stats['total_entries']} entradas, "
+          f"{cache_stats['total_size_mb']} MB")
+
+    return {"success": True, "ok": ok, "cache_hits": cache_h, "fail": fail}
+
+
+def _generar_carrusel_interactivo(studio: "Studio", args: Any) -> int:
+    """Wrapper CLI para generar-carousel."""
+    resultado = _generar_carrusel_completo(
+        studio, args.carrusel,
+        batch=args.batch,
+        workers=args.workers,
+        retries=args.retries,
+        use_cache=not args.no_cache,
+        force=False,
+        skip_confirm=args.yes,
+        seconds_per_image=args.seconds_per_image,
+    )
+    if not resultado["success"]:
+        print(f"ERROR: {resultado.get('error')}")
+        return 1
+    return 0
+
+
+def _encolar_carrusel(studio: "Studio",  # noqa: F821
+                      carrusel_path: str | Path) -> dict[str, Any]:
+    """Encola todos los slides de un carrusel para procesamiento en background."""
+    from generation_pipeline import GenerationQueue, QueueItem
+
+    ruta = Path(carrusel_path)
+    if not ruta.exists():
+        return {"encolados": 0, "error": f"No existe: {ruta}"}
+
+    items = _build_batch_items_from_carrusel(ruta, batch_variants=1)
+    if not items:
+        return {"encolados": 0, "error": "Sin slides con prompt"}
+
+    db_path = Path(".cache") / "generation_queue.db"
+    queue = GenerationQueue(db_path)
+    encolados = 0
+    for it in items:
+        queue.enqueue(QueueItem(
+            prompt=it.prompt,
+            params_json=json.dumps(it.params),
+            output_path=str(it.output_path) if it.output_path else None,
+        ))
+        encolados += 1
+    return {"encolados": encolados}
+
+
+def _procesar_cola(studio: "Studio") -> dict[str, Any]:  # noqa: F821
+    """Procesa todos los items encolados usando BatchGenerator."""
+    from generation_pipeline import BatchGenerator, BatchItem, GenerationQueue
+
+    db_path = Path(".cache") / "generation_queue.db"
+    queue = GenerationQueue(db_path)
+    pending = queue.list_pending(limit=500)
+    if not pending:
+        return {"exitos": 0, "total": 0, "error": "Cola vacia"}
+
+    cache = ImageCache(Path(".cache") / "generation_cache.json")
+    batch_gen = BatchGenerator(
+        generator=studio.image_generator,
+        cache=cache,
+        max_workers=3,
+    )
+
+    items = []
+    for q in pending:
+        params = json.loads(q.params_json)
+        items.append(BatchItem(
+            id=str(q.id),
+            prompt=q.prompt,
+            params=params,
+            output_path=Path(q.output_path) if q.output_path else None,
+        ))
+
+    results = batch_gen.generate_all(items)
+
+    exitos = 0
+    for i, r in enumerate(results):
+        q = pending[i]
+        if r.success:
+            queue.mark_done(q.id)
+            exitos += 1
+        else:
+            queue.mark_error(q.id, r.error or "unknown")
+    return {"exitos": exitos, "total": len(results)}
+
+
 # ==================== CLI ====================
 
 def cli() -> int:
@@ -678,10 +896,61 @@ def cli() -> int:
     p_prev.add_argument("--carrusel", required=True,
                          help="Path al carrusel.json")
 
-    # subcomando: generar
-    p_gen = sub.add_parser("generar", help="Genera imagenes para un carrusel")
+    # subcomando: generar (alias de generar-carousel, retrocompatibilidad)
+    p_gen = sub.add_parser("generar", help="(alias) Genera imagenes para un carrusel")
     p_gen.add_argument("--carrusel", required=True,
                         help="Path al carrusel.json")
+    p_gen.add_argument("--batch", type=int, default=1,
+                        help="Variantes por slide (default 1)")
+    p_gen.add_argument("--cache", action="store_true", default=True,
+                        help="Usar cache de imagenes (default: activado)")
+    p_gen.add_argument("--no-cache", action="store_false", dest="cache",
+                        help="Desactivar cache para esta corrida")
+    p_gen.add_argument("--retries", type=int, default=3,
+                        help="Reintentos por imagen (default 3)")
+    p_gen.add_argument("--workers", type=int, default=3,
+                        help="Workers en paralelo (default 3)")
+    p_gen.add_argument("--force", action="store_true",
+                        help="Regenerar aunque exista en cache")
+    p_gen.add_argument("--yes", "-y", action="store_true",
+                        help="Saltar confirmacion (default: True para este alias)")
+
+    # subcomando: generar-carousel (version completa, mas flags)
+    p_genc = sub.add_parser("generar-carousel",
+                             help="Genera todas las imagenes de un carrusel "
+                                  "con cache + retry + batch + estimacion")
+    p_genc.add_argument("--carrusel", required=True,
+                         help="Path al carrusel.json")
+    p_genc.add_argument("--batch", type=int, default=1,
+                         help="Variantes por slide (default 1)")
+    p_genc.add_argument("--workers", type=int, default=3,
+                         help="Workers en paralelo")
+    p_genc.add_argument("--retries", type=int, default=3,
+                         help="Reintentos por imagen")
+    p_genc.add_argument("--no-cache", action="store_true",
+                         help="Ignorar cache, regenerar todo")
+    p_genc.add_argument("--yes", "-y", action="store_true",
+                         help="Saltar confirmacion de tiempo estimado")
+    p_genc.add_argument("--seconds-per-image", type=float, default=25.0,
+                         help="Segundos por imagen para estimacion (default 25, "
+                              "Apple Silicon)")
+
+    # subcomando: cache-stats
+    p_cs = sub.add_parser("cache-stats",
+                           help="Estadisticas de la cache de generacion")
+    p_cs.add_argument("--clear", action="store_true",
+                       help="Borrar toda la cache")
+
+    # subcomando: generar-cola (encolar para batch futuro)
+    p_cola = sub.add_parser("generar-cola",
+                             help="Encola imagenes para generacion en background "
+                                  "(procesar con --procesar-cola)")
+    p_cola.add_argument("--carrusel", required=True,
+                         help="Path al carrusel.json")
+
+    # subcomando: procesar-cola
+    p_proc = sub.add_parser("procesar-cola",
+                             help="Procesa la cola de generacion (usa cache + retry)")
 
     # subcomando: listar
     p_list = sub.add_parser("listar", help="Lista carruseles disponibles")
@@ -743,6 +1012,7 @@ def cli() -> int:
             print(f"Post ID: {resultado.instagram_post_id}")
         if resultado.permalink:
             print(f"Permalink: {resultado.permalink}")
+        return 0 if resultado.exito else 1
 
     elif args.comando == "preview":
         html_path = studio.preview_carrusel(args.carrusel)
@@ -754,20 +1024,44 @@ def cli() -> int:
         print("Abrilo con doble-click en tu navegador.")
 
     elif args.comando == "generar":
-        resultados = studio.generar_imagenes_carrusel(args.carrusel)
-        fooocus_ok = studio.image_generator.__class__.__name__ != "StubImageGenerator"
-        print(f"Fooocus disponible: {fooocus_ok}")
-        print(f"Slides procesados: {len(resultados)}")
-        for r in resultados:
-            if r.get("saltado"):
-                print(f"  slide {r['n_slide']}: saltado ({r.get('razon', '')})")
-            elif r.get("error"):
-                print(f"  slide {r['n_slide']}: ERROR ({r['error']})")
-            elif r.get("stub"):
-                print(f"  slide {r['n_slide']}: stub (imagen NO generada, "
-                      "ver mensaje en JSON al lado)")
-            else:
-                print(f"  slide {r['n_slide']}: generada en {r['output_path']}")
+        # Retrocompatibilidad: delega a generar-carousel con skip_confirm=True
+        resultados = _generar_carrusel_completo(
+            studio, args.carrusel,
+            batch=getattr(args, "batch", 1),
+            workers=getattr(args, "workers", 3),
+            retries=getattr(args, "retries", 3),
+            use_cache=getattr(args, "no_cache", False) is False,
+            force=getattr(args, "force", False),
+            skip_confirm=True,  # el alias siempre saltea confirmacion
+        )
+        if not resultados["success"]:
+            print(f"ERROR: {resultados.get('error')}")
+            return 1
+
+    elif args.comando == "generar-carousel":
+        return _generar_carrusel_interactivo(studio, args)
+
+    elif args.comando == "cache-stats":
+        cache_path = Path(".cache") / "generation_cache.json"
+        cache = ImageCache(cache_path)
+        if args.clear:
+            cache.clear()
+            print(f"Cache borrada: {cache_path}")
+        else:
+            stats = cache.stats()
+            print(f"Cache path: {cache_path}")
+            print(f"Total entradas: {stats['total_entries']}")
+            print(f"Tamano total: {stats['total_size_mb']} MB "
+                  f"({stats['total_size_bytes']} bytes)")
+
+    elif args.comando == "generar-cola":
+        resultados = _encolar_carrusel(studio, args.carrusel)
+        print(f"Encolados {resultados['encolados']} items.")
+        print(f"Para procesar: python3 studio.py procesar-cola")
+
+    elif args.comando == "procesar-cola":
+        resultados = _procesar_cola(studio)
+        print(f"Procesados: {resultados['exitos']}/{resultados['total']} OK")
 
     elif args.comando == "listar":
         carruseles = studio.listar_carruseles(args.proyecto)

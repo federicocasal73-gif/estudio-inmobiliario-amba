@@ -6,6 +6,9 @@ __pycache__/
 .coverage
 htmlcov/
 
+# Cache de generacion de imagenes (regenerable, no se commitea)
+.cache/
+
 # Skills de autoskills (solo local, no en SaaS comercial)
 .agents/
 skills-lock.json

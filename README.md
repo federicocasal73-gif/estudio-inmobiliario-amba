@@ -5,8 +5,8 @@
 [![Pillow](https://img.shields.io/badge/Pillow-required-green.svg)](https://python-pillow.org/)
 [![Fooocus](https://img.shields.io/badge/Fooocus-optional-orange.svg)](https://github.com/lllyasviel/Fooocus)
 [![gradio-client](https://img.shields.io/badge/gradio--client-optional-orange.svg)](https://gradio.app/)
-[![Tests](https://img.shields.io/badge/tests-97%20passed-brightgreen.svg)](tests/)
-[![Coverage](https://img.shields.io/badge/coverage-25%25-yellow.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-154%20passed-brightgreen.svg)](tests/)
+[![Coverage](https://img.shields.io/badge/coverage-41%25-yellow.svg)](tests/)
 [![Argentina](https://img.shields.io/badge/Argentina-AMBBA-blue.svg)](https://github.com/)
 [![Vertical: real estate](https://img.shields.io/badge/vertical-real%20estate-lightgrey.svg)]()
 [![Vertical: rural](https://img.shields.io/badge/vertical-rural-lightgrey.svg)]()
@@ -107,8 +107,50 @@ python3 studio.py semana --n 1 --proyectos X --publicar dry-run # Generar semana
 python3 studio.py duplicar --origen X --destino Y              # Clonar proyecto
 python3 studio.py publicar --carrusel path --modo dry-run       # Publicar (3 modos)
 python3 studio.py preview --carrusel path                       # Preview HTML
-python3 studio.py generar --carrusel path                      # Generar imagenes
+python3 studio.py generar --carrusel path --yes                 # Generar imagenes (alias)
 python3 studio.py listar                                        # Ver carruseles
+
+# Comandos nuevos (Fase 2: pipeline de generacion):
+python3 studio.py generar-carousel \
+    --carrusel path --batch 4 --workers 3 --yes                # Generar con cache + batch
+python3 studio.py cache-stats                                   # Ver stats de cache
+python3 studio.py cache-stats --clear                           # Limpiar cache
+python3 studio.py generar-cola --carrusel path                  # Encolar para background
+python3 studio.py procesar-cola                                 # Procesar cola
+```
+
+## Pipeline de generacion (Fase 2)
+
+El estudio tiene un pipeline de generacion con 3 componentes clave:
+
+1. **Cache**: si el mismo prompt se genera 2 veces, la segunda vez usa la
+   imagen ya guardada. Persistente en `.cache/generation_cache.json`.
+
+2. **Retry**: si Fooocus falla, se reintenta con backoff exponencial + jitter
+   (3 reintentos por default, configurable).
+
+3. **Batch + paralelo**: N imagenes en paralelo con `ThreadPoolExecutor`
+   (3 workers por default, configurable). Genera multiples variantes por
+   slide para A/B testing.
+
+Ejemplo:
+```bash
+python3 studio.py generar-carousel \
+    --carrusel inmuebles/lotes/chacra-canuelas-5ha/carruseles/lote_premium/carrusel.json \
+    --batch 3 --workers 5 --yes
+```
+
+Salida:
+```
+Carrusel: ...
+Slides a generar: 15 (batch=3, workers=5, retries=3, cache=on)
+  - Cache hits esperados: 8/15 (53%)
+  - Tiempo estimado: 1m 30s
+  [1/15] slide slide_01_v1: OK
+  ...
+
+Resultado: 15/15 OK (8 cache hits, 0 fallaron)
+Cache total: 7 entradas, 1.2 MB
 ```
 
 ---

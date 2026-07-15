@@ -1,293 +1,484 @@
-"""Tests del modulo de validacion (validators.py).
+"""Tests del modulo validators.py.
 
-Cubre el patron principal del estudio: validar posts antes de publicar.
-Siguiendo python-testing-patterns: parametrized + fixtures + edge cases.
+Cubre:
+  - ResultadoValidacion dataclass
+  - _slug_municipio, _normalizar_municipio
+  - validate_caption: None, string, vacio, largo, warning
+  - validate_hashtags: None, formato, cantidad, blacklist, must_include
+  - validate_municipio: AMBA, no AMBA, estricto
+  - validate_hectareas: negativo, 0, >1000, valid
+  - validate_carrusel: cantidad, archivos, tamano
+  - validate_imagen: existe, tamano, extension
+  - validate_post: composite, todos los sub-validators
+  - safe_post: wrapper
 """
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from validators import (
+    IG_CAPTION_MAX_CHARS,
+    IG_CARRUSEL_MAX,
+    IG_CARRUSEL_MIN,
+    IG_HASHTAGS_MAX,
+    IG_IMAGE_MAX_MB,
+    MUNICIPIOS_AMBA,
+    ResultadoValidacion,
+    _normalizar_municipio,
+    _slug_municipio,
+    safe_post,
     validate_caption,
+    validate_carrusel,
     validate_hashtags,
     validate_hectareas,
+    validate_imagen,
     validate_municipio,
     validate_post,
 )
 
+# ===== ResultadoValidacion =====
+
+
+class TestResultadoValidacion:
+    def test_ok_default(self):
+        r = ResultadoValidacion(ok=True)
+        assert r.ok is True
+        assert r.errores == []
+        assert r.advertencias == []
+        assert r.metadata == {}
+
+    def test_to_dict(self):
+        r = ResultadoValidacion(ok=True, metadata={"longitud": 100})
+        d = r.to_dict()
+        assert d["ok"] is True
+        assert d["metadata"]["longitud"] == 100
+
+    def test_agregar_error(self):
+        r = ResultadoValidacion(ok=True)
+        r.agregar_error("algo fallo")
+        assert r.ok is False
+        assert "algo fallo" in r.errores
+
+    def test_agregar_warning(self):
+        r = ResultadoValidacion(ok=True)
+        r.agregar_warning("cuidado")
+        assert r.ok is True
+        assert "cuidado" in r.advertencias
+
+    def test_agregar_multiple_errors(self):
+        r = ResultadoValidacion(ok=True)
+        r.agregar_error("e1")
+        r.agregar_error("e2")
+        assert r.ok is False
+        assert len(r.errores) == 2
+
+
+# ===== Helpers =====
+
+
+class TestSlugMunicipio:
+    def test_canuelas(self):
+        assert _slug_municipio("Cañuelas") == "canuelas"
+
+    def test_lujan(self):
+        assert _slug_municipio("Luján") == "lujan"
+
+    def test_capilla_del_senor(self):
+        assert _slug_municipio("Capilla del Senor") == "capilladelsenor"
+
+    def test_exaltacion(self):
+        assert _slug_municipio("Exaltacion de la Cruz") == "exaltaciondelacruz"
+
+    def test_vacio(self):
+        assert _slug_municipio("") == ""
+
+
+class TestNormalizarMunicipio:
+    def test_canuelas(self):
+        result = _normalizar_municipio("canuelas")
+        assert result == "Canuelas"
+
+    def test_empty(self):
+        assert _normalizar_municipio("") == ""
+
+
+# ===== validate_caption =====
+
 
 class TestValidateCaption:
-    """Tests de validacion de caption."""
+    def test_caption_valido(self):
+        r = validate_caption("Mi lote en Cañuelas")
+        assert r.ok is True
+        assert r.metadata["longitud"] == len("Mi lote en Cañuelas")
 
-    def test_valid_short_caption(self):
-        # Arrange & Act
-        result = validate_caption("Hola mundo")
+    def test_caption_vacio(self):
+        r = validate_caption("")
+        assert r.ok is False
+        assert len(r.errores) > 0
 
-        # Assert
-        assert result.ok is True
-        assert result.metadata["longitud"] == 10
+    def test_caption_none(self):
+        r = validate_caption(None)
+        assert r.ok is False
 
-    def test_empty_caption_fails(self):
-        # Act
-        result = validate_caption("")
+    def test_caption_no_string(self):
+        r = validate_caption(123)
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is False
-        assert "vacio" in result.errores[0].lower()
+    def test_caption_demasiado_largo(self):
+        r = validate_caption("x" * (IG_CAPTION_MAX_CHARS + 1))
+        assert r.ok is False
 
-    def test_caption_at_limit_succeeds(self):
-        # Arrange
-        text = "a" * 2200
+    def test_caption_limite_exacto(self):
+        r = validate_caption("x" * IG_CAPTION_MAX_CHARS)
+        assert r.ok is True
 
-        # Act
-        result = validate_caption(text)
+    def test_caption_warning_cerca_limite(self):
+        r = validate_caption("x" * 1981)  # > 90% of 2200
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
-        # Assert
-        assert result.ok is True
 
-    def test_caption_over_limit_fails(self):
-        # Arrange
-        text = "a" * 2201
-
-        # Act
-        result = validate_caption(text)
-
-        # Assert
-        assert result.ok is False
-        assert "2201" in result.errores[0]
-
-    @pytest.mark.parametrize(
-        "text,expected_ok",
-        [
-            ("", False),
-            ("short", True),
-            ("a" * 2199, True),  # borde
-            ("a" * 2200, True),  # limite exacto
-            ("a" * 2201, False),  # 1 mas del limite
-            ("a" * 5000, False),  # mucho mas
-        ],
-    )
-    def test_caption_length_parametrized(self, text: str, expected_ok: bool):
-        # Act
-        result = validate_caption(text)
-
-        # Assert
-        assert result.ok is expected_ok
-
-    def test_caption_with_unicode_passes(self):
-        # Arrange (emojis son 1 character cada uno en len() en Python)
-        text = "🌾 Hermosa chacra 🏡 en Cañuelas" * 50
-
-        # Act
-        result = validate_caption(text)
-
-        # Assert (puede pasar o fallar segun longitud, no crash)
-        assert isinstance(result.ok, bool)
+# ===== validate_hashtags =====
 
 
 class TestValidateHashtags:
-    """Tests de validacion de hashtags."""
+    def test_hashtags_validos(self):
+        r = validate_hashtags(["#lotes", "#campo"])
+        assert r.ok is True
+        assert r.metadata["cantidad"] == 2
 
-    def test_valid_hashtags(self):
-        # Act
-        result = validate_hashtags(["#lotes", "#chacras"])
+    def test_hashtags_none(self):
+        r = validate_hashtags(None)
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
-        # Assert
-        assert result.ok is True
+    def test_hashtags_no_lista(self):
+        r = validate_hashtags("#lotes")
+        assert r.ok is False
 
-    def test_empty_list_warning(self):
-        # Act
-        result = validate_hashtags([])
+    def test_hashtags_vacios(self):
+        r = validate_hashtags([])
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
-        # Assert (warning no es error)
-        assert result.ok is True
-        assert len(result.advertencias) > 0
+    def test_hashtags_demasiados(self):
+        r = validate_hashtags([f"#tag{i}" for i in range(IG_HASHTAGS_MAX + 1)])
+        assert r.ok is False
 
-    def test_too_many_hashtags_fails(self):
-        # Arrange
-        tags = [f"#tag{i}" for i in range(31)]
+    def test_hashtags_limite_exacto(self):
+        r = validate_hashtags([f"#tag{i}" for i in range(IG_HASHTAGS_MAX)])
+        assert r.ok is True
 
-        # Act
-        result = validate_hashtags(tags)
+    def test_hashtag_formato_invalido(self):
+        r = validate_hashtags(["sin_hash"])
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is False
-        assert "31" in result.errores[0]
+    def test_hashtag_con_espacio(self):
+        r = validate_hashtags(["#lote grande"])
+        assert r.ok is False
 
-    def test_exactly_30_hashtags_ok(self):
-        # Arrange (limite exacto)
-        tags = [f"#tag{i}" for i in range(30)]
+    def test_hashtag_underscore(self):
+        r = validate_hashtags(["#lote_grande"])
+        assert r.ok is True
 
-        # Act
-        result = validate_hashtags(tags)
+    def test_hashtag_digitos(self):
+        r = validate_hashtags(["#lote123"])
+        assert r.ok is True
 
-        # Assert
-        assert result.ok is True
-
-    def test_hashtag_without_hash_fails(self):
-        # Act
-        result = validate_hashtags(["lotes sin #"])
-
-        # Assert
-        assert result.ok is False
-
-    def test_hashtag_with_space_fails(self):
-        # Act
-        result = validate_hashtags(["#lotes con espacio"])
-
-        # Assert
-        assert result.ok is False
-
-    def test_blacklist_filtering(self):
-        # Act
-        result = validate_hashtags(
-            ["#lotes", "#chacras"],
-            blacklist=["chacras"],
+    def test_blacklist(self):
+        r = validate_hashtags(
+            ["#lotes", "#campo"],
+            blacklist=["lotes"],
         )
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is False
-        assert any("#chacras" in e for e in result.errores)
+    def test_blacklist_case_insensitive(self):
+        r = validate_hashtags(
+            ["#LOTES", "#campo"],
+            blacklist=["LOTEs"],
+        )
+        assert r.ok is False
+
+    def test_must_include_falta(self):
+        r = validate_hashtags(
+            ["#lotes"],
+            must_include=["campo"],
+        )
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
     def test_must_include_presente(self):
-        # Act
-        result = validate_hashtags(
-            ["#lotes", "#patrimonio"],
-            must_include=["#patrimonio"],
+        r = validate_hashtags(
+            ["#lotes", "#campo"],
+            must_include=["campo"],
         )
+        assert r.ok is True
+        assert len(r.advertencias) == 0
 
-        # Assert
-        assert result.ok is True
 
-    def test_must_include_faltante_es_warning(self):
-        # Act
-        result = validate_hashtags(
-            ["#lotes"],
-            must_include=["#patrimonio"],
-        )
-
-        # Assert (warning, no error)
-        assert result.ok is True
-        assert len(result.advertencias) > 0
+# ===== validate_municipio =====
 
 
 class TestValidateMunicipio:
-    """Tests de validacion de municipio."""
+    def test_municipio_en_lista(self):
+        r = validate_municipio("Cañuelas")
+        assert r.ok is True
+        assert r.metadata["en_lista"] is True
 
-    @pytest.mark.parametrize(
-        "municipio,esperado_en_lista,esperado_ok",
-        [
-            ("Canuelas", True, True),
-            ("Pilar", True, True),
-            ("Escobar", True, True),
-            ("Lujan", True, True),
-            ("Lobos", True, True),
-            ("Mar del Plata", False, True),  # warning, no error por default
-            ("Buenos Aires", False, True),
-            ("", None, False),  # vacio SI es error
-        ],
-    )
-    def test_municipio_en_lista_o_warning(
-        self, municipio: str, esperado_en_lista: bool | None, esperado_ok: bool
-    ):
-        # Act
-        result = validate_municipio(municipio)
+    def test_municipio_no_en_lista(self):
+        r = validate_municipio("Mar del Plata")
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
-        # Assert
-        assert result.ok is esperado_ok
-        if esperado_en_lista is True:
-            assert result.metadata.get("en_lista") is True
-        elif esperado_en_lista is False:
-            assert len(result.advertencias) > 0
+    def test_municipio_estricto_no_en_lista(self):
+        r = validate_municipio("Cordoba", estricto=True)
+        assert r.ok is False
 
-    def test_estricto_falla_si_no_esta(self):
-        # Act
-        result = validate_municipio("Mar del Plata", estricto=True)
+    def test_municipio_vacio(self):
+        r = validate_municipio("")
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is False
+    def test_municipio_none(self):
+        r = validate_municipio(None)
+        assert r.ok is False
+
+    def test_municipios_cubiertos(self):
+        for m in MUNICIPIOS_AMBA:
+            r = validate_municipio(m)
+            assert r.ok is True, f"Fallo para municipio: {m}"
+
+
+# ===== validate_hectareas =====
 
 
 class TestValidateHectareas:
-    """Tests de validacion de hectareas."""
+    def test_hectareas_validas(self):
+        r = validate_hectareas(5)
+        assert r.ok is True
+        assert r.metadata["hectareas"] == 5.0
 
-    @pytest.mark.parametrize(
-        "hectareas,esperado_ok",
-        [
-            (5, True),
-            (0.5, True),
-            (100, True),
-            (0, False),
-            (-1, False),
-            (-5.5, False),
-        ],
-    )
-    def test_hectareas_positivas(self, hectareas, esperado_ok):
-        # Act
-        result = validate_hectareas(hectareas)
+    def test_hectareas_0(self):
+        r = validate_hectareas(0)
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is esperado_ok
+    def test_hectareas_negativas(self):
+        r = validate_hectareas(-5)
+        assert r.ok is False
 
-    def test_huge_hectareas_warning(self):
-        # Act
-        result = validate_hectareas(5000)
+    def test_hectareas_grandes_warning(self):
+        r = validate_hectareas(1500)
+        assert r.ok is True
+        assert len(r.advertencias) > 0
 
-        # Assert (no falla pero avisa)
-        assert result.ok is True
-        assert len(result.advertencias) > 0
+    def test_hectareas_limite_exacto(self):
+        r = validate_hectareas(1000)
+        assert r.ok is True
+
+    def test_hectareas_no_numerico(self):
+        r = validate_hectareas("abc")
+        assert r.ok is False
+
+    def test_hectareas_float(self):
+        r = validate_hectareas(5.5)
+        assert r.ok is True
+        assert r.metadata["hectareas"] == 5.5
+
+
+# ===== validate_carrusel =====
+
+
+class TestValidateCarrusel:
+    def test_carrusel_valido(self, tmp_path):
+        img1 = tmp_path / "img1.jpg"
+        img2 = tmp_path / "img2.jpg"
+        img1.write_bytes(b"\xff" * 100)
+        img2.write_bytes(b"\xff" * 100)
+        r = validate_carrusel([str(img1), str(img2)])
+        assert r.ok is True
+
+    def test_carrusel_no_lista(self):
+        r = validate_carrusel("no_es_lista")
+        assert r.ok is False
+
+    def test_carrusel_muy_pocos(self, tmp_path):
+        img = tmp_path / "img1.jpg"
+        img.write_bytes(b"\xff" * 100)
+        r = validate_carrusel([str(img)])
+        assert r.ok is False
+
+    def test_carrusel_muy_muchos(self, tmp_path):
+        imgs = []
+        for i in range(IG_CARRUSEL_MAX + 1):
+            img = tmp_path / f"img{i}.jpg"
+            img.write_bytes(b"\xff" * 100)
+            imgs.append(str(img))
+        r = validate_carrusel(imgs)
+        assert r.ok is False
+
+    def test_carrusel_limite_min(self, tmp_path):
+        imgs = []
+        for i in range(IG_CARRUSEL_MIN):
+            img = tmp_path / f"img{i}.jpg"
+            img.write_bytes(b"\xff" * 100)
+            imgs.append(str(img))
+        r = validate_carrusel(imgs)
+        assert r.ok is True
+
+    def test_carrusel_limite_max(self, tmp_path):
+        imgs = []
+        for i in range(IG_CARRUSEL_MAX):
+            img = tmp_path / f"img{i}.jpg"
+            img.write_bytes(b"\xff" * 100)
+            imgs.append(str(img))
+        r = validate_carrusel(imgs)
+        assert r.ok is True
+
+    def test_carrusel_archivo_no_existe(self, tmp_path):
+        r = validate_carrusel(["/no/existe/a.jpg", "/no/existe/b.jpg"])
+        assert r.ok is False
+
+    def test_carrusel_imagen_grande(self, tmp_path):
+        img1 = tmp_path / "ok.jpg"
+        img2 = tmp_path / "big.jpg"
+        img1.write_bytes(b"\xff" * 100)
+        img2.write_bytes(b"\xff" * (IG_IMAGE_MAX_MB * 1024 * 1024 + 1))
+        r = validate_carrusel([str(img1), str(img2)])
+        assert r.ok is False
+
+    def test_carrusel_imagen_limite_exacto(self, tmp_path):
+        img1 = tmp_path / "ok.jpg"
+        img2 = tmp_path / "exact.jpg"
+        img1.write_bytes(b"\xff" * 100)
+        img2.write_bytes(b"\xff" * (IG_IMAGE_MAX_MB * 1024 * 1024))
+        r = validate_carrusel([str(img1), str(img2)])
+        assert r.ok is True
+
+
+# ===== validate_imagen =====
+
+
+class TestValidateImagen:
+    def test_imagen_valida(self, tmp_path):
+        img = tmp_path / "foto.jpg"
+        img.write_bytes(b"\xff" * 100)
+        r = validate_imagen(str(img))
+        assert r.ok is True
+
+    def test_imagen_no_existe(self):
+        r = validate_imagen("/no/existe/foto.jpg")
+        assert r.ok is False
+
+    def test_imagen_grande(self, tmp_path):
+        img = tmp_path / "big.jpg"
+        img.write_bytes(b"\xff" * (IG_IMAGE_MAX_MB * 1024 * 1024 + 1))
+        r = validate_imagen(str(img))
+        assert r.ok is False
+
+    def test_imagen_extension_rara(self, tmp_path):
+        img = tmp_path / "foto.bmp"
+        img.write_bytes(b"\xff" * 100)
+        r = validate_imagen(str(img))
+        assert r.ok is True
+        assert len(r.advertencias) > 0
+
+    def test_imagen_png(self, tmp_path):
+        img = tmp_path / "foto.png"
+        img.write_bytes(b"\xff" * 100)
+        r = validate_imagen(str(img))
+        assert r.ok is True
+
+    def test_imagen_jpeg(self, tmp_path):
+        img = tmp_path / "foto.jpeg"
+        img.write_bytes(b"\xff" * 100)
+        r = validate_imagen(str(img))
+        assert r.ok is True
+
+
+# ===== validate_post =====
 
 
 class TestValidatePost:
-    """Tests del wrapper validate_post (caption + hashtags + municipio + ha)."""
-
-    def test_valid_post(self, sample_post):
-        # Act
-        result = validate_post(
-            caption=sample_post["caption_completo"],
-            hashtags=sample_post["hashtags"],
-            municipio=sample_post["municipio"],
-            hectareas=5,
-        )
-
-        # Assert
-        assert result.ok is True
-
-    def test_post_with_invalid_caption(self):
-        # Act
-        result = validate_post(
-            caption="",  # vacio
-            hashtags=["#lotes"],
+    def test_post_valido(self, tmp_path):
+        r = validate_post(
+            caption="Lote en Cañuelas",
+            hashtags=["#lotes", "#canuelas"],
             municipio="Cañuelas",
             hectareas=5,
         )
+        assert r.ok is True
 
-        # Assert
-        assert result.ok is False
-        assert any("vacio" in e for e in result.errores)
+    def test_post_caption_invalido(self):
+        r = validate_post(caption="")
+        assert r.ok is False
 
-    def test_post_with_invalid_hectareas(self):
-        # Act
-        result = validate_post(
-            caption="texto valido",
-            hashtags=["#lotes"],
-            municipio="Cañuelas",
-            hectareas=-1,
+    def test_post_hashtags_invalidos(self):
+        r = validate_post(
+            caption="test",
+            hashtags=["sin_hash"],
         )
+        assert r.ok is False
 
-        # Assert
-        assert result.ok is False
+    def test_post_municipio_invalido_estricto(self):
+        r = validate_post(
+            caption="test",
+            municipio="Cordoba",
+            estricto_municipio=True,
+        )
+        assert r.ok is False
 
-    def test_post_with_blacklist_hashtag(self):
-        # Act
-        result = validate_post(
-            caption="texto",
-            hashtags=["#lotes", "#inversion"],
-            hashtags_blacklist=["inversion"],
+    def test_post_hectareas_invalidas(self):
+        r = validate_post(
+            caption="test",
+            hectareas=-5,
+        )
+        assert r.ok is False
+
+    def test_post_solo_caption(self):
+        r = validate_post(caption="test caption")
+        assert r.ok is True
+
+    def test_post_sin_hashtags(self):
+        r = validate_post(caption="test", hashtags=None)
+        assert r.ok is True
+
+    def test_post_metadata_structure(self):
+        r = validate_post(
+            caption="test",
+            hashtags=["#ok"],
             municipio="Cañuelas",
             hectareas=5,
         )
+        assert "caption" in r.metadata
+        assert "hashtags" in r.metadata
+        assert "municipio" in r.metadata
+        assert "hectareas" in r.metadata
 
-        # Assert
-        assert result.ok is False
+
+# ===== safe_post =====
+
+
+class TestSafePost:
+    def test_safe_post_agrega_validacion(self):
+        post = {
+            "caption_completo": "Test caption",
+            "hashtags": ["#lotes"],
+        }
+        result = safe_post(post, municipio="Cañuelas")
+        assert "_validacion" in result
+        assert result["_validacion"]["ok"] is True
+
+    def test_safe_post_caption_vacio(self):
+        post = {
+            "caption_completo": "",
+            "hashtags": ["#lotes"],
+        }
+        result = safe_post(post)
+        assert result["_validacion"]["ok"] is False
+
+    def test_safe_post_sin_caption(self):
+        post = {"hashtags": ["#lotes"]}
+        result = safe_post(post)
+        assert "_validacion" in result

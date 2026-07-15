@@ -2,6 +2,7 @@
 
 Patron: AAA, captura de logs con caplog (fixture de pytest).
 """
+
 from __future__ import annotations
 
 import json

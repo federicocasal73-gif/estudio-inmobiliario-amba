@@ -2,6 +2,7 @@
 
 Patron: AAA (Arrange-Act-Assert) siguiendo python-testing-patterns skill.
 """
+
 from __future__ import annotations
 
 import os
@@ -105,28 +106,26 @@ class TestEnvOverrides:
         config = {}
 
         # Act
-        result = _apply_env_overrides(
-            _set_env({"STUDIO_DEBUG": "true"}, config))
+        result = _apply_env_overrides(_set_env({"STUDIO_DEBUG": "true"}, config))
 
         # Assert
         assert result["studio"]["debug"] is True
 
     def test_studio_debug_false(self):
         config = {}
-        result = _apply_env_overrides(
-            _set_env({"STUDIO_DEBUG": "false"}, config))
+        result = _apply_env_overrides(_set_env({"STUDIO_DEBUG": "false"}, config))
         assert result["studio"]["debug"] is False
 
     def test_studio_log_level(self):
         config = {}
-        result = _apply_env_overrides(
-            _set_env({"STUDIO_LOG_LEVEL": "WARNING"}, config))
+        result = _apply_env_overrides(_set_env({"STUDIO_LOG_LEVEL": "WARNING"}, config))
         assert result["logging"]["level"] == "WARNING"
 
     def test_studio_fooocus_url(self):
         config = {}
         result = _apply_env_overrides(
-            _set_env({"STUDIO_FOOOCUS_URL": "http://10.0.0.1:7865"}, config))
+            _set_env({"STUDIO_FOOOCUS_URL": "http://10.0.0.1:7865"}, config)
+        )
         assert result["image_generator"]["fooocus_url"] == "http://10.0.0.1:7865"
 
 

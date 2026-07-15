@@ -21,6 +21,7 @@ Uso:
         print(f"--- Variante {i} ({v['tono']}) ---")
         print(v["caption_completo"])
 """
+
 from __future__ import annotations
 
 import json
@@ -46,7 +47,9 @@ class VarianteCaption:
     hashtags: list[str]
     caption_completo: str
     metadata: dict[str, Any] = field(default_factory=dict)
-    fecha_creacion: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    fecha_creacion: str = field(
+        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -58,11 +61,15 @@ class CaptionVariants:
     def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
-    def generar(self, tipo: str, n: int = 3,
-                tonos: list[str] | None = None,
-                nichos: list[str] | None = None,
-                municipio: str = "Cañuelas",
-                **kwargs) -> list[VarianteCaption]:
+    def generar(
+        self,
+        tipo: str,
+        n: int = 3,
+        tonos: list[str] | None = None,
+        nichos: list[str] | None = None,
+        municipio: str = "Cañuelas",
+        **kwargs,
+    ) -> list[VarianteCaption]:
         """Genera N variantes del mismo tipo de post con tonos distintos."""
         if tonos is None:
             tonos = self._tonos_por_tipo(tipo)[:n]
@@ -74,8 +81,11 @@ class CaptionVariants:
 
         variantes: list[VarianteCaption] = []
         for i, tono in enumerate(tonos):
-            nichos = nichos_por_variante if isinstance(nichos_por_variante, list) \
-                     else [nichos_por_variante]
+            nichos = (
+                nichos_por_variante
+                if isinstance(nichos_por_variante, list)
+                else [nichos_por_variante]
+            )
             try:
                 post = self._generar_post(tipo, tono, municipio, nichos, **kwargs)
             except Exception as e:
@@ -94,9 +104,10 @@ class CaptionVariants:
                 caption=post.get("caption", ""),
                 hashtags=post.get("hashtags", []),
                 caption_completo=post.get("caption_completo", ""),
-                metadata={"kwargs": {k: v for k, v in kwargs.items()
-                                      if isinstance(v, (str, int, float))},
-                          "nicho": nichos},
+                metadata={
+                    "kwargs": {k: v for k, v in kwargs.items() if isinstance(v, (str, int, float))},
+                    "nicho": nichos,
+                },
             )
             variantes.append(v)
 
@@ -132,8 +143,9 @@ class CaptionVariants:
             "reel_hook_corto": ["general"],
         }.get(tipo, ["general"])
 
-    def _generar_post(self, tipo: str, tono: str, municipio: str,
-                       nichos: list[str], **kwargs) -> dict[str, Any]:
+    def _generar_post(
+        self, tipo: str, tono: str, municipio: str, nichos: list[str], **kwargs
+    ) -> dict[str, Any]:
         """Llama al factory apropiado segun tipo."""
         factory_map = {
             "lote_venta": self.studio.post.post_lote_venta,
@@ -156,9 +168,12 @@ class CaptionVariants:
         call_kwargs.update(kwargs)
         return factory(**call_kwargs)
 
-    def guardar(self, variantes: list[VarianteCaption],
-                nombre: str | None = None,
-                proyecto: str | None = None) -> Path:
+    def guardar(
+        self,
+        variantes: list[VarianteCaption],
+        nombre: str | None = None,
+        proyecto: str | None = None,
+    ) -> Path:
         """Guarda las variantes en JSON + un txt con todas para comparar."""
         if proyecto:
             carpeta = ROOT / "inmuebles" / "lotes" / proyecto / "variantes"
@@ -180,8 +195,7 @@ class CaptionVariants:
             "variantes": [v.to_dict() for v in variantes],
             "fecha": datetime.now().isoformat(timespec="seconds"),
         }
-        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                             encoding="utf-8")
+        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
         # TXT para comparar visualmente
         txt_path = carpeta / f"{nombre}.txt"
@@ -200,9 +214,9 @@ class CaptionVariants:
 
         return carpeta
 
-    def mejor_caption_para_publicar(self, variantes: list[VarianteCaption],
-                                     criterios: dict[str, Any] | None = None
-                                     ) -> VarianteCaption:
+    def mejor_caption_para_publicar(
+        self, variantes: list[VarianteCaption], criterios: dict[str, Any] | None = None
+    ) -> VarianteCaption:
         """Elige la 'mejor' variante segun criterios simples.
 
         criterios disponibles:
@@ -215,13 +229,13 @@ class CaptionVariants:
 
         if "max_caracteres" in criterios:
             mx = criterios["max_caracteres"]
-            candidatos = [v for v in candidatos
-                          if len(v.caption_completo) <= mx]
+            candidatos = [v for v in candidatos if len(v.caption_completo) <= mx]
 
         if "tono_preferido" in criterios:
             tonos_orden = criterios["tono_preferido"]
-            candidatos.sort(key=lambda v: tonos_orden.index(v.tono)
-                            if v.tono in tonos_orden else 999)
+            candidatos.sort(
+                key=lambda v: tonos_orden.index(v.tono) if v.tono in tonos_orden else 999
+            )
 
         if "nicho_preferido" in criterios:
             nicho = criterios["nicho_preferido"]
@@ -232,6 +246,7 @@ class CaptionVariants:
 
 def demo() -> None:
     from realestate_studio import RealestateStudio
+
     studio = RealestateStudio()
     cv = CaptionVariants(studio)
 
@@ -254,7 +269,8 @@ def demo() -> None:
     print(f"\nGuardado en: {carpeta.relative_to(ROOT)}")
 
     mejor = cv.mejor_caption_para_publicar(
-        variantes, criterios={"tono_preferido": ["emotivo", "inversion"]})
+        variantes, criterios={"tono_preferido": ["emotivo", "inversion"]}
+    )
     print(f"\nMejor variante segun criterios: {mejor.variante_id}")
 
 

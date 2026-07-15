@@ -1,0 +1,18 @@
+{
+  "numero": 1,
+  "tipo": "portada",
+  "descripcion": "Portada: chacra 5 ha en Cañuelas al atardecer",
+  "prompt": "5 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, atardecer, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+  "texto_overlay": "5 ha · Cañuelas",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "tipo_prompt": "chacra_pampeana",
+    "hectareas": 5,
+    "municipio": "Cañuelas"
+  }
+}

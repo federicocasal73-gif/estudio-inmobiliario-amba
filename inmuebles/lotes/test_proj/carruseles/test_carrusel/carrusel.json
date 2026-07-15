@@ -1,0 +1,122 @@
+{
+  "tema": "test",
+  "tipo": "lote_premium",
+  "municipio": "Cañuelas",
+  "tono": "emotivo",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "portada",
+      "descripcion": "Portada: chacra 5 ha en Cañuelas al atardecer",
+      "prompt": "5 hectares pampas farm, traditional estancia house, Cañuelas, Argentina, verano pampeano, atardecer, wide rural landscape, pampas grass, scattered ombú trees, eucalyptus windbreak, traditional wire fence, dirt road entrance, golden pampas sunset, ultra realistic photography, 8k, real estate photography",
+      "texto_overlay": "5 ha · Cañuelas",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "chacra_pampeana",
+        "hectareas": 5,
+        "municipio": "Cañuelas"
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "foto",
+      "descripcion": "Vista aerea con drone del loteo",
+      "prompt": "aerial drone view of 20 lot subdivision in Cañuelas, Buenos Aires province, aerial drone shot, subdivision of rectangular lots, dirt streets forming grid, countryside around, green pastures, pampas horizon, ultra realistic, sharp focus, 8k",
+      "texto_overlay": "Vista aérea · 360° de horizonte pampeano",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "tipo_prompt": "vista_aerea_loteo",
+        "municipio": "Cañuelas"
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "foto",
+      "descripcion": "Detalle de tranquera de madera",
+      "prompt": "rustic wooden gate entrance to farm in Cañuelas, Buenos Aires province, rustic wooden gate with wire fence, traditional Argentine countryside entrance, ombú trees in background, dirt road, photographic style",
+      "texto_overlay": "Tu próxima tranquera · ingreso sobre calle mejorada",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "tranquera",
+        "municipio": "Cañuelas"
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "foto",
+      "descripcion": "Molino y tanque australiano funcionando",
+      "prompt": "classic windmill and water tank in Cañuelas, Buenos Aires province, classic Argentine windmill next to round water tank, pampas landscape, blue sky with clouds, traditional rural icon, photography",
+      "texto_overlay": "Agua propia · molino + tanque australiano",
+      "aspect_ratio": "1024*1024",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "molino",
+        "municipio": "Cañuelas"
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "descripcion": "Slide final con datos de contacto",
+      "prompt": "",
+      "texto_overlay": "¿Lo vemos?\nDM o link en bio",
+      "aspect_ratio": "896*1152",
+      "styles": [],
+      "metadata": {
+        "requiere_foto_real": false,
+        "tipo": "cta"
+      }
+    }
+  ],
+  "caption_narrativo": "🌾 test\n\nUna historia en 5 imágenes. Seguimos →\n\nSlide 1: 5 ha · Cañuelas\n\nMirá esto →\n\nSlide 2: Vista aérea · 360° de horizonte pampeano\n\nDeslizá →\n\nSlide 3: Tu próxima tranquera · ingreso sobre calle mejorada\n\nDeslizá →\n\nSlide 4: Agua propia · molino + tanque australiano\n\nMirá esto →\n\nSlide 5: ¿Lo vemos?\nDM o link en bio\n\n📍 Cañuelas, Buenos Aires\n\nTe esperamos.",
+  "hashtags": [
+    "#inversionagro",
+    "#inversioninmobiliaria",
+    "#inmobiliariacanuelas",
+    "#inmuebles",
+    "#canuelasrealestate",
+    "#terrenos",
+    "#inversiones",
+    "#chacrasencanuelas",
+    "#camposenventa",
+    "#rendimientoinmobiliario",
+    "#tierrasenventa",
+    "#patrimonio",
+    "#inmobiliaria",
+    "#ganaderia",
+    "#estancia",
+    "#bienesraices",
+    "#lotesencanuelas",
+    "#tierracomoinversion",
+    "#invertirenlotes",
+    "#chacras"
+  ],
+  "fecha_creacion": "2026-07-15T10:13:27",
+  "metadata": {
+    "hectareas": 5,
+    "precio_usd": null,
+    "distancia_caba": null,
+    "n_slides": 5
+  },
+  "n_slides": 5,
+  "caption_completo": "🌾 test\n\nUna historia en 5 imágenes. Seguimos →\n\nSlide 1: 5 ha · Cañuelas\n\nMirá esto →\n\nSlide 2: Vista aérea · 360° de horizonte pampeano\n\nDeslizá →\n\nSlide 3: Tu próxima tranquera · ingreso sobre calle mejorada\n\nDeslizá →\n\nSlide 4: Agua propia · molino + tanque australiano\n\nMirá esto →\n\nSlide 5: ¿Lo vemos?\nDM o link en bio\n\n📍 Cañuelas, Buenos Aires\n\nTe esperamos.\n\n#inversionagro #inversioninmobiliaria #inmobiliariacanuelas #inmuebles #canuelasrealestate #terrenos #inversiones #chacrasencanuelas #camposenventa #rendimientoinmobiliario #tierrasenventa #patrimonio #inmobiliaria #ganaderia #estancia #bienesraices #lotesencanuelas #tierracomoinversion #invertirenlotes #chacras"
+}

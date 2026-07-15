@@ -4,6 +4,7 @@ Tests principales sobre la API publica del estudio:
 - VerticalLotes.chacra_pampeana() y similares
 - CaptionFactory.post_*()
 """
+
 from __future__ import annotations
 
 import pytest
@@ -33,8 +34,7 @@ class TestVerticalLotes:
 
     def test_chacra_pampeana_generates_prompt(self):
         # Act
-        req = self.lotes.chacra_pampeana(
-            hectareas=5, municipio="Cañuelas", momento="atardecer")
+        req = self.lotes.chacra_pampeana(hectareas=5, municipio="Cañuelas", momento="atardecer")
 
         # Assert
         assert req.prompt
@@ -44,17 +44,23 @@ class TestVerticalLotes:
 
     def test_chacra_pampeana_metadata(self):
         # Act
-        req = self.lotes.chacra_pampeana(
-            hectareas=5, municipio="Cañuelas")
+        req = self.lotes.chacra_pampeana(hectareas=5, municipio="Cañuelas")
 
         # Assert
         assert req.metadata["tipo"] == "chacra"
         assert req.metadata["hectareas"] == 5
         assert req.metadata["municipio"] == "Cañuelas"
 
-    @pytest.mark.parametrize("municipio", [
-        "Cañuelas", "Pilar", "Escobar", "Mercedes", "Luján",
-    ])
+    @pytest.mark.parametrize(
+        "municipio",
+        [
+            "Cañuelas",
+            "Pilar",
+            "Escobar",
+            "Mercedes",
+            "Luján",
+        ],
+    )
     def test_chacra_pampeana_with_various_municipios(self, municipio):
         # Act
         req = self.lotes.chacra_pampeana(hectareas=5, municipio=municipio)
@@ -74,8 +80,7 @@ class TestVerticalLotes:
 
     def test_lote_inversion_chico_uses_small_area(self):
         # Act
-        req = self.lotes.lote_inversion_chico(
-            metros_cuadrados=600, municipio="Pilar")
+        req = self.lotes.lote_inversion_chico(metros_cuadrados=600, municipio="Pilar")
 
         # Assert
         assert "600" in req.prompt
@@ -108,7 +113,8 @@ class TestCaptionFactory:
     def test_post_presupuesto_obra(self):
         # Act
         post = self.post.post_presupuesto_obra(
-            zona="Cañuelas", metros_cuadrados=130,
+            zona="Cañuelas",
+            metros_cuadrados=130,
         )
 
         # Assert
@@ -128,8 +134,11 @@ class TestCaptionFactory:
     def test_post_lote_venta_with_all_tonos(self, tono):
         # Act
         post = self.post.post_lote_venta(
-            tema="test", municipio="Cañuelas",
-            hectareas="5", distancia_caba="65 km", tono=tono,
+            tema="test",
+            municipio="Cañuelas",
+            hectareas="5",
+            distancia_caba="65 km",
+            tono=tono,
         )
 
         # Assert
@@ -154,8 +163,7 @@ class TestHashtags:
 
     def test_hashtags_with_blacklist(self):
         # Act
-        tags = self.post.hashtags(["general"], "Cañuelas",
-                                  blacklist=["#lotes"])
+        tags = self.post.hashtags(["general"], "Cañuelas", blacklist=["#lotes"])
 
         # Assert (debe excluir solo "#lotes" exacto, no variaciones como "#lotesencanuelas")
         assert "#lotes" not in tags
@@ -163,8 +171,7 @@ class TestHashtags:
 
     def test_hashtags_with_must_include(self):
         # Act
-        tags = self.post.hashtags(["general"], "Cañuelas",
-                                  must_include=["#patrimonio"])
+        tags = self.post.hashtags(["general"], "Cañuelas", must_include=["#patrimonio"])
 
         # Assert
         assert "#patrimonio" in tags

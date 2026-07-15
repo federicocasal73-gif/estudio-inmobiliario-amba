@@ -26,6 +26,7 @@ Uso:
     )
     print(resultado.ruta_salida)
 """
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
@@ -35,6 +36,7 @@ from typing import Any
 
 try:
     from PIL import Image, ImageEnhance, ImageFilter, ImageOps, ImageStat
+
     HAS_PILLOW = True
 except ImportError:
     HAS_PILLOW = False
@@ -53,7 +55,9 @@ class ResultadoMejora:
     metadata_origen: dict[str, Any] = field(default_factory=dict)
     metadata_destino: dict[str, Any] = field(default_factory=dict)
     fooocus_usado: bool = False
-    fecha_procesado: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    fecha_procesado: str = field(
+        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -67,24 +71,39 @@ class MejoraFotos:
 
     PARAMETROS_POR_MODO = {
         "natural": {
-            "brillo": 1.05, "contraste": 1.10, "saturacion": 1.05,
-            "sharpness": 1.20, "warmth": 1.00,
+            "brillo": 1.05,
+            "contraste": 1.10,
+            "saturacion": 1.05,
+            "sharpness": 1.20,
+            "warmth": 1.00,
         },
         "magazine": {
-            "brillo": 1.08, "contraste": 1.25, "saturacion": 1.15,
-            "sharpness": 1.40, "warmth": 1.15,
+            "brillo": 1.08,
+            "contraste": 1.25,
+            "saturacion": 1.15,
+            "sharpness": 1.40,
+            "warmth": 1.15,
         },
         "instagram": {
-            "brillo": 1.10, "contraste": 1.20, "saturacion": 1.20,
-            "sharpness": 1.50, "warmth": 1.10,
+            "brillo": 1.10,
+            "contraste": 1.20,
+            "saturacion": 1.20,
+            "sharpness": 1.50,
+            "warmth": 1.10,
         },
         "golden_hour": {
-            "brillo": 1.05, "contraste": 1.15, "saturacion": 1.25,
-            "sharpness": 1.30, "warmth": 1.40,
+            "brillo": 1.05,
+            "contraste": 1.15,
+            "saturacion": 1.25,
+            "sharpness": 1.30,
+            "warmth": 1.40,
         },
         "pampa": {
-            "brillo": 1.05, "contraste": 1.30, "saturacion": 1.35,
-            "sharpness": 1.40, "warmth": 1.05,
+            "brillo": 1.05,
+            "contraste": 1.30,
+            "saturacion": 1.35,
+            "sharpness": 1.40,
+            "warmth": 1.05,
         },
     }
 
@@ -103,6 +122,7 @@ class MejoraFotos:
             return False
         try:
             import urllib.request
+
             req = urllib.request.Request(f"{self.fooocus_url}/", method="GET")
             with urllib.request.urlopen(req, timeout=3):
                 return True
@@ -111,12 +131,15 @@ class MejoraFotos:
 
     # ---------------- API principal ----------------
 
-    def mejorar(self, foto_path: str | Path,
-                modo: str = "magazine",
-                intensidad: str = "media",
-                upscale: int = 1,
-                ruta_salida: str | Path | None = None,
-                tamaño_ig: tuple[int, int] | None = None) -> ResultadoMejora:
+    def mejorar(
+        self,
+        foto_path: str | Path,
+        modo: str = "magazine",
+        intensidad: str = "media",
+        upscale: int = 1,
+        ruta_salida: str | Path | None = None,
+        tamaño_ig: tuple[int, int] | None = None,
+    ) -> ResultadoMejora:
         if not HAS_PILLOW:
             raise RuntimeError("Pillow no instalado. pip install pillow")
 
@@ -139,11 +162,13 @@ class MejoraFotos:
         resultado.metadata_origen = self._metadata_imagen(foto_path)
 
         img = Image.open(foto_path)
-        resultado.metadata_origen.update({
-            "modo": img.mode,
-            "size": img.size,
-            "formato": img.format,
-        })
+        resultado.metadata_origen.update(
+            {
+                "modo": img.mode,
+                "size": img.size,
+                "formato": img.format,
+            }
+        )
 
         transformaciones: list[str] = []
 
@@ -192,49 +217,66 @@ class MejoraFotos:
 
         img.save(ruta_salida, "JPEG", quality=92, optimize=True)
         resultado.metadata_destino = self._metadata_imagen(ruta_salida)
-        resultado.metadata_destino.update({
-            "modo": img.mode,
-            "size": img.size,
-            "formato": "JPEG",
-        })
+        resultado.metadata_destino.update(
+            {
+                "modo": img.mode,
+                "size": img.size,
+                "formato": "JPEG",
+            }
+        )
         resultado.foto_destino = str(ruta_salida.resolve())
         resultado.transformaciones = transformaciones
         return resultado
 
-    def batch(self, carpeta_origen: str | Path,
-              carpeta_destino: str | Path,
-              modo: str = "magazine",
-              intensidad: str = "media",
-              upscale: int = 1,
-              extensiones: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".tif", ".tiff")) -> list[ResultadoMejora]:
+    def batch(
+        self,
+        carpeta_origen: str | Path,
+        carpeta_destino: str | Path,
+        modo: str = "magazine",
+        intensidad: str = "media",
+        upscale: int = 1,
+        extensiones: tuple[str, ...] = (".jpg", ".jpeg", ".png", ".tif", ".tiff"),
+    ) -> list[ResultadoMejora]:
         carpeta_origen = Path(carpeta_origen)
         carpeta_destino = Path(carpeta_destino)
         carpeta_destino.mkdir(parents=True, exist_ok=True)
 
-        fotos = sorted([p for p in carpeta_origen.iterdir()
-                        if p.is_file() and p.suffix.lower() in extensiones])
+        fotos = sorted(
+            [p for p in carpeta_origen.iterdir() if p.is_file() and p.suffix.lower() in extensiones]
+        )
         resultados: list[ResultadoMejora] = []
         for foto in fotos:
             try:
                 ruta_salida = carpeta_destino / f"{foto.stem}_{modo}_x{upscale}.jpg"
                 resultado = self.mejorar(
-                    foto_path=foto, modo=modo, intensidad=intensidad,
-                    upscale=upscale, ruta_salida=ruta_salida)
+                    foto_path=foto,
+                    modo=modo,
+                    intensidad=intensidad,
+                    upscale=upscale,
+                    ruta_salida=ruta_salida,
+                )
                 resultados.append(resultado)
             except Exception as e:
-                resultados.append(ResultadoMejora(
-                    foto_origen=str(foto),
-                    foto_destino="",
-                    modo=modo, intensidad=intensidad, upscale=upscale,
-                    transformaciones=[f"ERROR: {e}"],
-                ))
+                resultados.append(
+                    ResultadoMejora(
+                        foto_origen=str(foto),
+                        foto_destino="",
+                        modo=modo,
+                        intensidad=intensidad,
+                        upscale=upscale,
+                        transformaciones=[f"ERROR: {e}"],
+                    )
+                )
         return resultados
 
     # ---------------- Hooks para Fooocus (futuro) ----------------
 
-    def mejorar_con_fooocus(self, foto_path: str | Path,
-                             operacion: str = "upscale_2x",
-                             ruta_salida: str | Path | None = None) -> ResultadoMejora:
+    def mejorar_con_fooocus(
+        self,
+        foto_path: str | Path,
+        operacion: str = "upscale_2x",
+        ruta_salida: str | Path | None = None,
+    ) -> ResultadoMejora:
         """Hook para cuando Fooocus este activo.
 
         operacion: 'upscale_2x' | 'upscale_4x' | 'face_enhance' | 'inpaint'
@@ -247,12 +289,11 @@ class MejoraFotos:
 
         # Por ahora delega al metodo local hasta que integremos la API de Fooocus
         escala = {"upscale_2x": 2, "upscale_4x": 4}.get(operacion, 2)
-        resultado = self.mejorar(foto_path, modo="magazine",
-                                 intensidad="media", upscale=escala,
-                                 ruta_salida=ruta_salida)
+        resultado = self.mejorar(
+            foto_path, modo="magazine", intensidad="media", upscale=escala, ruta_salida=ruta_salida
+        )
         resultado.fooocus_usado = False  # hasta integrar API
-        resultado.transformaciones.append(
-            "fooocus_delegated_to_local_pending_api_integration")
+        resultado.transformaciones.append("fooocus_delegated_to_local_pending_api_integration")
         return resultado
 
     # ---------------- Utilidades internas ----------------
@@ -321,8 +362,7 @@ class MejoraFotos:
         return img.resize(new_size, Image.Resampling.LANCZOS)
 
     @staticmethod
-    def _resize_instagram(img: Image.Image,
-                          target: tuple[int, int]) -> Image.Image:
+    def _resize_instagram(img: Image.Image, target: tuple[int, int]) -> Image.Image:
         return img.resize(target, Image.Resampling.LANCZOS)
 
 
@@ -346,7 +386,9 @@ def demo() -> None:
     print("\n--- Mejora con modo 'magazine' ---")
     resultado = mejora.mejorar(
         foto_path=test_foto,
-        modo="magazine", intensidad="media", upscale=1,
+        modo="magazine",
+        intensidad="media",
+        upscale=1,
     )
     print(f"Origen:  {resultado.foto_origen}")
     print(f"Destino: {resultado.foto_destino}")
@@ -360,7 +402,9 @@ def demo() -> None:
     resultados_batch = mejora.batch(
         carpeta_origen=test_dir,
         carpeta_destino=test_dir / "mejoras_batch",
-        modo="golden_hour", intensidad="alta", upscale=2,
+        modo="golden_hour",
+        intensidad="alta",
+        upscale=2,
     )
     for r in resultados_batch:
         print(f"  {r.foto_origen} -> {r.foto_destino} ({len(r.transformaciones)} pasos)")

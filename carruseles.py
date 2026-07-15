@@ -17,6 +17,7 @@ Uso desde opencode:
                                    hectareas=5, precio_usd="USD 60.000")
     factory.guardar(carrusel, proyecto="chacra-canuelas-5ha", nombre="lote_premium")
 """
+
 from __future__ import annotations
 
 import json
@@ -41,10 +42,10 @@ ASPECT_INSTAGRAM_POST = "896*1152"
 @dataclass
 class Slide:
     numero: int
-    tipo: str                          # "portada" | "foto" | "dato" | "beneficio" | "cta" | "placeholder_foto"
-    descripcion: str                   # descripcion humana del slide
-    prompt: str = ""                   # prompt SDXL (vacio si es placeholder)
-    texto_overlay: str = ""            # texto que va encima de la imagen
+    tipo: str  # "portada" | "foto" | "dato" | "beneficio" | "cta" | "placeholder_foto"
+    descripcion: str  # descripcion humana del slide
+    prompt: str = ""  # prompt SDXL (vacio si es placeholder)
+    texto_overlay: str = ""  # texto que va encima de la imagen
     aspect_ratio: str = ASPECT_INSTAGRAM_POST
     styles: list[str] = field(default_factory=lambda: ["Fooocus V2", "Fooocus Enhance"])
     metadata: dict[str, Any] = field(default_factory=dict)
@@ -56,13 +57,15 @@ class Slide:
 @dataclass
 class Carrusel:
     tema: str
-    tipo: str                          # "lote_premium" | "country_etapa" | "obra_avance" | "servicios" | "antes_despues"
+    tipo: str  # "lote_premium" | "country_etapa" | "obra_avance" | "servicios" | "antes_despues"
     municipio: str
     tono: str
     slides: list[Slide]
     caption_narrativo: str
     hashtags: list[str]
-    fecha_creacion: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    fecha_creacion: str = field(
+        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+    )
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -104,8 +107,14 @@ class CaptionNarrativo:
     ]
 
     @classmethod
-    def unir(cls, tema: str, municipio: str, slides: list[Slide],
-             tono: str = "emotivo", gancho_inicial: str | None = None) -> str:
+    def unir(
+        cls,
+        tema: str,
+        municipio: str,
+        slides: list[Slide],
+        tono: str = "emotivo",
+        gancho_inicial: str | None = None,
+    ) -> str:
         gancho = gancho_inicial or random.choice(cls.GANCHOS)
         lineas: list[str] = []
 
@@ -156,12 +165,16 @@ class CarruselFactory:
 
     # ---------------- 1) LOTE PREMIUM ----------------
 
-    def lote_premium(self, tema: str, municipio: str,
-                     hectareas: float | int,
-                     precio_usd: str | None = None,
-                     distancia_caba: str | None = None,
-                     tono: str = "emotivo",
-                     n_slides: int = 6) -> Carrusel:
+    def lote_premium(
+        self,
+        tema: str,
+        municipio: str,
+        hectareas: float | int,
+        precio_usd: str | None = None,
+        distancia_caba: str | None = None,
+        tono: str = "emotivo",
+        n_slides: int = 6,
+    ) -> Carrusel:
         if n_slides < 4:
             n_slides = 4
 
@@ -169,126 +182,159 @@ class CarruselFactory:
 
         # Slide 1: Portada
         req_portada = self.studio.lotes.chacra_pampeana(
-            hectareas=hectareas, municipio=municipio, momento="atardecer")
-        slides.append(Slide(
-            numero=1,
-            tipo="portada",
-            descripcion=f"Portada: chacra {hectareas} ha en {municipio} al atardecer",
-            prompt=req_portada.prompt,
-            aspect_ratio=req_portada.aspect_ratio,
-            styles=req_portada.styles,
-            texto_overlay=self._overlay_portada(hectareas, municipio, precio_usd),
-            metadata={"tipo_prompt": "chacra_pampeana", "hectareas": hectareas,
-                      "municipio": municipio},
-        ))
+            hectareas=hectareas, municipio=municipio, momento="atardecer"
+        )
+        slides.append(
+            Slide(
+                numero=1,
+                tipo="portada",
+                descripcion=f"Portada: chacra {hectareas} ha en {municipio} al atardecer",
+                prompt=req_portada.prompt,
+                aspect_ratio=req_portada.aspect_ratio,
+                styles=req_portada.styles,
+                texto_overlay=self._overlay_portada(hectareas, municipio, precio_usd),
+                metadata={
+                    "tipo_prompt": "chacra_pampeana",
+                    "hectareas": hectareas,
+                    "municipio": municipio,
+                },
+            )
+        )
 
         # Slide 2: Vista aerea
         req_aerea = self.studio.lotes.vista_aerea_loteo(
             n_lotes=int(hectareas * 4) if isinstance(hectareas, (int, float)) else 20,
-            municipio=municipio)
-        slides.append(Slide(
-            numero=2,
-            tipo="foto",
-            descripcion="Vista aerea con drone del loteo",
-            prompt=req_aerea.prompt,
-            aspect_ratio=req_aerea.aspect_ratio,
-            styles=req_aerea.styles,
-            texto_overlay="Vista aérea · 360° de horizonte pampeano",
-            metadata={"tipo_prompt": "vista_aerea_loteo", "municipio": municipio},
-        ))
+            municipio=municipio,
+        )
+        slides.append(
+            Slide(
+                numero=2,
+                tipo="foto",
+                descripcion="Vista aerea con drone del loteo",
+                prompt=req_aerea.prompt,
+                aspect_ratio=req_aerea.aspect_ratio,
+                styles=req_aerea.styles,
+                texto_overlay="Vista aérea · 360° de horizonte pampeano",
+                metadata={"tipo_prompt": "vista_aerea_loteo", "municipio": municipio},
+            )
+        )
 
         # Slide 3: Tranquera
         req_tranquera = self.studio.lotes.tranquera_argentina(municipio=municipio)
-        slides.append(Slide(
-            numero=3,
-            tipo="foto",
-            descripcion="Detalle de tranquera de madera",
-            prompt=req_tranquera.prompt,
-            aspect_ratio=req_tranquera.aspect_ratio,
-            styles=req_tranquera.styles,
-            texto_overlay="Tu próxima tranquera · ingreso sobre calle mejorada",
-            metadata={"tipo_prompt": "tranquera", "municipio": municipio},
-        ))
+        slides.append(
+            Slide(
+                numero=3,
+                tipo="foto",
+                descripcion="Detalle de tranquera de madera",
+                prompt=req_tranquera.prompt,
+                aspect_ratio=req_tranquera.aspect_ratio,
+                styles=req_tranquera.styles,
+                texto_overlay="Tu próxima tranquera · ingreso sobre calle mejorada",
+                metadata={"tipo_prompt": "tranquera", "municipio": municipio},
+            )
+        )
 
         # Slide 4: Molino
         req_molino = self.studio.lotes.molino_tanque_australiano(municipio=municipio)
-        slides.append(Slide(
-            numero=4,
-            tipo="foto",
-            descripcion="Molino y tanque australiano funcionando",
-            prompt=req_molino.prompt,
-            aspect_ratio=req_molino.aspect_ratio,
-            styles=req_molino.styles,
-            texto_overlay="Agua propia · molino + tanque australiano",
-            metadata={"tipo_prompt": "molino", "municipio": municipio},
-        ))
+        slides.append(
+            Slide(
+                numero=4,
+                tipo="foto",
+                descripcion="Molino y tanque australiano funcionando",
+                prompt=req_molino.prompt,
+                aspect_ratio=req_molino.aspect_ratio,
+                styles=req_molino.styles,
+                texto_overlay="Agua propia · molino + tanque australiano",
+                metadata={"tipo_prompt": "molino", "municipio": municipio},
+            )
+        )
 
         # Slide 5: Render del proyecto (si hay slide extra)
         if n_slides >= 6:
             req_render = self.studio.construccion.render_proyecto(
                 estilo="casa de campo tradicional con galería",
-                hectareas=hectareas, municipio=municipio)
-            slides.append(Slide(
-                numero=5,
-                tipo="beneficio",
-                descripcion="Render de casa posible sobre el lote",
-                prompt=req_render.prompt,
-                aspect_ratio=req_render.aspect_ratio,
-                styles=req_render.styles,
-                texto_overlay="Tu casa acá · te la diseñamos llave en mano",
-                metadata={"tipo_prompt": "render_proyecto", "municipio": municipio},
-            ))
+                hectareas=hectareas,
+                municipio=municipio,
+            )
+            slides.append(
+                Slide(
+                    numero=5,
+                    tipo="beneficio",
+                    descripcion="Render de casa posible sobre el lote",
+                    prompt=req_render.prompt,
+                    aspect_ratio=req_render.aspect_ratio,
+                    styles=req_render.styles,
+                    texto_overlay="Tu casa acá · te la diseñamos llave en mano",
+                    metadata={"tipo_prompt": "render_proyecto", "municipio": municipio},
+                )
+            )
 
         # Slide final: CTA con datos
-        slides.append(Slide(
-            numero=len(slides) + 1,
-            tipo="cta",
-            descripcion="Slide final con datos de contacto",
-            prompt="",
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=[],
-            texto_overlay=self._overlay_cta(precio_usd, distancia_caba),
-            metadata={"requiere_foto_real": False, "tipo": "cta"},
-        ))
+        slides.append(
+            Slide(
+                numero=len(slides) + 1,
+                tipo="cta",
+                descripcion="Slide final con datos de contacto",
+                prompt="",
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=[],
+                texto_overlay=self._overlay_cta(precio_usd, distancia_caba),
+                metadata={"requiere_foto_real": False, "tipo": "cta"},
+            )
+        )
 
         caption = CaptionNarrativo.unir(tema, municipio, slides, tono)
-        hashtags = self.studio.post.hashtags(
-            ["general", "campo", "inversion"], municipio)
+        hashtags = self.studio.post.hashtags(["general", "campo", "inversion"], municipio)
 
         return Carrusel(
-            tema=tema, tipo="lote_premium", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"hectareas": hectareas, "precio_usd": precio_usd,
-                      "distancia_caba": distancia_caba, "n_slides": len(slides)},
+            tema=tema,
+            tipo="lote_premium",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "hectareas": hectareas,
+                "precio_usd": precio_usd,
+                "distancia_caba": distancia_caba,
+                "n_slides": len(slides),
+            },
         )
 
     # ---------------- 2) COUNTRY ETAPA ----------------
 
-    def country_etapa(self, nombre_country: str, municipio: str,
-                      etapa: str = "2", n_lotes: int = 12,
-                      precio_desde: str = "USD 85.000",
-                      amenities: str = "Club house, pileta, canchas de tenis, golf",
-                      distancia_caba: str = "45 km",
-                      tono: str = "premium",
-                      n_slides: int = 5) -> Carrusel:
+    def country_etapa(
+        self,
+        nombre_country: str,
+        municipio: str,
+        etapa: str = "2",
+        n_lotes: int = 12,
+        precio_desde: str = "USD 85.000",
+        amenities: str = "Club house, pileta, canchas de tenis, golf",
+        distancia_caba: str = "45 km",
+        tono: str = "premium",
+        n_slides: int = 5,
+    ) -> Carrusel:
         if n_slides < 3:
             n_slides = 3
 
         slides: list[Slide] = []
 
         # Slide 1: Portada (siempre)
-        req = self.studio.lotes.country_premium(
-            nombre=nombre_country, amenities=amenities)
-        slides.append(Slide(
-            numero=1,
-            tipo="portada",
-            descripcion=f"Portada: entrada de {nombre_country}",
-            prompt=req.prompt,
-            aspect_ratio=req.aspect_ratio,
-            styles=req.styles,
-            texto_overlay=f"{nombre_country}\nEtapa {etapa} disponible",
-            metadata={"nombre_country": nombre_country, "etapa": etapa},
-        ))
+        req = self.studio.lotes.country_premium(nombre=nombre_country, amenities=amenities)
+        slides.append(
+            Slide(
+                numero=1,
+                tipo="portada",
+                descripcion=f"Portada: entrada de {nombre_country}",
+                prompt=req.prompt,
+                aspect_ratio=req.aspect_ratio,
+                styles=req.styles,
+                texto_overlay=f"{nombre_country}\nEtapa {etapa} disponible",
+                metadata={"nombre_country": nombre_country, "etapa": etapa},
+            )
+        )
 
         # Slides intermedios segun n_slides:
         #   3 slides: portada + obra + cta
@@ -299,77 +345,88 @@ class CarruselFactory:
         intermedios: list[Slide] = []
 
         if n_slides >= 4:
-            intermedios.append(Slide(
-                numero=len(slides) + len(intermedios) + 1,
-                tipo="foto",
-                descripcion="Masterplan del country con lotes marcados",
-                prompt=(
-                    f"architectural masterplan visualization of {nombre_country} gated community "
-                    f"in {municipio}, Buenos Aires province, {n_lotes} marked lots, "
-                    f"roads, green spaces, club house, professional architectural rendering"
-                ),
-                aspect_ratio="1152*896",
-                styles=["Fooocus V2", "Fooocus Enhance", "misc-architectural"],
-                texto_overlay=f"{n_lotes} lotes · desde {precio_desde}",
-                metadata={"tipo_prompt": "masterplan"},
-            ))
+            intermedios.append(
+                Slide(
+                    numero=len(slides) + len(intermedios) + 1,
+                    tipo="foto",
+                    descripcion="Masterplan del country con lotes marcados",
+                    prompt=(
+                        f"architectural masterplan visualization of {nombre_country} gated community "
+                        f"in {municipio}, Buenos Aires province, {n_lotes} marked lots, "
+                        f"roads, green spaces, club house, professional architectural rendering"
+                    ),
+                    aspect_ratio="1152*896",
+                    styles=["Fooocus V2", "Fooocus Enhance", "misc-architectural"],
+                    texto_overlay=f"{n_lotes} lotes · desde {precio_desde}",
+                    metadata={"tipo_prompt": "masterplan"},
+                )
+            )
 
         if n_slides >= 5:
-            intermedios.append(Slide(
-                numero=len(slides) + len(intermedios) + 1,
-                tipo="beneficio",
-                descripcion="Amenities del country",
-                prompt=(
-                    f"luxury club house and amenities at {nombre_country} country, "
-                    f"{amenities}, swimming pool, tennis courts, modern architecture, "
-                    f"{municipio} Buenos Aires, blue hour photography"
-                ),
-                aspect_ratio="1152*896",
-                styles=["Fooocus V2", "Fooocus Enhance", "ads-luxury"],
-                texto_overlay=f"Amenities · {amenities}",
-                metadata={"amenities": amenities},
-            ))
+            intermedios.append(
+                Slide(
+                    numero=len(slides) + len(intermedios) + 1,
+                    tipo="beneficio",
+                    descripcion="Amenities del country",
+                    prompt=(
+                        f"luxury club house and amenities at {nombre_country} country, "
+                        f"{amenities}, swimming pool, tennis courts, modern architecture, "
+                        f"{municipio} Buenos Aires, blue hour photography"
+                    ),
+                    aspect_ratio="1152*896",
+                    styles=["Fooocus V2", "Fooocus Enhance", "ads-luxury"],
+                    texto_overlay=f"Amenities · {amenities}",
+                    metadata={"amenities": amenities},
+                )
+            )
 
         if n_slides >= 3:
             req_obra = self.studio.lotes.loteo_en_desarrollo(
-                etapa=f"Etapa {etapa}", municipio=municipio)
-            intermedios.append(Slide(
-                numero=len(slides) + len(intermedios) + 1,
-                tipo="foto",
-                descripcion="Obra de movimiento de suelo en etapa actual",
-                prompt=req_obra.prompt,
-                aspect_ratio=req_obra.aspect_ratio,
-                styles=req_obra.styles,
-                texto_overlay=f"Etapa {etapa} · obra en curso",
-                metadata={"tipo_prompt": "loteo_en_desarrollo"},
-            ))
+                etapa=f"Etapa {etapa}", municipio=municipio
+            )
+            intermedios.append(
+                Slide(
+                    numero=len(slides) + len(intermedios) + 1,
+                    tipo="foto",
+                    descripcion="Obra de movimiento de suelo en etapa actual",
+                    prompt=req_obra.prompt,
+                    aspect_ratio=req_obra.aspect_ratio,
+                    styles=req_obra.styles,
+                    texto_overlay=f"Etapa {etapa} · obra en curso",
+                    metadata={"tipo_prompt": "loteo_en_desarrollo"},
+                )
+            )
 
         if n_slides >= 6:
-            intermedios.append(Slide(
-                numero=len(slides) + len(intermedios) + 1,
-                tipo="beneficio",
-                descripcion="Render de lote con casa modelo",
-                prompt=(
-                    f"architectural rendering of a modern country house at {nombre_country}, "
-                    f"{municipio} Buenos Aires, manicured lawn, sunset, photorealistic"
-                ),
-                aspect_ratio="1152*896",
-                styles=["Fooocus V2", "Fooocus Enhance", "misc-architectural"],
-                texto_overlay="Casa modelo · te la entregamos llave en mano",
-                metadata={"tipo_prompt": "render_casa_country"},
-            ))
+            intermedios.append(
+                Slide(
+                    numero=len(slides) + len(intermedios) + 1,
+                    tipo="beneficio",
+                    descripcion="Render de lote con casa modelo",
+                    prompt=(
+                        f"architectural rendering of a modern country house at {nombre_country}, "
+                        f"{municipio} Buenos Aires, manicured lawn, sunset, photorealistic"
+                    ),
+                    aspect_ratio="1152*896",
+                    styles=["Fooocus V2", "Fooocus Enhance", "misc-architectural"],
+                    texto_overlay="Casa modelo · te la entregamos llave en mano",
+                    metadata={"tipo_prompt": "render_casa_country"},
+                )
+            )
 
         if n_slides >= 7:
-            intermedios.append(Slide(
-                numero=len(slides) + len(intermedios) + 1,
-                tipo="dato",
-                descripcion="Dato clave del country",
-                prompt="",
-                aspect_ratio=ASPECT_INSTAGRAM_POST,
-                styles=[],
-                texto_overlay=f"Desde {precio_desde}\nA {distancia_caba} de CABA",
-                metadata={"requiere_foto_real": False, "tipo": "dato"},
-            ))
+            intermedios.append(
+                Slide(
+                    numero=len(slides) + len(intermedios) + 1,
+                    tipo="dato",
+                    descripcion="Dato clave del country",
+                    prompt="",
+                    aspect_ratio=ASPECT_INSTAGRAM_POST,
+                    styles=[],
+                    texto_overlay=f"Desde {precio_desde}\nA {distancia_caba} de CABA",
+                    metadata={"requiere_foto_real": False, "tipo": "dato"},
+                )
+            )
 
         slides.extend(intermedios)
 
@@ -378,63 +435,78 @@ class CarruselFactory:
             s.numero = i + 1
 
         # Slide CTA final
-        slides.append(Slide(
-            numero=len(slides) + 1,
-            tipo="cta",
-            descripcion="Slide final con datos para reservar",
-            prompt="",
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=[],
-            texto_overlay=self._overlay_cta_country(
-                precio_desde, distancia_caba, n_lotes),
-            metadata={"requiere_foto_real": False, "tipo": "cta"},
-        ))
+        slides.append(
+            Slide(
+                numero=len(slides) + 1,
+                tipo="cta",
+                descripcion="Slide final con datos para reservar",
+                prompt="",
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=[],
+                texto_overlay=self._overlay_cta_country(precio_desde, distancia_caba, n_lotes),
+                metadata={"requiere_foto_real": False, "tipo": "cta"},
+            )
+        )
 
         # Renumerar tras agregar CTA
         for i, s in enumerate(slides):
             s.numero = i + 1
 
         caption = CaptionNarrativo.unir(
-            f"{nombre_country} · Etapa {etapa}", municipio, slides, tono)
+            f"{nombre_country} · Etapa {etapa}", municipio, slides, tono
+        )
         hashtags = self.studio.post.hashtags(["country", "inversion"], municipio)
 
         return Carrusel(
             tema=f"{nombre_country} · Etapa {etapa}",
-            tipo="country_etapa", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"nombre_country": nombre_country, "etapa": etapa,
-                      "n_lotes": n_lotes, "precio_desde": precio_desde,
-                      "n_slides": len(slides)},
+            tipo="country_etapa",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "nombre_country": nombre_country,
+                "etapa": etapa,
+                "n_lotes": n_lotes,
+                "precio_desde": precio_desde,
+                "n_slides": len(slides),
+            },
         )
 
     # ---------------- 3) OBRA AVANCE ----------------
 
-    def obra_avance(self, nombre_obra: str, municipio: str,
-                    semana: int, etapa: str,
-                    foto_antes_path: str | None = None,
-                    estilo_render: str = "casa de campo tradicional",
-                    hectareas: float | int = 1,
-                    tono: str = "practico",
-                    n_slides: int = 4) -> Carrusel:
+    def obra_avance(
+        self,
+        nombre_obra: str,
+        municipio: str,
+        semana: int,
+        etapa: str,
+        foto_antes_path: str | None = None,
+        estilo_render: str = "casa de campo tradicional",
+        hectareas: float | int = 1,
+        tono: str = "practico",
+        n_slides: int = 4,
+    ) -> Carrusel:
         if n_slides < 3:
             n_slides = 3
 
         slides: list[Slide] = []
 
         # Slide 1: Portada
-        req_obra = self.studio.construccion.obra_gruesa(
-            etapa=etapa, municipio=municipio)
-        slides.append(Slide(
-            numero=1,
-            tipo="portada",
-            descripcion=f"Portada: obra {nombre_obra} semana {semana}",
-            prompt=req_obra.prompt,
-            aspect_ratio=req_obra.aspect_ratio,
-            styles=req_obra.styles,
-            texto_overlay=f"{nombre_obra}\nSemana {semana} · {etapa}",
-            metadata={"nombre_obra": nombre_obra, "semana": semana,
-                      "etapa": etapa},
-        ))
+        req_obra = self.studio.construccion.obra_gruesa(etapa=etapa, municipio=municipio)
+        slides.append(
+            Slide(
+                numero=1,
+                tipo="portada",
+                descripcion=f"Portada: obra {nombre_obra} semana {semana}",
+                prompt=req_obra.prompt,
+                aspect_ratio=req_obra.aspect_ratio,
+                styles=req_obra.styles,
+                texto_overlay=f"{nombre_obra}\nSemana {semana} · {etapa}",
+                metadata={"nombre_obra": nombre_obra, "semana": semana, "etapa": etapa},
+            )
+        )
 
         # Slide 2: Foto real del avance (placeholder)
         if foto_antes_path:
@@ -446,75 +518,91 @@ class CarruselFactory:
             placeholder_desc = f"Placeholder: foto real del avance de semana {semana}"
             prompt_value = ""
 
-        slides.append(Slide(
-            numero=2,
-            tipo="placeholder_foto",
-            descripcion=placeholder_desc,
-            prompt=prompt_value,
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=[],
-            texto_overlay=f"Semana {semana} · así viene avanzando",
-            metadata={
-                "placeholder_foto_path": placeholder_path,
-                "requiere_foto_real": True,
-                "semana": semana,
-            },
-        ))
+        slides.append(
+            Slide(
+                numero=2,
+                tipo="placeholder_foto",
+                descripcion=placeholder_desc,
+                prompt=prompt_value,
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=[],
+                texto_overlay=f"Semana {semana} · así viene avanzando",
+                metadata={
+                    "placeholder_foto_path": placeholder_path,
+                    "requiere_foto_real": True,
+                    "semana": semana,
+                },
+            )
+        )
 
         # Slide 3: Render de cómo va a quedar
         if n_slides >= 4:
             req_render = self.studio.construccion.render_proyecto(
-                estilo=estilo_render, hectareas=hectareas, municipio=municipio)
-            slides.append(Slide(
-                numero=3,
-                tipo="beneficio",
-                descripcion=f"Render objetivo: {estilo_render}",
-                prompt=req_render.prompt,
-                aspect_ratio=req_render.aspect_ratio,
-                styles=req_render.styles,
-                texto_overlay=f"Hacia dónde vamos · {estilo_render}",
-                metadata={"tipo_prompt": "render_proyecto",
-                          "estilo": estilo_render},
-            ))
+                estilo=estilo_render, hectareas=hectareas, municipio=municipio
+            )
+            slides.append(
+                Slide(
+                    numero=3,
+                    tipo="beneficio",
+                    descripcion=f"Render objetivo: {estilo_render}",
+                    prompt=req_render.prompt,
+                    aspect_ratio=req_render.aspect_ratio,
+                    styles=req_render.styles,
+                    texto_overlay=f"Hacia dónde vamos · {estilo_render}",
+                    metadata={"tipo_prompt": "render_proyecto", "estilo": estilo_render},
+                )
+            )
             slide_cta_idx = 4
         else:
             slide_cta_idx = 3
 
         # Slide CTA
-        slides.append(Slide(
-            numero=slide_cta_idx,
-            tipo="cta",
-            descripcion="Próximos pasos + contacto",
-            prompt="",
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=[],
-            texto_overlay=f"Próxima semana: {self._proxima_etapa(etapa)}\n\nTe contamos más por DM",
-            metadata={"requiere_foto_real": False, "tipo": "cta",
-                      "etapa_actual": etapa},
-        ))
+        slides.append(
+            Slide(
+                numero=slide_cta_idx,
+                tipo="cta",
+                descripcion="Próximos pasos + contacto",
+                prompt="",
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=[],
+                texto_overlay=f"Próxima semana: {self._proxima_etapa(etapa)}\n\nTe contamos más por DM",
+                metadata={"requiere_foto_real": False, "tipo": "cta", "etapa_actual": etapa},
+            )
+        )
 
         caption = CaptionNarrativo.unir(
-            f"Obra {nombre_obra} · Semana {semana}", municipio, slides, tono)
-        hashtags = self.studio.post.hashtags(
-            ["construccion", "casas"], municipio)
+            f"Obra {nombre_obra} · Semana {semana}", municipio, slides, tono
+        )
+        hashtags = self.studio.post.hashtags(["construccion", "casas"], municipio)
 
         return Carrusel(
             tema=f"Obra {nombre_obra} · Semana {semana}",
-            tipo="obra_avance", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"nombre_obra": nombre_obra, "semana": semana,
-                      "etapa": etapa, "hectareas": hectareas,
-                      "n_slides": len(slides)},
+            tipo="obra_avance",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "nombre_obra": nombre_obra,
+                "semana": semana,
+                "etapa": etapa,
+                "hectareas": hectareas,
+                "n_slides": len(slides),
+            },
         )
 
     # ---------------- 4) SERVICIOS ----------------
 
-    def servicios(self, empresa: str = "Construcciones Rurales",
-                  municipio: str = "Cañuelas",
-                  servicios: list[str] | None = None,
-                  tonos_por_slide: list[str] | None = None,
-                  tono: str = "premium",
-                  n_slides: int = 6) -> Carrusel:
+    def servicios(
+        self,
+        empresa: str = "Construcciones Rurales",
+        municipio: str = "Cañuelas",
+        servicios: list[str] | None = None,
+        tonos_por_slide: list[str] | None = None,
+        tono: str = "premium",
+        n_slides: int = 6,
+    ) -> Carrusel:
         if servicios is None:
             servicios = [
                 "Diseño arquitectónico",
@@ -538,16 +626,18 @@ class CarruselFactory:
             f"construction equipment background, professional photography, "
             f"Buenos Aires Argentina, blue hour, corporate branding"
         )
-        slides.append(Slide(
-            numero=1,
-            tipo="portada",
-            descripcion=f"Portada: ¿Qué hace {empresa}?",
-            prompt=prompt_portada,
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=["Fooocus V2", "Fooocus Enhance", "ads-real estate"],
-            texto_overlay=f"¿Qué hace {empresa}?\nDel plano a la llave",
-            metadata={"empresa": empresa},
-        ))
+        slides.append(
+            Slide(
+                numero=1,
+                tipo="portada",
+                descripcion=f"Portada: ¿Qué hace {empresa}?",
+                prompt=prompt_portada,
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=["Fooocus V2", "Fooocus Enhance", "ads-real estate"],
+                texto_overlay=f"¿Qué hace {empresa}?\nDel plano a la llave",
+                metadata={"empresa": empresa},
+            )
+        )
 
         # Slides de servicios (1 por servicio)
         prompts_servicios = {
@@ -579,53 +669,60 @@ class CarruselFactory:
 
         for i, servicio in enumerate(servicios):
             prompt = prompts_servicios.get(
-                servicio,
-                f"professional photography of {servicio}, construction industry"
+                servicio, f"professional photography of {servicio}, construction industry"
             )
-            slides.append(Slide(
-                numero=len(slides) + 1,
-                tipo="beneficio",
-                descripcion=f"Servicio {i + 1}: {servicio}",
-                prompt=prompt,
-                aspect_ratio=ASPECT_INSTAGRAM_POST,
-                styles=["Fooocus V2", "Fooocus Enhance", "ads-real estate"],
-                texto_overlay=f"{i + 1}. {servicio}",
-                metadata={"servicio": servicio, "orden": i + 1},
-            ))
+            slides.append(
+                Slide(
+                    numero=len(slides) + 1,
+                    tipo="beneficio",
+                    descripcion=f"Servicio {i + 1}: {servicio}",
+                    prompt=prompt,
+                    aspect_ratio=ASPECT_INSTAGRAM_POST,
+                    styles=["Fooocus V2", "Fooocus Enhance", "ads-real estate"],
+                    texto_overlay=f"{i + 1}. {servicio}",
+                    metadata={"servicio": servicio, "orden": i + 1},
+                )
+            )
 
         # Slide CTA final
-        slides.append(Slide(
-            numero=len(slides) + 1,
-            tipo="cta",
-            descripcion="Slide final: cómo empezar tu proyecto",
-            prompt="",
-            aspect_ratio=ASPECT_INSTAGRAM_POST,
-            styles=[],
-            texto_overlay=f"¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 {municipio}, Buenos Aires",
-            metadata={"requiere_foto_real": False, "tipo": "cta"},
-        ))
+        slides.append(
+            Slide(
+                numero=len(slides) + 1,
+                tipo="cta",
+                descripcion="Slide final: cómo empezar tu proyecto",
+                prompt="",
+                aspect_ratio=ASPECT_INSTAGRAM_POST,
+                styles=[],
+                texto_overlay=f"¿Arrancamos?\n\nEscribinos al DM o link en bio.\n\n📍 {municipio}, Buenos Aires",
+                metadata={"requiere_foto_real": False, "tipo": "cta"},
+            )
+        )
 
-        caption = CaptionNarrativo.unir(
-            f"{empresa} · qué hacemos", municipio, slides, tono)
-        hashtags = self.studio.post.hashtags(
-            ["construccion", "casas", "general"], municipio)
+        caption = CaptionNarrativo.unir(f"{empresa} · qué hacemos", municipio, slides, tono)
+        hashtags = self.studio.post.hashtags(["construccion", "casas", "general"], municipio)
         hashtags = [h for h in hashtags if h != "#casas"] + ["#casasllaveenmano"]
 
         return Carrusel(
             tema=f"{empresa} · Servicios",
-            tipo="servicios", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"empresa": empresa, "servicios": servicios,
-                      "n_slides": len(slides)},
+            tipo="servicios",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={"empresa": empresa, "servicios": servicios, "n_slides": len(slides)},
         )
 
     # ---------------- Mejora de fotos en slides (gap #10) ----------------
 
-    def aplicar_mejora_a_slide(self, carrusel: Carrusel,
-                                n_slide: int,
-                                modo: str = "magazine",
-                                intensidad: str = "media",
-                                upscale: int = 1) -> dict[str, Any]:
+    def aplicar_mejora_a_slide(
+        self,
+        carrusel: Carrusel,
+        n_slide: int,
+        modo: str = "magazine",
+        intensidad: str = "media",
+        upscale: int = 1,
+    ) -> dict[str, Any]:
         """Aplica mejora de foto a la imagen del slide n_slide.
 
         Retorna info de la mejora aplicada o error si no hay imagen.
@@ -633,8 +730,7 @@ class CarruselFactory:
         from mejora_fotos import MejoraFotos
 
         if n_slide < 1 or n_slide > len(carrusel.slides):
-            raise ValueError(
-                f"n_slide fuera de rango: {n_slide} (1..{len(carrusel.slides)})")
+            raise ValueError(f"n_slide fuera de rango: {n_slide} (1..{len(carrusel.slides)})")
 
         slide = carrusel.slides[n_slide - 1]
         if slide.tipo != "placeholder_foto":
@@ -669,7 +765,9 @@ class CarruselFactory:
         mejora = MejoraFotos()
         resultado = mejora.mejorar(
             foto_path=path,
-            modo=modo, intensidad=intensidad, upscale=upscale,
+            modo=modo,
+            intensidad=intensidad,
+            upscale=upscale,
         )
 
         return {
@@ -684,52 +782,59 @@ class CarruselFactory:
             "transformaciones": resultado.transformaciones,
         }
 
-    def aplicar_mejora_a_todos_los_placeholders(self, carrusel: Carrusel,
-                                                 modo: str = "magazine",
-                                                 intensidad: str = "media",
-                                                 upscale: int = 1) -> list[dict[str, Any]]:
+    def aplicar_mejora_a_todos_los_placeholders(
+        self,
+        carrusel: Carrusel,
+        modo: str = "magazine",
+        intensidad: str = "media",
+        upscale: int = 1,
+    ) -> list[dict[str, Any]]:
         """Aplica mejora a todos los slides de tipo placeholder_foto."""
         placeholders = [s for s in carrusel.slides if s.tipo == "placeholder_foto"]
         resultados = []
         for slide in placeholders:
-            r = self.aplicar_mejora_a_slide(
-                carrusel, slide.numero, modo, intensidad, upscale)
+            r = self.aplicar_mejora_a_slide(carrusel, slide.numero, modo, intensidad, upscale)
             resultados.append(r)
         return resultados
 
     # ---------------- Story + Reel (gap #17) ----------------
 
-    def story(self, tema: str, municipio: str,
-              imagen_prompts: list[str] | None = None,
-              duracion_por_slide: int = 5,
-              tono: str = "emotivo") -> Carrusel:
+    def story(
+        self,
+        tema: str,
+        municipio: str,
+        imagen_prompts: list[str] | None = None,
+        duracion_por_slide: int = 5,
+        tono: str = "emotivo",
+    ) -> Carrusel:
         """Story de Instagram (9:16, formato vertical).
 
         imagen_prompts: lista de prompts para cada slide (opcional)
         duracion_por_slide: segundos (5 default)
         """
         from realestate_studio import ASPECT_INSTAGRAM_STORY
+
         if imagen_prompts is None:
             imagen_prompts = [
-                self.studio.lotes.chacra_pampeana(
-                    hectareas=5, municipio=municipio).prompt,
+                self.studio.lotes.chacra_pampeana(hectareas=5, municipio=municipio).prompt,
                 self.studio.lotes.amanecer_pampa(municipio=municipio).prompt,
                 self.studio.lotes.tranquera_argentina(municipio=municipio).prompt,
             ]
 
         slides: list[Slide] = []
         for i, prompt in enumerate(imagen_prompts, 1):
-            slides.append(Slide(
-                numero=i,
-                tipo="foto",
-                descripcion=f"Story {i}/{len(imagen_prompts)}",
-                prompt=prompt,
-                aspect_ratio=ASPECT_INSTAGRAM_STORY,
-                styles=["Fooocus V2", "Fooocus Enhance"],
-                texto_overlay=tema if i == 1 else "",
-                metadata={"duracion_segundos": duracion_por_slide,
-                          "formato": "story"},
-            ))
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"Story {i}/{len(imagen_prompts)}",
+                    prompt=prompt,
+                    aspect_ratio=ASPECT_INSTAGRAM_STORY,
+                    styles=["Fooocus V2", "Fooocus Enhance"],
+                    texto_overlay=tema if i == 1 else "",
+                    metadata={"duracion_segundos": duracion_por_slide, "formato": "story"},
+                )
+            )
 
         caption = (
             f"📲 Story: {tema}\n\n"
@@ -740,30 +845,41 @@ class CarruselFactory:
         hashtags = self.studio.post.hashtags(["general", "inversion"], municipio)
         return Carrusel(
             tema=f"Story: {tema}",
-            tipo="story", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"formato": "story",
-                      "aspect_ratio": ASPECT_INSTAGRAM_STORY,
-                      "n_slides": len(slides)},
+            tipo="story",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "formato": "story",
+                "aspect_ratio": ASPECT_INSTAGRAM_STORY,
+                "n_slides": len(slides),
+            },
         )
 
-    def reel(self, tema: str, municipio: str,
-             prompt_principal: str | None = None,
-             duracion_segundos: int = 30,
-             tono: str = "emotivo") -> Carrusel:
+    def reel(
+        self,
+        tema: str,
+        municipio: str,
+        prompt_principal: str | None = None,
+        duracion_segundos: int = 30,
+        tono: str = "emotivo",
+    ) -> Carrusel:
         """Reel de Instagram (1 slide, 9:16, caption corto).
 
         prompt_principal: prompt para la imagen principal del reel
         duracion_segundos: duracion del video (15-90)
         """
         from realestate_studio import ASPECT_INSTAGRAM_STORY
+
         if prompt_principal is None:
             prompt_principal = self.studio.lotes.chacra_pampeana(
-                hectareas=5, municipio=municipio).prompt
+                hectareas=5, municipio=municipio
+            ).prompt
 
         # Caption corto tipo hook para reel
-        caption_corto = self.studio.post.post_reel_hook(
-            tema=tema, tono=tono)["caption"]
+        caption_corto = self.studio.post.post_reel_hook(tema=tema, tono=tono)["caption"]
 
         slides: list[Slide] = [
             Slide(
@@ -774,27 +890,31 @@ class CarruselFactory:
                 aspect_ratio=ASPECT_INSTAGRAM_STORY,
                 styles=["Fooocus V2", "Fooocus Enhance", "ads-luxury"],
                 texto_overlay=tema,
-                metadata={"duracion_segundos": duracion_segundos,
-                          "formato": "reel"},
+                metadata={"duracion_segundos": duracion_segundos, "formato": "reel"},
             )
         ]
         hashtags = self.studio.post.hashtags(["general", "inversion"], municipio)
         return Carrusel(
             tema=f"Reel: {tema}",
-            tipo="reel", municipio=municipio, tono=tono,
-            slides=slides, caption_narrativo=caption_corto,
+            tipo="reel",
+            municipio=municipio,
+            tono=tono,
+            slides=slides,
+            caption_narrativo=caption_corto,
             hashtags=hashtags,
-            metadata={"formato": "reel",
-                      "aspect_ratio": ASPECT_INSTAGRAM_STORY,
-                      "duracion_segundos": duracion_segundos,
-                      "n_slides": 1},
+            metadata={
+                "formato": "reel",
+                "aspect_ratio": ASPECT_INSTAGRAM_STORY,
+                "duracion_segundos": duracion_segundos,
+                "n_slides": 1,
+            },
         )
 
     # ---------------- Carruseles especificos de construccion ----------------
 
-    def etapas_construccion(self, metros_cuadrados: int = 120,
-                              municipio: str = "Cañuelas",
-                              n_slides: int = 10) -> Carrusel:
+    def etapas_construccion(
+        self, metros_cuadrados: int = 120, municipio: str = "Cañuelas", n_slides: int = 10
+    ) -> Carrusel:
         """Carrusel mostrando las 8-10 etapas de una obra completa."""
         if n_slides < 8:
             n_slides = 8
@@ -816,15 +936,18 @@ class CarruselFactory:
         slides: list[Slide] = []
         for i, (tipo_prompt, titulo, desc) in enumerate(etapas_usar, 1):
             req = getattr(self.studio.construccion, tipo_prompt)(municipio=municipio)
-            slides.append(Slide(
-                numero=i, tipo="foto",
-                descripcion=f"{titulo} - {desc}",
-                prompt=req.prompt,
-                aspect_ratio=req.aspect_ratio,
-                styles=req.styles,
-                texto_overlay=titulo,
-                metadata={"tipo_prompt": tipo_prompt, "etapa": i},
-            ))
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"{titulo} - {desc}",
+                    prompt=req.prompt,
+                    aspect_ratio=req.aspect_ratio,
+                    styles=req.styles,
+                    texto_overlay=titulo,
+                    metadata={"tipo_prompt": tipo_prompt, "etapa": i},
+                )
+            )
 
         caption = (
             f"🔨 Como se construye una casa en {n_slides} pasos\n\n"
@@ -834,19 +957,26 @@ class CarruselFactory:
             f"💬 Te interesa saber mas? Pedinos el desglose por etapa."
         )
         hashtags = self.studio.post.hashtags(
-            ["construccion", "ingenieria", "arquitectura"], municipio)
+            ["construccion", "ingenieria", "arquitectura"], municipio
+        )
         return Carrusel(
             tema=f"Etapas de construcción en {municipio}",
-            tipo="etapas_construccion", municipio=municipio,
+            tipo="etapas_construccion",
+            municipio=municipio,
             tono="educativo",
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"formato": "carrusel_etapas", "n_etapas": n_slides,
-                      "metros_cuadrados": metros_cuadrados},
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "formato": "carrusel_etapas",
+                "n_etapas": n_slides,
+                "metros_cuadrados": metros_cuadrados,
+            },
         )
 
-    def steel_frame_completo(self, municipio: str = "Cañuelas",
-                               metros_cuadrados: int = 120,
-                               n_slides: int = 6) -> Carrusel:
+    def steel_frame_completo(
+        self, municipio: str = "Cañuelas", metros_cuadrados: int = 120, n_slides: int = 6
+    ) -> Carrusel:
         """Carrusel completo del sistema steel frame."""
         if n_slides < 5:
             n_slides = 5
@@ -864,15 +994,18 @@ class CarruselFactory:
         slides: list[Slide] = []
         for i, (tipo_prompt, titulo, desc) in enumerate(items_usar, 1):
             req = getattr(self.studio.construccion, tipo_prompt)(municipio=municipio)
-            slides.append(Slide(
-                numero=i, tipo="foto",
-                descripcion=f"{titulo} - {desc}",
-                prompt=req.prompt,
-                aspect_ratio=req.aspect_ratio,
-                styles=req.styles,
-                texto_overlay=titulo,
-                metadata={"tipo_prompt": tipo_prompt, "etapa": i},
-            ))
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"{titulo} - {desc}",
+                    prompt=req.prompt,
+                    aspect_ratio=req.aspect_ratio,
+                    styles=req.styles,
+                    texto_overlay=titulo,
+                    metadata={"tipo_prompt": tipo_prompt, "etapa": i},
+                )
+            )
 
         caption = (
             f"⚙️ Steel Frame: el sistema constructivo del futuro\n\n"
@@ -884,21 +1017,29 @@ class CarruselFactory:
             f"✓ Construccion en seco = menos humedad\n\n"
             f"Te interesa construir en steel frame? Escribinos."
         )
-        hashtags = self.studio.post.hashtags(
-            ["construccion", "casas", "ingenieria"], municipio)
+        hashtags = self.studio.post.hashtags(["construccion", "casas", "ingenieria"], municipio)
         return Carrusel(
             tema=f"Steel Frame en {municipio}",
-            tipo="steel_frame", municipio=municipio, tono="educativo",
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"sistema": "steel_frame",
-                      "metros_cuadrados": metros_cuadrados,
-                      "n_slides": n_slides},
+            tipo="steel_frame",
+            municipio=municipio,
+            tono="educativo",
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "sistema": "steel_frame",
+                "metros_cuadrados": metros_cuadrados,
+                "n_slides": n_slides,
+            },
         )
 
-    def llave_en_mano_completo(self, municipio: str = "Cañuelas",
-                                 metros_cuadrados: int = 130,
-                                 precio_desde: str = "USD 95.000",
-                                 n_slides: int = 8) -> Carrusel:
+    def llave_en_mano_completo(
+        self,
+        municipio: str = "Cañuelas",
+        metros_cuadrados: int = 130,
+        precio_desde: str = "USD 95.000",
+        n_slides: int = 8,
+    ) -> Carrusel:
         """Carrusel explicando que incluye 'llave en mano'."""
         if n_slides < 7:
             n_slides = 7
@@ -922,16 +1063,20 @@ class CarruselFactory:
             except AttributeError:
                 # Si no existe el metodo, usar otro generico
                 req = self.studio.lotes.chacra_pampeana(
-                    hectareas=metros_cuadrados/10000, municipio=municipio)
-            slides.append(Slide(
-                numero=i, tipo="foto",
-                descripcion=f"{titulo} - {desc}",
-                prompt=req.prompt,
-                aspect_ratio=req.aspect_ratio,
-                styles=req.styles,
-                texto_overlay=titulo,
-                metadata={"tipo_prompt": tipo_prompt, "etapa": i},
-            ))
+                    hectareas=metros_cuadrados / 10000, municipio=municipio
+                )
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"{titulo} - {desc}",
+                    prompt=req.prompt,
+                    aspect_ratio=req.aspect_ratio,
+                    styles=req.styles,
+                    texto_overlay=titulo,
+                    metadata={"tipo_prompt": tipo_prompt, "etapa": i},
+                )
+            )
 
         caption = (
             f"🔑 Llave en mano: que incluye?\n\n"
@@ -948,20 +1093,24 @@ class CarruselFactory:
             f"✓ Garantia postventa\n\n"
             f"Un solo equipo. Un solo presupuesto. Una sola llamada."
         )
-        hashtags = self.studio.post.hashtags(
-            ["construccion", "casas", "general"], municipio)
+        hashtags = self.studio.post.hashtags(["construccion", "casas", "general"], municipio)
         return Carrusel(
             tema=f"Llave en mano en {municipio}",
-            tipo="llave_en_mano", municipio=municipio, tono="premium",
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"modalidad": "llave_en_mano",
-                      "precio_desde": precio_desde,
-                      "metros_cuadrados": metros_cuadrados,
-                      "n_slides": n_slides},
+            tipo="llave_en_mano",
+            municipio=municipio,
+            tono="premium",
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "modalidad": "llave_en_mano",
+                "precio_desde": precio_desde,
+                "metros_cuadrados": metros_cuadrados,
+                "n_slides": n_slides,
+            },
         )
 
-    def terminaciones_detalle(self, municipio: str = "Cañuelas",
-                                 n_slides: int = 6) -> Carrusel:
+    def terminaciones_detalle(self, municipio: str = "Cañuelas", n_slides: int = 6) -> Carrusel:
         """Carrusel de terminaciones (los detalles que importan)."""
         if n_slides < 5:
             n_slides = 5
@@ -982,15 +1131,18 @@ class CarruselFactory:
                 req = getattr(self.studio.construccion, tipo_prompt)(municipio=municipio)
             except AttributeError:
                 req = self.studio.lotes.chacra_pampeana(hectareas=1, municipio=municipio)
-            slides.append(Slide(
-                numero=i, tipo="foto",
-                descripcion=f"{titulo} - {desc}",
-                prompt=req.prompt,
-                aspect_ratio=req.aspect_ratio,
-                styles=req.styles,
-                texto_overlay=titulo,
-                metadata={"tipo_prompt": tipo_prompt, "etapa": i},
-            ))
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"{titulo} - {desc}",
+                    prompt=req.prompt,
+                    aspect_ratio=req.aspect_ratio,
+                    styles=req.styles,
+                    texto_overlay=titulo,
+                    metadata={"tipo_prompt": tipo_prompt, "etapa": i},
+                )
+            )
 
         caption = (
             f"✨ Las terminaciones son la diferencia\n\n"
@@ -1006,19 +1158,27 @@ class CarruselFactory:
             f"En {municipio} trabajamos con materiales premium en cada detalle."
         )
         hashtags = self.studio.post.hashtags(
-            ["construccion", "casas", "diseno_interior"], municipio)
+            ["construccion", "casas", "diseno_interior"], municipio
+        )
         return Carrusel(
             tema=f"Terminaciones que importan ({municipio})",
-            tipo="terminaciones", municipio=municipio, tono="aspiracional",
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"formato": "carrusel_terminaciones",
-                      "n_slides": n_slides},
+            tipo="terminaciones",
+            municipio=municipio,
+            tono="aspiracional",
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={"formato": "carrusel_terminaciones", "n_slides": n_slides},
         )
 
-    def obra_completa(self, nombre_obra: str, municipio: str = "Cañuelas",
-                       metros_cuadrados: int = 130,
-                       estilo: str = "minimalista moderno",
-                       n_slides: int = 8) -> Carrusel:
+    def obra_completa(
+        self,
+        nombre_obra: str,
+        municipio: str = "Cañuelas",
+        metros_cuadrados: int = 130,
+        estilo: str = "minimalista moderno",
+        n_slides: int = 8,
+    ) -> Carrusel:
         """Carrusel 'obra completa' con before/after + etapas clave."""
         if n_slides < 6:
             n_slides = 6
@@ -1041,16 +1201,18 @@ class CarruselFactory:
                 req = getattr(self.studio.construccion, tipo_prompt)(municipio=municipio)
             except AttributeError:
                 req = self.studio.lotes.loteo_en_desarrollo(etapa="Etapa 1", municipio=municipio)
-            slides.append(Slide(
-                numero=i, tipo="foto",
-                descripcion=f"{titulo} - {desc}",
-                prompt=req.prompt,
-                aspect_ratio=req.aspect_ratio,
-                styles=req.styles,
-                texto_overlay=titulo,
-                metadata={"tipo_prompt": tipo_prompt, "etapa": i,
-                          "nombre_obra": nombre_obra},
-            ))
+            slides.append(
+                Slide(
+                    numero=i,
+                    tipo="foto",
+                    descripcion=f"{titulo} - {desc}",
+                    prompt=req.prompt,
+                    aspect_ratio=req.aspect_ratio,
+                    styles=req.styles,
+                    texto_overlay=titulo,
+                    metadata={"tipo_prompt": tipo_prompt, "etapa": i, "nombre_obra": nombre_obra},
+                )
+            )
 
         caption = (
             f"🏡 Obra {nombre_obra} - proceso completo\n\n"
@@ -1059,32 +1221,39 @@ class CarruselFactory:
             f"{n_slides} pasos clave que te mostramos hoy.\n\n"
             f"¿Tenés un proyecto similar? Arranquemos con un render."
         )
-        hashtags = self.studio.post.hashtags(
-            ["construccion", "casas", "arquitectura"], municipio)
+        hashtags = self.studio.post.hashtags(["construccion", "casas", "arquitectura"], municipio)
         return Carrusel(
             tema=f"Obra {nombre_obra}",
-            tipo="obra_completa", municipio=municipio, tono="emotivo",
-            slides=slides, caption_narrativo=caption, hashtags=hashtags,
-            metadata={"nombre_obra": nombre_obra, "estilo": estilo,
-                      "metros_cuadrados": metros_cuadrados,
-                      "n_slides": n_slides},
+            tipo="obra_completa",
+            municipio=municipio,
+            tono="emotivo",
+            slides=slides,
+            caption_narrativo=caption,
+            hashtags=hashtags,
+            metadata={
+                "nombre_obra": nombre_obra,
+                "estilo": estilo,
+                "metros_cuadrados": metros_cuadrados,
+                "n_slides": n_slides,
+            },
         )
 
     # ---------------- Persistencia ----------------
 
-    def guardar(self, carrusel: Carrusel, nombre: str,
-                proyecto: str | None = None,
-                vertical: str = "lotes") -> Path:
+    def guardar(
+        self, carrusel: Carrusel, nombre: str, proyecto: str | None = None, vertical: str = "lotes"
+    ) -> Path:
         if proyecto and vertical in ("lotes", "obras"):
-            carpeta = (ROOT / "inmuebles" / vertical / proyecto / "carruseles" / nombre)
+            carpeta = ROOT / "inmuebles" / vertical / proyecto / "carruseles" / nombre
         else:
-            carpeta = (ROOT / "inmuebles" / vertical / "carruseles" / nombre)
+            carpeta = ROOT / "inmuebles" / vertical / "carruseles" / nombre
         carpeta.mkdir(parents=True, exist_ok=True)
 
         # JSON completo
         json_path = carpeta / "carrusel.json"
-        json_path.write_text(json.dumps(carrusel.to_dict(), indent=2,
-                                        ensure_ascii=False), encoding="utf-8")
+        json_path.write_text(
+            json.dumps(carrusel.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8"
+        )
 
         # Slides individuales como prompts
         slides_dir = carpeta / "slides"
@@ -1092,8 +1261,9 @@ class CarruselFactory:
         for slide in carrusel.slides:
             slide_path = slides_dir / f"slide_{slide.numero:02d}_{slide.tipo}.json"
             slide_data = slide.to_dict()
-            slide_path.write_text(json.dumps(slide_data, indent=2,
-                                             ensure_ascii=False), encoding="utf-8")
+            slide_path.write_text(
+                json.dumps(slide_data, indent=2, ensure_ascii=False), encoding="utf-8"
+            )
 
         # Markdown imprimible
         md_path = carpeta / "carrusel.md"
@@ -1207,6 +1377,7 @@ class CarruselFactory:
 def demo() -> None:
     """Demostración rápida de los 4 tipos de carrusel."""
     from realestate_studio import RealestateStudio
+
     studio = RealestateStudio()
     factory = CarruselFactory(studio)
 
@@ -1217,36 +1388,38 @@ def demo() -> None:
     # 1) Lote premium
     c1 = factory.lote_premium(
         tema="5 ha en Cañuelas, a 65 km de CABA",
-        municipio="Cañuelas", hectareas=5,
-        precio_usd="USD 60.000", distancia_caba="65 km",
-        tono="emotivo", n_slides=6)
+        municipio="Cañuelas",
+        hectareas=5,
+        precio_usd="USD 60.000",
+        distancia_caba="65 km",
+        tono="emotivo",
+        n_slides=6,
+    )
     print(f"\n[1] lote_premium: {c1.n_slides} slides")
     print(f"    Caption ({len(c1.caption_narrativo)} chars):")
     print(c1.caption_narrativo[:200] + "...")
 
     # 2) Country etapa
     c2 = factory.country_etapa(
-        nombre_country="El Casco", municipio="Pilar",
-        etapa="2", n_lotes=12, n_slides=5)
+        nombre_country="El Casco", municipio="Pilar", etapa="2", n_lotes=12, n_slides=5
+    )
     print(f"\n[2] country_etapa: {c2.n_slides} slides")
 
     # 3) Obra avance
     c3 = factory.obra_avance(
-        nombre_obra="Casa Pérez", municipio="Escobar",
-        semana=3, etapa="mampostería", n_slides=4)
+        nombre_obra="Casa Pérez", municipio="Escobar", semana=3, etapa="mampostería", n_slides=4
+    )
     print(f"\n[3] obra_avance: {c3.n_slides} slides")
     placeholder = [s for s in c3.slides if s.tipo == "placeholder_foto"]
     if placeholder:
         print(f"    Placeholder foto: {placeholder[0].metadata['placeholder_foto_path']}")
 
     # 4) Servicios
-    c4 = factory.servicios(
-        empresa="Construcciones Rurales", municipio="Cañuelas", n_slides=6)
+    c4 = factory.servicios(empresa="Construcciones Rurales", municipio="Cañuelas", n_slides=6)
     print(f"\n[4] servicios: {c4.n_slides} slides")
 
     # Persistir el primero
-    ruta = factory.guardar(c1, "lote_premium_cañuelas",
-                           proyecto="chacra-canuelas-5ha")
+    ruta = factory.guardar(c1, "lote_premium_cañuelas", proyecto="chacra-canuelas-5ha")
     print(f"\nGuardado en: {ruta.relative_to(ROOT)}")
 
 

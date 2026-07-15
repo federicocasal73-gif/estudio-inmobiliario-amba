@@ -20,6 +20,7 @@ Uso:
         modo=ModoPublicacion.DRY_RUN,
     )
 """
+
 from __future__ import annotations
 
 import json
@@ -54,7 +55,7 @@ class ModoPublicacion(Enum):
 class PublicacionResultado:
     modo: str
     exito: bool
-    tipo: str                          # "foto" | "carrusel"
+    tipo: str  # "foto" | "carrusel"
     caption_length: int
     n_imagenes: int
     media_ids: list[str] = field(default_factory=list)
@@ -71,14 +72,17 @@ class PublicacionResultado:
 class InstagramPublisher:
     """Wrapper para publicar fotos y carruseles en Instagram via Graph API."""
 
-    def __init__(self, auth: InstagramAuth,
-                 uploader: CloudinaryUploader | None = None):
+    def __init__(self, auth: InstagramAuth, uploader: CloudinaryUploader | None = None):
         self.auth = auth
         self.uploader = uploader or CloudinaryUploader(auth)
 
-    def _request(self, endpoint: str, method: str = "GET",
-                 params: dict | None = None,
-                 json_body: dict | None = None) -> dict:
+    def _request(
+        self,
+        endpoint: str,
+        method: str = "GET",
+        params: dict | None = None,
+        json_body: dict | None = None,
+    ) -> dict:
         """Hace un request a la Graph API."""
         if not self.auth.data:
             raise RuntimeError("auth.json no configurado")
@@ -122,15 +126,21 @@ class InstagramPublisher:
 
     # ---------------- Publicar foto ----------------
 
-    def publicar_foto(self, ruta_imagen: str | Path,
-                      caption: str,
-                      hashtags: list[str] | None = None,
-                      modo: ModoPublicacion = ModoPublicacion.DRY_RUN) -> PublicacionResultado:
+    def publicar_foto(
+        self,
+        ruta_imagen: str | Path,
+        caption: str,
+        hashtags: list[str] | None = None,
+        modo: ModoPublicacion = ModoPublicacion.DRY_RUN,
+    ) -> PublicacionResultado:
         ruta_imagen = Path(ruta_imagen)
         if not ruta_imagen.exists():
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="foto",
-                caption_length=len(caption), n_imagenes=0,
+                modo=modo.value,
+                exito=False,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=0,
                 error=f"No existe: {ruta_imagen}",
             )
 
@@ -144,8 +154,11 @@ class InstagramPublisher:
         if modo == ModoPublicacion.INTERACTIVO:
             if not self._confirmar(f"Publicar foto {ruta_imagen.name}?"):
                 return PublicacionResultado(
-                    modo=modo.value, exito=False, tipo="foto",
-                    caption_length=len(caption_full), n_imagenes=1,
+                    modo=modo.value,
+                    exito=False,
+                    tipo="foto",
+                    caption_length=len(caption_full),
+                    n_imagenes=1,
                     error="cancelado por el usuario",
                 )
 
@@ -164,32 +177,45 @@ class InstagramPublisher:
         print()
         print("⚠️  No se publicó nada. Para publicar de verdad usar --real o --interactivo")
         return PublicacionResultado(
-            modo=ModoPublicacion.DRY_RUN.value, exito=False,
-            tipo="foto", caption_length=len(caption), n_imagenes=1,
+            modo=ModoPublicacion.DRY_RUN.value,
+            exito=False,
+            tipo="foto",
+            caption_length=len(caption),
+            n_imagenes=1,
             metadata={"dry_run": True, "ruta": str(ruta)},
         )
 
-    def _publicar_foto_real(self, ruta: Path, caption: str,
-                            modo: ModoPublicacion) -> PublicacionResultado:
+    def _publicar_foto_real(
+        self, ruta: Path, caption: str, modo: ModoPublicacion
+    ) -> PublicacionResultado:
         if not self.auth.data:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="foto",
-                caption_length=len(caption), n_imagenes=1,
+                modo=modo.value,
+                exito=False,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=1,
                 error="auth.json no configurado",
             )
 
         image_url = self._upload_temp(ruta)
         if not image_url:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="foto",
-                caption_length=len(caption), n_imagenes=1,
+                modo=modo.value,
+                exito=False,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=1,
                 error="No se pudo subir la imagen a un host publico",
             )
 
         if not self._check_public_url(image_url):
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="foto",
-                caption_length=len(caption), n_imagenes=1,
+                modo=modo.value,
+                exito=False,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=1,
                 error=f"URL no accesible publicamente: {image_url}",
             )
 
@@ -197,22 +223,31 @@ class InstagramPublisher:
             container = self._request(
                 f"{self.auth.data.instagram_user_id}/media",
                 method="POST",
-                json_body={"image_url": image_url, "caption": caption,
-                           "access_token": self.auth.data.access_token},
+                json_body={
+                    "image_url": image_url,
+                    "caption": caption,
+                    "access_token": self.auth.data.access_token,
+                },
             )
             creation_id = container["id"]
 
             while True:
-                status = self._request(creation_id, params={
-                    "fields": "status_code,status",
-                })
+                status = self._request(
+                    creation_id,
+                    params={
+                        "fields": "status_code,status",
+                    },
+                )
                 code = status.get("status_code")
                 if code == "FINISHED":
                     break
                 if code == "ERROR":
                     return PublicacionResultado(
-                        modo=modo.value, exito=False, tipo="foto",
-                        caption_length=len(caption), n_imagenes=1,
+                        modo=modo.value,
+                        exito=False,
+                        tipo="foto",
+                        caption_length=len(caption),
+                        n_imagenes=1,
                         media_ids=[creation_id],
                         error=f"Media processing failed: {status}",
                     )
@@ -221,44 +256,59 @@ class InstagramPublisher:
             publish = self._request(
                 f"{self.auth.data.instagram_user_id}/media_publish",
                 method="POST",
-                json_body={"creation_id": creation_id,
-                           "access_token": self.auth.data.access_token},
+                json_body={"creation_id": creation_id, "access_token": self.auth.data.access_token},
             )
             ig_post_id = publish.get("id")
             permalink = self._obtener_permalink(ig_post_id) if ig_post_id else None
 
             return PublicacionResultado(
-                modo=modo.value, exito=True, tipo="foto",
-                caption_length=len(caption), n_imagenes=1,
+                modo=modo.value,
+                exito=True,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=1,
                 media_ids=[creation_id, ig_post_id] if ig_post_id else [creation_id],
-                instagram_post_id=ig_post_id, permalink=permalink,
+                instagram_post_id=ig_post_id,
+                permalink=permalink,
             )
         except Exception as e:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="foto",
-                caption_length=len(caption), n_imagenes=1,
+                modo=modo.value,
+                exito=False,
+                tipo="foto",
+                caption_length=len(caption),
+                n_imagenes=1,
                 error=str(e),
             )
 
     # ---------------- Publicar carrusel ----------------
 
-    def publicar_carrusel(self, rutas_imagenes: list[str | Path],
-                          caption: str,
-                          hashtags: list[str] | None = None,
-                          modo: ModoPublicacion = ModoPublicacion.DRY_RUN) -> PublicacionResultado:
+    def publicar_carrusel(
+        self,
+        rutas_imagenes: list[str | Path],
+        caption: str,
+        hashtags: list[str] | None = None,
+        modo: ModoPublicacion = ModoPublicacion.DRY_RUN,
+    ) -> PublicacionResultado:
         rutas = [Path(r) for r in rutas_imagenes]
         for r in rutas:
             if not r.exists():
                 return PublicacionResultado(
-                    modo=modo.value, exito=False, tipo="carrusel",
-                    caption_length=len(caption), n_imagenes=len(rutas),
+                    modo=modo.value,
+                    exito=False,
+                    tipo="carrusel",
+                    caption_length=len(caption),
+                    n_imagenes=len(rutas),
                     error=f"No existe: {r}",
                 )
 
         if not (2 <= len(rutas) <= 10):
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
-                caption_length=len(caption), n_imagenes=len(rutas),
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
+                caption_length=len(caption),
+                n_imagenes=len(rutas),
                 error=f"Carrusel debe tener entre 2 y 10 imagenes (recibido: {len(rutas)})",
             )
 
@@ -272,8 +322,11 @@ class InstagramPublisher:
         if modo == ModoPublicacion.INTERACTIVO:
             if not self._confirmar(f"Publicar carrusel de {len(rutas)} imagenes?"):
                 return PublicacionResultado(
-                    modo=modo.value, exito=False, tipo="carrusel",
-                    caption_length=len(caption_full), n_imagenes=len(rutas),
+                    modo=modo.value,
+                    exito=False,
+                    tipo="carrusel",
+                    caption_length=len(caption_full),
+                    n_imagenes=len(rutas),
                     error="cancelado por el usuario",
                 )
 
@@ -290,17 +343,24 @@ class InstagramPublisher:
         print(caption[:500] + ("..." if len(caption) > 500 else ""))
         print("---")
         return PublicacionResultado(
-            modo=ModoPublicacion.DRY_RUN.value, exito=False,
-            tipo="carrusel", caption_length=len(caption), n_imagenes=len(rutas),
+            modo=ModoPublicacion.DRY_RUN.value,
+            exito=False,
+            tipo="carrusel",
+            caption_length=len(caption),
+            n_imagenes=len(rutas),
             metadata={"dry_run": True, "rutas": [str(r) for r in rutas]},
         )
 
-    def _publicar_carrusel_real(self, rutas: list[Path], caption: str,
-                                modo: ModoPublicacion) -> PublicacionResultado:
+    def _publicar_carrusel_real(
+        self, rutas: list[Path], caption: str, modo: ModoPublicacion
+    ) -> PublicacionResultado:
         if not self.auth.data:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
-                caption_length=len(caption), n_imagenes=len(rutas),
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
+                caption_length=len(caption),
+                n_imagenes=len(rutas),
                 error="auth.json no configurado",
             )
 
@@ -310,39 +370,52 @@ class InstagramPublisher:
                 image_url = self._upload_temp(ruta)
                 if not image_url:
                     return PublicacionResultado(
-                        modo=modo.value, exito=False, tipo="carrusel",
-                        caption_length=len(caption), n_imagenes=len(rutas),
+                        modo=modo.value,
+                        exito=False,
+                        tipo="carrusel",
+                        caption_length=len(caption),
+                        n_imagenes=len(rutas),
                         error=f"No se pudo subir {ruta}",
                     )
                 container = self._request(
                     f"{self.auth.data.instagram_user_id}/media",
                     method="POST",
-                    json_body={"image_url": image_url,
-                               "is_carousel_item": True,
-                               "access_token": self.auth.data.access_token},
+                    json_body={
+                        "image_url": image_url,
+                        "is_carousel_item": True,
+                        "access_token": self.auth.data.access_token,
+                    },
                 )
                 children_ids.append(container["id"])
 
             carousel = self._request(
                 f"{self.auth.data.instagram_user_id}/media",
                 method="POST",
-                json_body={"media_type": "CAROUSEL",
-                           "children": children_ids,
-                           "caption": caption,
-                           "access_token": self.auth.data.access_token},
+                json_body={
+                    "media_type": "CAROUSEL",
+                    "children": children_ids,
+                    "caption": caption,
+                    "access_token": self.auth.data.access_token,
+                },
             )
             creation_id = carousel["id"]
 
             while True:
-                status = self._request(creation_id, params={
-                    "fields": "status_code,status",
-                })
+                status = self._request(
+                    creation_id,
+                    params={
+                        "fields": "status_code,status",
+                    },
+                )
                 if status.get("status_code") == "FINISHED":
                     break
                 if status.get("status_code") == "ERROR":
                     return PublicacionResultado(
-                        modo=modo.value, exito=False, tipo="carrusel",
-                        caption_length=len(caption), n_imagenes=len(rutas),
+                        modo=modo.value,
+                        exito=False,
+                        tipo="carrusel",
+                        caption_length=len(caption),
+                        n_imagenes=len(rutas),
                         media_ids=children_ids,
                         error=f"Processing failed: {status}",
                     )
@@ -351,22 +424,28 @@ class InstagramPublisher:
             publish = self._request(
                 f"{self.auth.data.instagram_user_id}/media_publish",
                 method="POST",
-                json_body={"creation_id": creation_id,
-                           "access_token": self.auth.data.access_token},
+                json_body={"creation_id": creation_id, "access_token": self.auth.data.access_token},
             )
             ig_post_id = publish.get("id")
             permalink = self._obtener_permalink(ig_post_id) if ig_post_id else None
 
             return PublicacionResultado(
-                modo=modo.value, exito=True, tipo="carrusel",
-                caption_length=len(caption), n_imagenes=len(rutas),
+                modo=modo.value,
+                exito=True,
+                tipo="carrusel",
+                caption_length=len(caption),
+                n_imagenes=len(rutas),
                 media_ids=[ig_post_id] if ig_post_id else [],
-                instagram_post_id=ig_post_id, permalink=permalink,
+                instagram_post_id=ig_post_id,
+                permalink=permalink,
             )
         except Exception as e:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
-                caption_length=len(caption), n_imagenes=len(rutas),
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
+                caption_length=len(caption),
+                n_imagenes=len(rutas),
                 error=str(e),
             )
 
@@ -394,14 +473,14 @@ class InstagramPublisher:
         except EOFError:
             return False
 
-    def guardar_log(self, resultado: PublicacionResultado,
-                    nombre: str | None = None) -> Path:
+    def guardar_log(self, resultado: PublicacionResultado, nombre: str | None = None) -> Path:
         if not nombre:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             nombre = f"publicacion_{ts}"
         ruta = LOG_DIR / f"{nombre}.json"
-        ruta.write_text(json.dumps(resultado.to_dict(), indent=2,
-                                   ensure_ascii=False), encoding="utf-8")
+        ruta.write_text(
+            json.dumps(resultado.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         return ruta
 
 

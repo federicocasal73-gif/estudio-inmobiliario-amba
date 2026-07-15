@@ -25,6 +25,7 @@ Uso:
 Los HTML son self-contained (CSS inline, sin dependencias externas)
 y se pueden abrir directamente con doble-click en el navegador.
 """
+
 from __future__ import annotations
 
 import html
@@ -39,8 +40,9 @@ ROOT = Path(__file__).resolve().parent
 @dataclass
 class PreviewConfig:
     """Configuracion visual del preview."""
-    ancho_slide_px: int = 540          # 540 es tipico para preview 4:5
-    alto_slide_px: int = 675           # mantiene 4:5
+
+    ancho_slide_px: int = 540  # 540 es tipico para preview 4:5
+    alto_slide_px: int = 675  # mantiene 4:5
     color_fondo: str = "#fafafa"
     color_slide: str = "#ffffff"
     color_overlay: str = "rgba(0,0,0,0.55)"
@@ -80,8 +82,7 @@ class PreviewHTML:
 
     # ---------------- Carrusel ----------------
 
-    def carrusel(self, carrusel: Any,
-                 ruta_salida: str | Path) -> Path:
+    def carrusel(self, carrusel: Any, ruta_salida: str | Path) -> Path:
         """Genera preview HTML de un carrusel."""
         ruta_salida = Path(ruta_salida)
         ruta_salida.parent.mkdir(parents=True, exist_ok=True)
@@ -97,8 +98,7 @@ class PreviewHTML:
             bg, fg = _color_para_slide(idx)
             if slide.tipo == "placeholder_foto":
                 bg, fg = "#e0e0e0", "#424242"
-            overlay_text = (slide.texto_overlay or slide.descripcion
-                            or f"Slide {slide.numero}")
+            overlay_text = slide.texto_overlay or slide.descripcion or f"Slide {slide.numero}"
             prompt = slide.prompt or ""
             metadata = slide.metadata or {}
             placeholder_path = metadata.get("placeholder_foto_path", "")
@@ -116,20 +116,20 @@ class PreviewHTML:
                 prompt_short = prompt[:120] + ("..." if len(prompt) > 120 else "")
                 prompt_block = (
                     f'<details class="prompt-details">'
-                    f'<summary>Ver prompt SDXL</summary>'
+                    f"<summary>Ver prompt SDXL</summary>"
                     f'<pre class="prompt-text">{_html_escape(prompt_short)}</pre>'
-                    f'</details>'
+                    f"</details>"
                 )
 
             slides_html.append(f'''
-            <div class="slide" data-slide-idx="{idx}" style="display: {'block' if idx == 0 else 'none'};">
+            <div class="slide" data-slide-idx="{idx}" style="display: {"block" if idx == 0 else "none"};">
                 <div class="slide-canvas" style="background: linear-gradient(135deg, {bg} 0%, {fg}22 100%); color: {fg};">
                     {tipo_badge}
                     <div class="slide-numero">{slide.numero}/{len(slides)}</div>
                     <div class="slide-contenido">
                         <div class="slide-placeholder-icon">📸</div>
                         <div class="slide-texto-overlay">
-                            {_html_escape(overlay_text).replace(chr(10), '<br>')}
+                            {_html_escape(overlay_text).replace(chr(10), "<br>")}
                         </div>
                     </div>
                 </div>
@@ -147,15 +147,14 @@ class PreviewHTML:
         # Caption y hashtags
         caption_html = _html_escape(caption).replace("\n", "<br>")
         hashtags_html = " ".join(
-            f'<span class="hashtag">{_html_escape(h)}</span>'
-            for h in hashtags
+            f'<span class="hashtag">{_html_escape(h)}</span>' for h in hashtags
         )
 
         # Indicar si es placeholder
         metadata_carrusel = getattr(carrusel, "metadata", {}) or {}
         es_placeholder = any(s.tipo == "placeholder_foto" for s in slides)
 
-        html_content = f'''<!DOCTYPE html>
+        html_content = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -362,7 +361,7 @@ body {{
         {dots_html}
     </div>
 
-    {''.join(slides_html)}
+    {"".join(slides_html)}
 
     <div class="caption-box">
         <h3 style="margin-bottom: 12px; font-size: 16px;">Caption</h3>
@@ -409,17 +408,22 @@ document.addEventListener('keydown', e => {{
 irASlide(0);
 </script>
 </body>
-</html>'''
+</html>"""
 
         ruta_salida.write_text(html_content, encoding="utf-8")
         return ruta_salida
 
     # ---------------- Post simple ----------------
 
-    def post(self, tema: str, caption: str, hashtags: list[str],
-             ruta_imagen: str | Path | None = None,
-             ruta_salida: str | Path = "preview_post.html",
-             metadata: dict[str, Any] | None = None) -> Path:
+    def post(
+        self,
+        tema: str,
+        caption: str,
+        hashtags: list[str],
+        ruta_imagen: str | Path | None = None,
+        ruta_salida: str | Path = "preview_post.html",
+        metadata: dict[str, Any] | None = None,
+    ) -> Path:
         """Genera preview HTML de un post individual."""
         ruta_salida = Path(ruta_salida)
         ruta_salida.parent.mkdir(parents=True, exist_ok=True)
@@ -435,26 +439,25 @@ irASlide(0);
         else:
             imagen_html = (
                 f'<div style="background: linear-gradient(135deg, {bg} 0%, {fg}22 100%); '
-                f'color: {fg}; width: 100%; height: 100%; display: flex; align-items: center; '
+                f"color: {fg}; width: 100%; height: 100%; display: flex; align-items: center; "
                 f'justify-content: center; flex-direction: column;">'
                 f'<div style="font-size: 64px; opacity: 0.4;">📸</div>'
                 f'<div style="margin-top: 12px; font-size: 14px; opacity: 0.6;">Imagen no generada</div>'
-                f'</div>'
+                f"</div>"
             )
 
         caption_html = _html_escape(caption).replace("\n", "<br>")
         hashtags_html = " ".join(
-            f'<span class="hashtag">{_html_escape(h)}</span>'
-            for h in hashtags
+            f'<span class="hashtag">{_html_escape(h)}</span>' for h in hashtags
         )
 
         meta = metadata or {}
         meta_items = "".join(
-            f'<div><strong>{_html_escape(str(k))}:</strong> {_html_escape(str(v))}</div>'
+            f"<div><strong>{_html_escape(str(k))}:</strong> {_html_escape(str(v))}</div>"
             for k, v in meta.items()
         )
 
-        html_content = f'''<!DOCTYPE html>
+        html_content = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -555,7 +558,7 @@ body {{
     </div>
 </div>
 </body>
-</html>'''
+</html>"""
 
         ruta_salida.write_text(html_content, encoding="utf-8")
         return ruta_salida
@@ -575,8 +578,12 @@ def demo() -> None:
 
     carrusel = factory.lote_premium(
         tema="5 ha en Cañuelas, a 65 km de CABA",
-        municipio="Cañuelas", hectareas=5,
-        precio_usd="USD 60.000", tono="emotivo", n_slides=5)
+        municipio="Cañuelas",
+        hectareas=5,
+        precio_usd="USD 60.000",
+        tono="emotivo",
+        n_slides=5,
+    )
 
     preview = PreviewHTML()
     html_path = preview.carrusel(
@@ -589,8 +596,11 @@ def demo() -> None:
     # Tambien demo de post
     post = studio.post.post_lote_venta(
         tema="5 ha en Cañuelas",
-        municipio="Cañuelas", hectareas="5 ha", distancia_caba="65 km",
-        tono="emotivo")
+        municipio="Cañuelas",
+        hectareas="5 ha",
+        distancia_caba="65 km",
+        tono="emotivo",
+    )
     html_path2 = preview.post(
         tema="5 ha en Cañuelas",
         caption=post["caption"],

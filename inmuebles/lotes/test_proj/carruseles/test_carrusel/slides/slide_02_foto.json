@@ -1,0 +1,17 @@
+{
+  "numero": 2,
+  "tipo": "foto",
+  "descripcion": "Vista aerea con drone del loteo",
+  "prompt": "aerial drone view of 20 lot subdivision in Cañuelas, Buenos Aires province, aerial drone shot, subdivision of rectangular lots, dirt streets forming grid, countryside around, green pastures, pampas horizon, ultra realistic, sharp focus, 8k",
+  "texto_overlay": "Vista aérea · 360° de horizonte pampeano",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "tipo_prompt": "vista_aerea_loteo",
+    "municipio": "Cañuelas"
+  }
+}

@@ -32,6 +32,7 @@ Uso:
     )
     print(resultado.output_path)  # path a la imagen generada
 """
+
 from __future__ import annotations
 
 import json
@@ -68,19 +69,24 @@ class ImageGenerator(ABC):
     """Interfaz abstracta para generadores de imagen."""
 
     @abstractmethod
-    def generar(self, prompt: str, negative_prompt: str = "",
-                aspect_ratio: str = "1152*896",
-                styles: list[str] | None = None,
-                output_path: Path | None = None,
-                **kwargs: Any) -> ImageResult:
+    def generar(
+        self,
+        prompt: str,
+        negative_prompt: str = "",
+        aspect_ratio: str = "1152*896",
+        styles: list[str] | None = None,
+        output_path: Path | None = None,
+        **kwargs: Any,
+    ) -> ImageResult:
         """Genera una imagen y devuelve el resultado."""
 
 
 class StubImageGenerator(ImageGenerator):
     """Stub que NO genera imagenes. Devuelve el prompt listo para copiar."""
 
-    def __init__(self, fooocus_url: str = "http://127.0.0.1:7865",
-                 output_dir: Path = DEFAULT_OUTPUT_DIR):
+    def __init__(
+        self, fooocus_url: str = "http://127.0.0.1:7865", output_dir: Path = DEFAULT_OUTPUT_DIR
+    ):
         self.fooocus_url = fooocus_url
         self.output_dir = output_dir
         self.fooocus_disponible = self._check_fooocus()
@@ -88,17 +94,22 @@ class StubImageGenerator(ImageGenerator):
     def _check_fooocus(self) -> bool:
         try:
             import urllib.request
+
             req = urllib.request.Request(f"{self.fooocus_url}/", method="GET")
             with urllib.request.urlopen(req, timeout=3):
                 return True
         except Exception:
             return False
 
-    def generar(self, prompt: str, negative_prompt: str = "",
-                aspect_ratio: str = "1152*896",
-                styles: list[str] | None = None,
-                output_path: Path | None = None,
-                **kwargs: Any) -> ImageResult:
+    def generar(
+        self,
+        prompt: str,
+        negative_prompt: str = "",
+        aspect_ratio: str = "1152*896",
+        styles: list[str] | None = None,
+        output_path: Path | None = None,
+        **kwargs: Any,
+    ) -> ImageResult:
         styles = styles or ["Fooocus V2", "Fooocus Enhance"]
         output_path = output_path or self._output_path_sugerido(prompt)
 
@@ -119,16 +130,18 @@ class StubImageGenerator(ImageGenerator):
                 "Alternativa: usar el prompt en Midjourney, DALL-E o Flux."
             )
 
-        self._guardar_prompt_json(
-            output_path, prompt, negative_prompt, aspect_ratio, styles)
+        self._guardar_prompt_json(output_path, prompt, negative_prompt, aspect_ratio, styles)
 
         return ImageResult(
-            prompt=prompt, negative_prompt=negative_prompt,
-            aspect_ratio=aspect_ratio, styles=styles,
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            aspect_ratio=aspect_ratio,
+            styles=styles,
             output_path=str(output_path),
             fooocus_url=self.fooocus_url,
             fooocus_disponible=self.fooocus_disponible,
-            stub=True, mensaje=mensaje,
+            stub=True,
+            mensaje=mensaje,
             metadata={"kwargs": kwargs},
         )
 
@@ -140,19 +153,25 @@ class StubImageGenerator(ImageGenerator):
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         return self.output_dir / f"{slug}_{ts}.jpg"
 
-    def _guardar_prompt_json(self, output_path: Path, prompt: str,
-                              negative_prompt: str, aspect_ratio: str,
-                              styles: list[str]) -> None:
+    def _guardar_prompt_json(
+        self,
+        output_path: Path,
+        prompt: str,
+        negative_prompt: str,
+        aspect_ratio: str,
+        styles: list[str],
+    ) -> None:
         json_path = output_path.with_suffix(".prompt.json")
         json_path.parent.mkdir(parents=True, exist_ok=True)
         data = {
-            "prompt": prompt, "negative_prompt": negative_prompt,
-            "aspect_ratio": aspect_ratio, "styles": styles,
+            "prompt": prompt,
+            "negative_prompt": negative_prompt,
+            "aspect_ratio": aspect_ratio,
+            "styles": styles,
             "imagen_esperada": str(output_path),
             "fecha": datetime.now().isoformat(timespec="seconds"),
         }
-        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                             encoding="utf-8")
+        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 class FooocusImageGenerator(ImageGenerator):
@@ -173,10 +192,13 @@ class FooocusImageGenerator(ImageGenerator):
         "predict",
     ]
 
-    def __init__(self, fooocus_url: str = "http://127.0.0.1:7865",
-                 output_dir: Path = DEFAULT_OUTPUT_DIR,
-                 poll_interval: int = 5,
-                 max_wait: int = 900):
+    def __init__(
+        self,
+        fooocus_url: str = "http://127.0.0.1:7865",
+        output_dir: Path = DEFAULT_OUTPUT_DIR,
+        poll_interval: int = 5,
+        max_wait: int = 900,
+    ):
         self.fooocus_url = fooocus_url
         self.output_dir = output_dir
         self.poll_interval = poll_interval
@@ -208,8 +230,9 @@ class FooocusImageGenerator(ImageGenerator):
             raise RuntimeError(f"No se pudo inspeccionar API de Fooocus: {e}") from e
 
         self._api_info = info
-        nombres = list(info.get("named_endpoints", {}).keys()) + \
-                  list(info.get("unnamed_endpoints", {}).keys())
+        nombres = list(info.get("named_endpoints", {}).keys()) + list(
+            info.get("unnamed_endpoints", {}).keys()
+        )
 
         for candidato in self._ENDPOINT_CANDIDATES:
             for nombre in nombres:
@@ -218,8 +241,7 @@ class FooocusImageGenerator(ImageGenerator):
                     return nombre
 
         raise RuntimeError(
-            f"No se encontro un endpoint de generacion en Fooocus. "
-            f"Endpoints disponibles: {nombres}"
+            f"No se encontro un endpoint de generacion en Fooocus. Endpoints disponibles: {nombres}"
         )
 
     def _parsear_aspect(self, aspect_ratio: str) -> tuple[int, int]:
@@ -230,14 +252,18 @@ class FooocusImageGenerator(ImageGenerator):
         except (ValueError, AttributeError):
             return 1152, 896
 
-    def generar(self, prompt: str, negative_prompt: str = "",
-                aspect_ratio: str = "1152*896",
-                styles: list[str] | None = None,
-                output_path: Path | None = None,
-                steps: int = 30,
-                cfg_scale: float = 4.0,
-                seed: int = -1,
-                **kwargs: Any) -> ImageResult:
+    def generar(
+        self,
+        prompt: str,
+        negative_prompt: str = "",
+        aspect_ratio: str = "1152*896",
+        styles: list[str] | None = None,
+        output_path: Path | None = None,
+        steps: int = 30,
+        cfg_scale: float = 4.0,
+        seed: int = -1,
+        **kwargs: Any,
+    ) -> ImageResult:
         """Envia prompt a Fooocus y descarga la imagen resultante."""
         styles = styles or ["Fooocus V2", "Fooocus Enhance"]
         output_path = output_path or self._output_path_sugerido(prompt)
@@ -254,17 +280,19 @@ class FooocusImageGenerator(ImageGenerator):
                 "styles": styles,
                 "performance_selection": "Speed",
                 "aspect_ratios_selection": aspect_ratio.replace("*", "x"),
-                "width": width, "height": height,
-                "image_number": 1, "seed": seed, "sharpness": 2.0,
-                "guidance_scale": cfg_scale, "steps": steps,
+                "width": width,
+                "height": height,
+                "image_number": 1,
+                "seed": seed,
+                "sharpness": 2.0,
+                "guidance_scale": cfg_scale,
+                "steps": steps,
             }
             kwargs_gradio = {k: v for k, v in kwargs_gradio.items() if v is not None}
 
             job = cliente.predict(**kwargs_gradio, api_name=endpoint)
         except Exception as e:
-            raise RuntimeError(
-                f"Error enviando a Fooocus (endpoint={endpoint}): {e}"
-            ) from e
+            raise RuntimeError(f"Error enviando a Fooocus (endpoint={endpoint}): {e}") from e
 
         try:
             resultado = self._esperar_y_descargar(job, output_path)
@@ -272,14 +300,16 @@ class FooocusImageGenerator(ImageGenerator):
             raise RuntimeError(f"Error descargando resultado: {e}") from e
 
         return ImageResult(
-            prompt=prompt, negative_prompt=negative_prompt,
-            aspect_ratio=aspect_ratio, styles=styles,
+            prompt=prompt,
+            negative_prompt=negative_prompt,
+            aspect_ratio=aspect_ratio,
+            styles=styles,
             output_path=str(output_path),
             fooocus_url=self.fooocus_url,
-            fooocus_disponible=True, stub=False,
+            fooocus_disponible=True,
+            stub=False,
             mensaje=f"Imagen generada por Fooocus en {output_path}",
-            metadata={"endpoint": endpoint, "steps": steps,
-                      "cfg_scale": cfg_scale, "seed": seed},
+            metadata={"endpoint": endpoint, "steps": steps, "cfg_scale": cfg_scale, "seed": seed},
         )
 
     def _esperar_y_descargar(self, job, output_path: Path) -> Path:
@@ -300,6 +330,7 @@ class FooocusImageGenerator(ImageGenerator):
             return output_path
         if isinstance(path_or_url, str) and path_or_url.startswith(("http://", "https://")):
             import urllib.request
+
             with urllib.request.urlopen(path_or_url, timeout=30) as resp:
                 output_path.write_bytes(resp.read())
             return output_path
@@ -354,7 +385,7 @@ def demo() -> None:
     print("--- Resultado ---")
     print(f"Stub: {resultado.stub}")
     print(f"Output esperado: {resultado.output_path}")
-    if resultado.exito if hasattr(resultado, 'exito') else True:
+    if resultado.exito if hasattr(resultado, "exito") else True:
         print(f"Imagen: {resultado.output_path}")
     print("Mensaje (primeras lineas):")
     for linea in resultado.mensaje.split("\n")[:6]:

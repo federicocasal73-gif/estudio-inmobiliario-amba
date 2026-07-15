@@ -25,6 +25,7 @@ CLI:
     python3 studio.py duplicar --origen chacra-canuelas-5ha --destino chacra-canuelas-8ha
     python3 studio.py publicar --carrusel inmuebles/.../carrusel.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -69,7 +70,9 @@ class PipelineResultado:
     validaciones: list[dict[str, Any]] = field(default_factory=list)
     errores: list[str] = field(default_factory=list)
     resumen: str = ""
-    fecha_ejecucion: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    fecha_ejecucion: str = field(
+        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -93,24 +96,28 @@ class Studio:
 
     # ---------------- Pipeline end-to-end ----------------
 
-    def pipeline_semana(self, semana_n: int = 1,
-                        proyectos: list[str] | None = None,
-                        posts_por_semana: int = 5,
-                        municipio_principal: str = "Cañuelas",
-                        fecha_inicio: str | None = None,
-                        modo_publicacion: ModoPublicacion = ModoPublicacion.DRY_RUN,
-                        generar_carruseles_faltantes: bool = True,
-                        aplicar_mejora_a_placeholders: bool = False,
-                        municipio_por_proyecto: dict[str, str] | None = None,
-                        validar_posts: bool = True,
-                        ) -> PipelineResultado:
+    def pipeline_semana(
+        self,
+        semana_n: int = 1,
+        proyectos: list[str] | None = None,
+        posts_por_semana: int = 5,
+        municipio_principal: str = "Cañuelas",
+        fecha_inicio: str | None = None,
+        modo_publicacion: ModoPublicacion = ModoPublicacion.DRY_RUN,
+        generar_carruseles_faltantes: bool = True,
+        aplicar_mejora_a_placeholders: bool = False,
+        municipio_por_proyecto: dict[str, str] | None = None,
+        validar_posts: bool = True,
+    ) -> PipelineResultado:
         """Ejecuta el pipeline completo de una semana."""
         proyectos = proyectos or []
         municipio_por_proyecto = municipio_por_proyecto or {}
 
         resultado = PipelineResultado(
             semana_numero=semana_n,
-            fecha_inicio="", fecha_fin="", n_slots=0,
+            fecha_inicio="",
+            fecha_fin="",
+            n_slots=0,
         )
 
         # 1) Calendario
@@ -150,13 +157,15 @@ class Studio:
                         municipio=slot.municipio,
                     )
                     if not val.ok or val.advertencias:
-                        resultado.validaciones.append({
-                            "fecha": slot.fecha,
-                            "tipo": slot.tipo_post,
-                            "ok": val.ok,
-                            "errores": val.errores,
-                            "advertencias": val.advertencias,
-                        })
+                        resultado.validaciones.append(
+                            {
+                                "fecha": slot.fecha,
+                                "tipo": slot.tipo_post,
+                                "ok": val.ok,
+                                "errores": val.errores,
+                                "advertencias": val.advertencias,
+                            }
+                        )
 
         # 2) Generar carruseles faltantes
         if generar_carruseles_faltantes:
@@ -165,19 +174,23 @@ class Studio:
                     try:
                         nombre = self._nombre_carrusel_desde_slot(slot, semana)
                         self._generar_o_reusar_carrusel(
-                            slot, nombre, municipio_por_proyecto.get(
-                                slot.proyecto, slot.municipio))
+                            slot, nombre, municipio_por_proyecto.get(slot.proyecto, slot.municipio)
+                        )
                         resultado.carruseles_generados.append(nombre)
                     except Exception as e:
                         resultado.errores.append(
-                            f"carrusel {slot.tipo_post} slot {slot.fecha}: {e}")
+                            f"carrusel {slot.tipo_post} slot {slot.fecha}: {e}"
+                        )
 
         # 3) Mejora de fotos placeholder (opcional, requiere fotos reales)
         if aplicar_mejora_a_placeholders:
             for slot in semana.slots:
                 if slot.post and slot.tipo_post == "obra_avance":
-                    placeholder = slot.post.get("metadata", {}).get(
-                        "placeholder_foto_path") if slot.post.get("metadata") else None
+                    placeholder = (
+                        slot.post.get("metadata", {}).get("placeholder_foto_path")
+                        if slot.post.get("metadata")
+                        else None
+                    )
                     # Solo mejora si existe el archivo
                     continue
 
@@ -187,8 +200,7 @@ class Studio:
                 pub = self._publicar_slot(slot, semana, modo_publicacion)
                 resultado.publicaciones.append(pub.to_dict())
             except Exception as e:
-                resultado.errores.append(
-                    f"publicacion slot {slot.fecha} {slot.tipo_post}: {e}")
+                resultado.errores.append(f"publicacion slot {slot.fecha} {slot.tipo_post}: {e}")
 
         # Resumen
         pub_ok = sum(1 for p in resultado.publicaciones if p.get("exito"))
@@ -225,10 +237,10 @@ class Studio:
             "domingo": "obra_avance",
         }.get(dia_semana, "lote_premium")
 
-    def _generar_o_reusar_carrusel(self, slot: Any, nombre: str,
-                                    municipio: str) -> Path:
-        carpeta_destino = (ROOT / "inmuebles" / "lotes" / (slot.proyecto or "_generados")
-                           / "carruseles" / nombre)
+    def _generar_o_reusar_carrusel(self, slot: Any, nombre: str, municipio: str) -> Path:
+        carpeta_destino = (
+            ROOT / "inmuebles" / "lotes" / (slot.proyecto or "_generados") / "carruseles" / nombre
+        )
         json_existente = carpeta_destino / "carrusel.json"
         if json_existente.exists():
             return carpeta_destino
@@ -238,39 +250,51 @@ class Studio:
             if tipo == "lote_premium":
                 tema = f"Lote destacado en {municipio}"
                 carrusel = self.carruseles.lote_premium(
-                    tema=tema, municipio=municipio, hectareas=5,
-                    tono=slot.tono, n_slides=6)
+                    tema=tema, municipio=municipio, hectareas=5, tono=slot.tono, n_slides=6
+                )
             elif tipo == "country_etapa":
                 carrusel = self.carruseles.country_etapa(
                     nombre_country="Country Premium",
-                    municipio=municipio, etapa="2", n_lotes=12,
-                    tono=slot.tono, n_slides=5)
+                    municipio=municipio,
+                    etapa="2",
+                    n_lotes=12,
+                    tono=slot.tono,
+                    n_slides=5,
+                )
             elif tipo == "obra_avance":
                 carrusel = self.carruseles.obra_avance(
                     nombre_obra=slot.proyecto or "Obra",
-                    municipio=municipio, semana=1, etapa="fundaciones",
-                    tono=slot.tono, n_slides=4)
+                    municipio=municipio,
+                    semana=1,
+                    etapa="fundaciones",
+                    tono=slot.tono,
+                    n_slides=4,
+                )
             elif tipo == "servicios":
                 carrusel = self.carruseles.servicios(
-                    empresa="Nuestra Empresa",
-                    municipio=municipio, n_slides=6)
+                    empresa="Nuestra Empresa", municipio=municipio, n_slides=6
+                )
             else:
                 carrusel = self.carruseles.lote_premium(
                     tema=f"Lote en {municipio}",
-                    municipio=municipio, hectareas=5,
-                    tono=slot.tono, n_slides=6)
+                    municipio=municipio,
+                    hectareas=5,
+                    tono=slot.tono,
+                    n_slides=6,
+                )
 
-            return self.carruseles.guardar(
-                carrusel, nombre=nombre, proyecto=slot.proyecto)
+            return self.carruseles.guardar(carrusel, nombre=nombre, proyecto=slot.proyecto)
         except Exception as e:
             raise RuntimeError(f"generando carrusel {tipo}: {e}")
 
-    def _publicar_slot(self, slot: Any, semana: Any,
-                       modo: ModoPublicacion) -> PublicacionResultado:
+    def _publicar_slot(self, slot: Any, semana: Any, modo: ModoPublicacion) -> PublicacionResultado:
         if not slot.post or not slot.post.get("caption_completo"):
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="vacio",
-                caption_length=0, n_imagenes=0,
+                modo=modo.value,
+                exito=False,
+                tipo="vacio",
+                caption_length=0,
+                n_imagenes=0,
                 error="slot sin post generado",
             )
 
@@ -280,28 +304,28 @@ class Studio:
 
         if slot.tipo_post in ("carrusel", "servicios") and slot.proyecto:
             nombre = self._nombre_carrusel_desde_slot(slot, semana)
-            carpeta = (ROOT / "inmuebles" / "lotes" / slot.proyecto /
-                       "carruseles" / nombre / "slides")
-            imagenes = sorted(carpeta.glob("slide_*.png")) + sorted(
-                carpeta.glob("slide_*.jpg"))
+            carpeta = (
+                ROOT / "inmuebles" / "lotes" / slot.proyecto / "carruseles" / nombre / "slides"
+            )
+            imagenes = sorted(carpeta.glob("slide_*.png")) + sorted(carpeta.glob("slide_*.jpg"))
             imagenes = [p for p in imagenes if p.suffix in (".png", ".jpg", ".jpeg")]
             if len(imagenes) >= 2:
                 return self.publisher.publicar_carrusel(
-                    rutas_imagenes=imagenes, caption=caption,
-                    hashtags=hashtags, modo=modo)
+                    rutas_imagenes=imagenes, caption=caption, hashtags=hashtags, modo=modo
+                )
 
         if slot.proyecto:
-            carpeta_prompts = (ROOT / "inmuebles" / "lotes" / slot.proyecto /
-                               "prompts")
-            imagenes = (sorted(carpeta_prompts.glob("*.png")) +
-                        sorted(carpeta_prompts.glob("*.jpg")))
+            carpeta_prompts = ROOT / "inmuebles" / "lotes" / slot.proyecto / "prompts"
+            imagenes = sorted(carpeta_prompts.glob("*.png")) + sorted(carpeta_prompts.glob("*.jpg"))
             if imagenes:
                 return self.publisher.publicar_foto(
-                    ruta_imagen=imagenes[0], caption=caption,
-                    hashtags=hashtags, modo=modo)
+                    ruta_imagen=imagenes[0], caption=caption, hashtags=hashtags, modo=modo
+                )
 
         return PublicacionResultado(
-            modo=modo.value, exito=False, tipo=slot.tipo_post,
+            modo=modo.value,
+            exito=False,
+            tipo=slot.tipo_post,
             caption_length=len(caption) + sum(len(h) for h in hashtags),
             n_imagenes=0,
             error="Sin imagenes generadas todavia. Dry-run del caption.",
@@ -315,8 +339,9 @@ class Studio:
 
     # ---------------- Duplicar proyecto (gap #9) ----------------
 
-    def duplicar_proyecto(self, origen: str, destino: str,
-                          cambios: dict[str, Any] | None = None) -> Path:
+    def duplicar_proyecto(
+        self, origen: str, destino: str, cambios: dict[str, Any] | None = None
+    ) -> Path:
         """Duplica un proyecto con overrides opcionales.
 
         cambios puede sobrescribir: hectareas, municipio, precio_usd, etc.
@@ -349,8 +374,7 @@ class Studio:
                 # Actualizar resumen
                 self._actualizar_resumen(json_path, cambios)
 
-    def _actualizar_prompts_en_json(self, json_path: Path,
-                                     cambios: dict[str, Any]) -> None:
+    def _actualizar_prompts_en_json(self, json_path: Path, cambios: dict[str, Any]) -> None:
         try:
             data = json.loads(json_path.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
@@ -362,10 +386,8 @@ class Studio:
                     prompt = slide["prompt"]
                     for key, value in cambios.items():
                         if key in ("hectareas",):
-                            prompt = prompt.replace(
-                                "5 hectares", f"{value} hectares")
-                            prompt = prompt.replace(
-                                "5 ha en", f"{value} ha en")
+                            prompt = prompt.replace("5 hectares", f"{value} hectares")
+                            prompt = prompt.replace("5 ha en", f"{value} ha en")
                             modificado = True
                         if key == "municipio":
                             for m in ["Cañuelas", "Escobar", "Pilar", "Mercedes"]:
@@ -375,12 +397,9 @@ class Studio:
                     if modificado:
                         slide["prompt"] = prompt
         if modificado:
-            json_path.write_text(json.dumps(data, indent=2,
-                                             ensure_ascii=False),
-                                 encoding="utf-8")
+            json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    def _actualizar_resumen(self, json_path: Path,
-                             cambios: dict[str, Any]) -> None:
+    def _actualizar_resumen(self, json_path: Path, cambios: dict[str, Any]) -> None:
         try:
             data = json.loads(json_path.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, OSError):
@@ -388,16 +407,18 @@ class Studio:
         for key, value in cambios.items():
             if key in data:
                 data[key] = value
-        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                             encoding="utf-8")
+        json_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # ---------------- Regenerar carruseles de una semana (gap #19) ----------------
 
-    def regenerar_carruseles(self, semana_n: int,
-                              proyectos: list[str] | None = None,
-                              municipio_principal: str = "Cañuelas",
-                              posts_por_semana: int = 5,
-                              fecha_inicio: str | None = None) -> PipelineResultado:
+    def regenerar_carruseles(
+        self,
+        semana_n: int,
+        proyectos: list[str] | None = None,
+        municipio_principal: str = "Cañuelas",
+        posts_por_semana: int = 5,
+        fecha_inicio: str | None = None,
+    ) -> PipelineResultado:
         """Fuerza la regeneracion de los carruseles de una semana."""
         return self.pipeline_semana(
             semana_n=semana_n,
@@ -411,15 +432,18 @@ class Studio:
 
     # ---------------- Publicar carrusel existente (gap #7) ----------------
 
-    def publicar_carrusel_existente(self, ruta_carrusel: str | Path,
-                                     modo: ModoPublicacion = ModoPublicacion.DRY_RUN
-                                     ) -> PublicacionResultado:
+    def publicar_carrusel_existente(
+        self, ruta_carrusel: str | Path, modo: ModoPublicacion = ModoPublicacion.DRY_RUN
+    ) -> PublicacionResultado:
         """Publica un carrusel que ya esta generado en disco."""
         ruta_carrusel = Path(ruta_carrusel)
         if not ruta_carrusel.exists():
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
-                caption_length=0, n_imagenes=0,
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
+                caption_length=0,
+                n_imagenes=0,
                 error=f"No existe: {ruta_carrusel}",
             )
 
@@ -427,15 +451,19 @@ class Studio:
             data = json.loads(ruta_carrusel.read_text(encoding="utf-8"))
         except json.JSONDecodeError as e:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
-                caption_length=0, n_imagenes=0,
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
+                caption_length=0,
+                n_imagenes=0,
                 error=f"JSON invalido: {e}",
             )
 
         # Buscar imagenes en la carpeta slides/
         carpeta_slides = ruta_carrusel.parent / "slides"
-        imagenes = (sorted(carpeta_slides.glob("slide_*.png")) +
-                    sorted(carpeta_slides.glob("slide_*.jpg")))
+        imagenes = sorted(carpeta_slides.glob("slide_*.png")) + sorted(
+            carpeta_slides.glob("slide_*.jpg")
+        )
         imagenes = [p for p in imagenes if p.suffix in (".png", ".jpg", ".jpeg")]
 
         caption = data.get("caption_narrativo", "")
@@ -444,23 +472,25 @@ class Studio:
 
         if len(imagenes) < 2:
             return PublicacionResultado(
-                modo=modo.value, exito=False, tipo="carrusel",
+                modo=modo.value,
+                exito=False,
+                tipo="carrusel",
                 caption_length=len(caption) + sum(len(h) for h in hashtags),
                 n_imagenes=len(imagenes),
                 error=f"Necesita >= 2 imagenes (encontradas: {len(imagenes)}). "
-                      f"Revisa {carpeta_slides}",
-                metadata={"n_slides_esperadas": n_slides,
-                          "carpeta_slides": str(carpeta_slides)},
+                f"Revisa {carpeta_slides}",
+                metadata={"n_slides_esperadas": n_slides, "carpeta_slides": str(carpeta_slides)},
             )
 
         return self.publisher.publicar_carrusel(
-            rutas_imagenes=imagenes, caption=caption,
-            hashtags=hashtags, modo=modo)
+            rutas_imagenes=imagenes, caption=caption, hashtags=hashtags, modo=modo
+        )
 
     # ---------------- Preview HTML de un carrusel ----------------
 
-    def preview_carrusel(self, ruta_carrusel: str | Path,
-                          ruta_html: str | Path | None = None) -> Path:
+    def preview_carrusel(
+        self, ruta_carrusel: str | Path, ruta_html: str | Path | None = None
+    ) -> Path:
         """Genera preview HTML de un carrusel en disco."""
         ruta_carrusel = Path(ruta_carrusel)
         if not ruta_carrusel.exists():
@@ -470,18 +500,21 @@ class Studio:
 
         # Reconstruir objeto Carrusel-like para el preview
         from carruseles import Carrusel, Slide
+
         slides = []
         for s in data.get("slides", []):
-            slides.append(Slide(
-                numero=s.get("numero", 0),
-                tipo=s.get("tipo", "foto"),
-                descripcion=s.get("descripcion", ""),
-                prompt=s.get("prompt", ""),
-                texto_overlay=s.get("texto_overlay", ""),
-                aspect_ratio=s.get("aspect_ratio", "896*1152"),
-                styles=s.get("styles", []),
-                metadata=s.get("metadata", {}),
-            ))
+            slides.append(
+                Slide(
+                    numero=s.get("numero", 0),
+                    tipo=s.get("tipo", "foto"),
+                    descripcion=s.get("descripcion", ""),
+                    prompt=s.get("prompt", ""),
+                    texto_overlay=s.get("texto_overlay", ""),
+                    aspect_ratio=s.get("aspect_ratio", "896*1152"),
+                    styles=s.get("styles", []),
+                    metadata=s.get("metadata", {}),
+                )
+            )
 
         carrusel = Carrusel(
             tema=data.get("tema", ""),
@@ -501,8 +534,9 @@ class Studio:
 
     # ---------------- Generacion de imagenes (Fase 4) ----------------
 
-    def generar_imagenes_carrusel(self, ruta_carrusel: str | Path,
-                                    force_real: bool = False) -> list[dict[str, Any]]:
+    def generar_imagenes_carrusel(
+        self, ruta_carrusel: str | Path, force_real: bool = False
+    ) -> list[dict[str, Any]]:
         """Genera imagenes para los slides de un carrusel.
 
         - Si Fooocus esta activo y force_real=True: envia prompts a Fooocus
@@ -528,19 +562,26 @@ class Studio:
             output_path = carpeta_imgs / f"slide_{numero:02d}_{tipo}.jpg"
 
             if tipo == "placeholder_foto":
-                resultados.append({
-                    "n_slide": numero, "tipo": tipo, "saltado": True,
-                    "razon": "requiere foto real",
-                    "path": slide_data.get("metadata", {}).get(
-                        "placeholder_foto_path", ""),
-                })
+                resultados.append(
+                    {
+                        "n_slide": numero,
+                        "tipo": tipo,
+                        "saltado": True,
+                        "razon": "requiere foto real",
+                        "path": slide_data.get("metadata", {}).get("placeholder_foto_path", ""),
+                    }
+                )
                 continue
 
             if not prompt:
-                resultados.append({
-                    "n_slide": numero, "tipo": tipo, "saltado": True,
-                    "razon": "sin prompt",
-                })
+                resultados.append(
+                    {
+                        "n_slide": numero,
+                        "tipo": tipo,
+                        "saltado": True,
+                        "razon": "sin prompt",
+                    }
+                )
                 continue
 
             try:
@@ -551,16 +592,24 @@ class Studio:
                     styles=styles,
                     output_path=output_path,
                 )
-                resultados.append({
-                    "n_slide": numero, "tipo": tipo, "saltado": False,
-                    "stub": r.stub,
-                    "output_path": r.output_path,
-                    "fooocus_disponible": r.fooocus_disponible,
-                })
+                resultados.append(
+                    {
+                        "n_slide": numero,
+                        "tipo": tipo,
+                        "saltado": False,
+                        "stub": r.stub,
+                        "output_path": r.output_path,
+                        "fooocus_disponible": r.fooocus_disponible,
+                    }
+                )
             except Exception as e:
-                resultados.append({
-                    "n_slide": numero, "tipo": tipo, "error": str(e),
-                })
+                resultados.append(
+                    {
+                        "n_slide": numero,
+                        "tipo": tipo,
+                        "error": str(e),
+                    }
+                )
 
         return resultados
 
@@ -573,32 +622,38 @@ class Studio:
         for nombre_carrusel in resultado.carruseles_generados:
             # Buscar el carrusel.json en el filesystem
             carpetas_posibles = [
-                ROOT / "inmuebles" / "lotes" / nombre_carrusel.split("_")[0]
-                / "carruseles" / nombre_carrusel,
+                ROOT
+                / "inmuebles"
+                / "lotes"
+                / nombre_carrusel.split("_")[0]
+                / "carruseles"
+                / nombre_carrusel,
             ]
             for carpeta in carpetas_posibles:
                 json_path = carpeta / "carrusel.json"
                 if json_path.exists():
                     slides_result = self.generar_imagenes_carrusel(json_path)
-                    reporte["carruseles"].append({
-                        "nombre": nombre_carrusel,
-                        "slides": slides_result,
-                    })
+                    reporte["carruseles"].append(
+                        {
+                            "nombre": nombre_carrusel,
+                            "slides": slides_result,
+                        }
+                    )
                     break
         return reporte
 
     # ---------------- Persistencia ----------------
 
-    def guardar_pipeline(self, resultado: PipelineResultado,
-                          nombre: str | None = None) -> Path:
+    def guardar_pipeline(self, resultado: PipelineResultado, nombre: str | None = None) -> Path:
         carpeta = ROOT / "inmuebles" / "pipelines"
         carpeta.mkdir(parents=True, exist_ok=True)
         if not nombre:
             ts = datetime.now().strftime("%Y%m%d_%H%M%S")
             nombre = f"pipeline_semana_{resultado.semana_numero:02d}_{ts}"
         ruta = carpeta / f"{nombre}.json"
-        ruta.write_text(json.dumps(resultado.to_dict(), indent=2,
-                                   ensure_ascii=False), encoding="utf-8")
+        ruta.write_text(
+            json.dumps(resultado.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         return ruta
 
     # ---------------- Listar carruseles disponibles (gap #18) ----------------
@@ -627,15 +682,17 @@ class Studio:
                     continue
                 try:
                     data = json.loads(json_path.read_text(encoding="utf-8"))
-                    resultados.append({
-                        "carpeta": str(carrusel_dir.relative_to(ROOT)),
-                        "nombre": carrusel_dir.name,
-                        "tema": data.get("tema", ""),
-                        "tipo": data.get("tipo", ""),
-                        "n_slides": data.get("n_slides", 0),
-                        "fecha_creacion": data.get("fecha_creacion", ""),
-                        "municipio": data.get("municipio", ""),
-                    })
+                    resultados.append(
+                        {
+                            "carpeta": str(carrusel_dir.relative_to(ROOT)),
+                            "nombre": carrusel_dir.name,
+                            "tema": data.get("tema", ""),
+                            "tipo": data.get("tipo", ""),
+                            "n_slides": data.get("n_slides", 0),
+                            "fecha_creacion": data.get("fecha_creacion", ""),
+                            "municipio": data.get("municipio", ""),
+                        }
+                    )
                 except (json.JSONDecodeError, OSError):
                     continue
         return resultados
@@ -643,8 +700,10 @@ class Studio:
 
 # ==================== HELPERS DE GENERACION (Fase 2) ====================
 
-def _build_batch_items_from_carrusel(carrusel_path: Path,
-                                      batch_variants: int = 1) -> list[BatchItem]:
+
+def _build_batch_items_from_carrusel(
+    carrusel_path: Path, batch_variants: int = 1
+) -> list[BatchItem]:
     """Lee carrusel.json y construye los BatchItems a generar."""
     data = json.loads(carrusel_path.read_text(encoding="utf-8"))
     slides = data.get("slides", [])
@@ -666,31 +725,35 @@ def _build_batch_items_from_carrusel(carrusel_path: Path,
         for variante in range(batch_variants):
             suffix = f"_v{variante + 1}" if batch_variants > 1 else ""
             output_path = carpeta_slides / f"slide_{numero:02d}_{tipo}{suffix}.jpg"
-            items.append(BatchItem(
-                id=f"slide_{numero:02d}_v{variante + 1}",
-                prompt=prompt,
-                params={
-                    "aspect_ratio": aspect,
-                    "styles": styles,
-                    "negative_prompt": "",
-                    "steps": 30,
-                    "cfg_scale": 4.0,
-                },
-                output_path=output_path,
-                max_retries=3,
-            ))
+            items.append(
+                BatchItem(
+                    id=f"slide_{numero:02d}_v{variante + 1}",
+                    prompt=prompt,
+                    params={
+                        "aspect_ratio": aspect,
+                        "styles": styles,
+                        "negative_prompt": "",
+                        "steps": 30,
+                        "cfg_scale": 4.0,
+                    },
+                    output_path=output_path,
+                    max_retries=3,
+                )
+            )
     return items
 
 
-def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
-                                 carrusel_path: str | Path,
-                                 batch: int = 1,
-                                 workers: int = 3,
-                                 retries: int = 3,
-                                 use_cache: bool = True,
-                                 force: bool = False,
-                                 skip_confirm: bool = False,
-                                 seconds_per_image: float = 25.0) -> dict[str, Any]:
+def _generar_carrusel_completo(
+    studio: "Studio",  # noqa: F821
+    carrusel_path: str | Path,
+    batch: int = 1,
+    workers: int = 3,
+    retries: int = 3,
+    use_cache: bool = True,
+    force: bool = False,
+    skip_confirm: bool = False,
+    seconds_per_image: float = 25.0,
+) -> dict[str, Any]:
     """Logica central del comando generar-carousel."""
     from generation_pipeline import BatchGenerator
 
@@ -705,10 +768,7 @@ def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
     # Estimacion
     cache_path = Path(".cache") / "generation_cache.json"
     cache = ImageCache(cache_path)
-    cache_hits = sum(
-        1 for it in items
-        if cache.get(it.prompt, it.hash_key_params())
-    )
+    cache_hits = sum(1 for it in items if cache.get(it.prompt, it.hash_key_params()))
     cache_hit_rate = cache_hits / len(items) if items else 0
 
     estimacion = estimate_time(
@@ -719,12 +779,12 @@ def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
     )
 
     print(f"Carrusel: {ruta}")
-    print(f"Slides a generar: {len(items)} (batch={batch}, workers={workers}, "
-          f"retries={retries}, cache={'on' if use_cache else 'off'})")
-    print(f"  - Cache hits esperados: {cache_hits}/{len(items)} "
-          f"({int(cache_hit_rate * 100)}%)")
-    print(f"  - Tiempo estimado: {estimacion['human_readable']} "
-          f"({estimacion['total_seconds']}s)")
+    print(
+        f"Slides a generar: {len(items)} (batch={batch}, workers={workers}, "
+        f"retries={retries}, cache={'on' if use_cache else 'off'})"
+    )
+    print(f"  - Cache hits esperados: {cache_hits}/{len(items)} ({int(cache_hit_rate * 100)}%)")
+    print(f"  - Tiempo estimado: {estimacion['human_readable']} ({estimacion['total_seconds']}s)")
 
     if not skip_confirm and not force:
         if not items:
@@ -747,7 +807,8 @@ def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
         retry_policy=retry_policy,
         on_progress=lambda c, t, r: print(
             f"  [{c}/{t}] slide {r.item_id}: "
-            f"{'OK (cache)' if r.cache_hit else 'OK' if r.success else 'FAIL'}"),
+            f"{'OK (cache)' if r.cache_hit else 'OK' if r.success else 'FAIL'}"
+        ),
     )
     for it in items:
         it.use_cache = use_cache
@@ -762,8 +823,9 @@ def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
 
     # Estadisticas de cache
     cache_stats = cache.stats()
-    print(f"Cache total: {cache_stats['total_entries']} entradas, "
-          f"{cache_stats['total_size_mb']} MB")
+    print(
+        f"Cache total: {cache_stats['total_entries']} entradas, {cache_stats['total_size_mb']} MB"
+    )
 
     return {"success": True, "ok": ok, "cache_hits": cache_h, "fail": fail}
 
@@ -771,7 +833,8 @@ def _generar_carrusel_completo(studio: "Studio",  # noqa: F821
 def _generar_carrusel_interactivo(studio: "Studio", args: Any) -> int:
     """Wrapper CLI para generar-carousel."""
     resultado = _generar_carrusel_completo(
-        studio, args.carrusel,
+        studio,
+        args.carrusel,
         batch=args.batch,
         workers=args.workers,
         retries=args.retries,
@@ -786,8 +849,10 @@ def _generar_carrusel_interactivo(studio: "Studio", args: Any) -> int:
     return 0
 
 
-def _encolar_carrusel(studio: "Studio",  # noqa: F821
-                      carrusel_path: str | Path) -> dict[str, Any]:
+def _encolar_carrusel(
+    studio: "Studio",  # noqa: F821
+    carrusel_path: str | Path,
+) -> dict[str, Any]:
     """Encola todos los slides de un carrusel para procesamiento en background."""
     from generation_pipeline import GenerationQueue, QueueItem
 
@@ -803,11 +868,13 @@ def _encolar_carrusel(studio: "Studio",  # noqa: F821
     queue = GenerationQueue(db_path)
     encolados = 0
     for it in items:
-        queue.enqueue(QueueItem(
-            prompt=it.prompt,
-            params_json=json.dumps(it.params),
-            output_path=str(it.output_path) if it.output_path else None,
-        ))
+        queue.enqueue(
+            QueueItem(
+                prompt=it.prompt,
+                params_json=json.dumps(it.params),
+                output_path=str(it.output_path) if it.output_path else None,
+            )
+        )
         encolados += 1
     return {"encolados": encolados}
 
@@ -832,12 +899,14 @@ def _procesar_cola(studio: "Studio") -> dict[str, Any]:  # noqa: F821
     items = []
     for q in pending:
         params = json.loads(q.params_json)
-        items.append(BatchItem(
-            id=str(q.id),
-            prompt=q.prompt,
-            params=params,
-            output_path=Path(q.output_path) if q.output_path else None,
-        ))
+        items.append(
+            BatchItem(
+                id=str(q.id),
+                prompt=q.prompt,
+                params=params,
+                output_path=Path(q.output_path) if q.output_path else None,
+            )
+        )
 
     results = batch_gen.generate_all(items)
 
@@ -854,9 +923,9 @@ def _procesar_cola(studio: "Studio") -> dict[str, Any]:  # noqa: F821
 
 # ==================== CLI ====================
 
+
 def cli() -> int:
-    parser = argparse.ArgumentParser(
-        description="Realestate Studio AMBA - CLI")
+    parser = argparse.ArgumentParser(description="Realestate Studio AMBA - CLI")
     sub = parser.add_subparsers(dest="comando", required=True)
 
     # subcomando: demo
@@ -865,17 +934,18 @@ def cli() -> int:
     # subcomando: semana
     p_sem = sub.add_parser("semana", help="Genera calendario semanal completo")
     p_sem.add_argument("--n", type=int, default=1, help="Numero de semana")
-    p_sem.add_argument("--proyectos", nargs="+", default=[],
-                        help="Lista de proyectos separados por espacio")
-    p_sem.add_argument("--posts", type=int, default=5,
-                        help="Posts por semana")
-    p_sem.add_argument("--municipio", default="Cañuelas",
-                        help="Municipio principal")
-    p_sem.add_argument("--fecha-inicio", default=None,
-                        help="Fecha de inicio YYYY-MM-DD")
-    p_sem.add_argument("--publicar", choices=["dry-run", "interactivo", "real"],
-                        default="dry-run",
-                        help="Modo de publicacion")
+    p_sem.add_argument(
+        "--proyectos", nargs="+", default=[], help="Lista de proyectos separados por espacio"
+    )
+    p_sem.add_argument("--posts", type=int, default=5, help="Posts por semana")
+    p_sem.add_argument("--municipio", default="Cañuelas", help="Municipio principal")
+    p_sem.add_argument("--fecha-inicio", default=None, help="Fecha de inicio YYYY-MM-DD")
+    p_sem.add_argument(
+        "--publicar",
+        choices=["dry-run", "interactivo", "real"],
+        default="dry-run",
+        help="Modo de publicacion",
+    )
 
     # subcomando: duplicar
     p_dup = sub.add_parser("duplicar", help="Duplica un proyecto")
@@ -886,76 +956,75 @@ def cli() -> int:
 
     # subcomando: publicar
     p_pub = sub.add_parser("publicar", help="Publica un carrusel existente")
-    p_pub.add_argument("--carrusel", required=True,
-                        help="Path al carrusel.json")
-    p_pub.add_argument("--modo", choices=["dry-run", "interactivo", "real"],
-                        default="dry-run")
+    p_pub.add_argument("--carrusel", required=True, help="Path al carrusel.json")
+    p_pub.add_argument("--modo", choices=["dry-run", "interactivo", "real"], default="dry-run")
 
     # subcomando: preview
     p_prev = sub.add_parser("preview", help="Genera preview HTML de un carrusel")
-    p_prev.add_argument("--carrusel", required=True,
-                         help="Path al carrusel.json")
+    p_prev.add_argument("--carrusel", required=True, help="Path al carrusel.json")
 
     # subcomando: generar (alias de generar-carousel, retrocompatibilidad)
     p_gen = sub.add_parser("generar", help="(alias) Genera imagenes para un carrusel")
-    p_gen.add_argument("--carrusel", required=True,
-                        help="Path al carrusel.json")
-    p_gen.add_argument("--batch", type=int, default=1,
-                        help="Variantes por slide (default 1)")
-    p_gen.add_argument("--cache", action="store_true", default=True,
-                        help="Usar cache de imagenes (default: activado)")
-    p_gen.add_argument("--no-cache", action="store_false", dest="cache",
-                        help="Desactivar cache para esta corrida")
-    p_gen.add_argument("--retries", type=int, default=3,
-                        help="Reintentos por imagen (default 3)")
-    p_gen.add_argument("--workers", type=int, default=3,
-                        help="Workers en paralelo (default 3)")
-    p_gen.add_argument("--force", action="store_true",
-                        help="Regenerar aunque exista en cache")
-    p_gen.add_argument("--yes", "-y", action="store_true",
-                        help="Saltar confirmacion (default: True para este alias)")
+    p_gen.add_argument("--carrusel", required=True, help="Path al carrusel.json")
+    p_gen.add_argument("--batch", type=int, default=1, help="Variantes por slide (default 1)")
+    p_gen.add_argument(
+        "--cache",
+        action="store_true",
+        default=True,
+        help="Usar cache de imagenes (default: activado)",
+    )
+    p_gen.add_argument(
+        "--no-cache", action="store_false", dest="cache", help="Desactivar cache para esta corrida"
+    )
+    p_gen.add_argument("--retries", type=int, default=3, help="Reintentos por imagen (default 3)")
+    p_gen.add_argument("--workers", type=int, default=3, help="Workers en paralelo (default 3)")
+    p_gen.add_argument("--force", action="store_true", help="Regenerar aunque exista en cache")
+    p_gen.add_argument(
+        "--yes",
+        "-y",
+        action="store_true",
+        help="Saltar confirmacion (default: True para este alias)",
+    )
 
     # subcomando: generar-carousel (version completa, mas flags)
-    p_genc = sub.add_parser("generar-carousel",
-                             help="Genera todas las imagenes de un carrusel "
-                                  "con cache + retry + batch + estimacion")
-    p_genc.add_argument("--carrusel", required=True,
-                         help="Path al carrusel.json")
-    p_genc.add_argument("--batch", type=int, default=1,
-                         help="Variantes por slide (default 1)")
-    p_genc.add_argument("--workers", type=int, default=3,
-                         help="Workers en paralelo")
-    p_genc.add_argument("--retries", type=int, default=3,
-                         help="Reintentos por imagen")
-    p_genc.add_argument("--no-cache", action="store_true",
-                         help="Ignorar cache, regenerar todo")
-    p_genc.add_argument("--yes", "-y", action="store_true",
-                         help="Saltar confirmacion de tiempo estimado")
-    p_genc.add_argument("--seconds-per-image", type=float, default=25.0,
-                         help="Segundos por imagen para estimacion (default 25, "
-                              "Apple Silicon)")
+    p_genc = sub.add_parser(
+        "generar-carousel",
+        help="Genera todas las imagenes de un carrusel con cache + retry + batch + estimacion",
+    )
+    p_genc.add_argument("--carrusel", required=True, help="Path al carrusel.json")
+    p_genc.add_argument("--batch", type=int, default=1, help="Variantes por slide (default 1)")
+    p_genc.add_argument("--workers", type=int, default=3, help="Workers en paralelo")
+    p_genc.add_argument("--retries", type=int, default=3, help="Reintentos por imagen")
+    p_genc.add_argument("--no-cache", action="store_true", help="Ignorar cache, regenerar todo")
+    p_genc.add_argument(
+        "--yes", "-y", action="store_true", help="Saltar confirmacion de tiempo estimado"
+    )
+    p_genc.add_argument(
+        "--seconds-per-image",
+        type=float,
+        default=25.0,
+        help="Segundos por imagen para estimacion (default 25, Apple Silicon)",
+    )
 
     # subcomando: cache-stats
-    p_cs = sub.add_parser("cache-stats",
-                           help="Estadisticas de la cache de generacion")
-    p_cs.add_argument("--clear", action="store_true",
-                       help="Borrar toda la cache")
+    p_cs = sub.add_parser("cache-stats", help="Estadisticas de la cache de generacion")
+    p_cs.add_argument("--clear", action="store_true", help="Borrar toda la cache")
 
     # subcomando: generar-cola (encolar para batch futuro)
-    p_cola = sub.add_parser("generar-cola",
-                             help="Encola imagenes para generacion en background "
-                                  "(procesar con --procesar-cola)")
-    p_cola.add_argument("--carrusel", required=True,
-                         help="Path al carrusel.json")
+    p_cola = sub.add_parser(
+        "generar-cola",
+        help="Encola imagenes para generacion en background (procesar con --procesar-cola)",
+    )
+    p_cola.add_argument("--carrusel", required=True, help="Path al carrusel.json")
 
     # subcomando: procesar-cola
-    p_proc = sub.add_parser("procesar-cola",
-                             help="Procesa la cola de generacion (usa cache + retry)")
+    p_proc = sub.add_parser(
+        "procesar-cola", help="Procesa la cola de generacion (usa cache + retry)"
+    )
 
     # subcomando: listar
     p_list = sub.add_parser("listar", help="Lista carruseles disponibles")
-    p_list.add_argument("--proyecto", default=None,
-                         help="Filtrar por proyecto")
+    p_list.add_argument("--proyecto", default=None, help="Filtrar por proyecto")
 
     args = parser.parse_args()
     studio = Studio()
@@ -1026,7 +1095,8 @@ def cli() -> int:
     elif args.comando == "generar":
         # Retrocompatibilidad: delega a generar-carousel con skip_confirm=True
         resultados = _generar_carrusel_completo(
-            studio, args.carrusel,
+            studio,
+            args.carrusel,
             batch=getattr(args, "batch", 1),
             workers=getattr(args, "workers", 3),
             retries=getattr(args, "retries", 3),
@@ -1051,8 +1121,7 @@ def cli() -> int:
             stats = cache.stats()
             print(f"Cache path: {cache_path}")
             print(f"Total entradas: {stats['total_entries']}")
-            print(f"Tamano total: {stats['total_size_mb']} MB "
-                  f"({stats['total_size_bytes']} bytes)")
+            print(f"Tamano total: {stats['total_size_mb']} MB ({stats['total_size_bytes']} bytes)")
 
     elif args.comando == "generar-cola":
         resultados = _encolar_carrusel(studio, args.carrusel)
@@ -1070,8 +1139,7 @@ def cli() -> int:
         else:
             print(f"Encontrados {len(carruseles)} carruseles:")
             for c in carruseles:
-                print(f"  - {c['nombre']} ({c['n_slides']} slides, "
-                      f"{c['municipio']}, {c['tipo']})")
+                print(f"  - {c['nombre']} ({c['n_slides']} slides, {c['municipio']}, {c['tipo']})")
 
     return 0
 
@@ -1109,6 +1177,7 @@ def demo() -> None:
 
 if __name__ == "__main__":
     import sys
+
     if len(sys.argv) > 1:
         sys.exit(cli())
     else:

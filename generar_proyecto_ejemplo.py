@@ -4,6 +4,7 @@ Crea:
   - 6 prompts visuales (atmosfera, lote, render, vista aerea, etc.)
   - 3 posts de Instagram (venta emotivo, inversion, preventa)
 """
+
 import json
 from pathlib import Path
 
@@ -25,16 +26,17 @@ def main() -> None:
     # ----- 1) Prompts visuales del lote -----
     prompts = {
         "01_chacra_atardecer": studio.lotes.chacra_pampeana(
-            hectareas=5, municipio=MUNICIPIO, momento="atardecer"),
-        "02_vista_aerea_loteo": studio.lotes.vista_aerea_loteo(
-            n_lotes=24, municipio=MUNICIPIO),
+            hectareas=5, municipio=MUNICIPIO, momento="atardecer"
+        ),
+        "02_vista_aerea_loteo": studio.lotes.vista_aerea_loteo(n_lotes=24, municipio=MUNICIPIO),
         "03_amanecer_pampa": studio.lotes.amanecer_pampa(municipio=MUNICIPIO),
         "04_tranquera_entrada": studio.lotes.tranquera_argentina(municipio=MUNICIPIO),
-        "05_molino_tanque": studio.lotes.molino_tanque_australiano(
-            municipio="Roque Pérez"),
+        "05_molino_tanque": studio.lotes.molino_tanque_australiano(municipio="Roque Pérez"),
         "06_render_proyecto": studio.construccion.render_proyecto(
             estilo="casa de campo tradicional argentina con galería",
-            hectareas=5, municipio=MUNICIPIO),
+            hectareas=5,
+            municipio=MUNICIPIO,
+        ),
     }
     for nombre, req in prompts.items():
         ruta = studio.guardar_prompt(req, nombre, subcarpeta=f"lotes/{PROYECTO}/prompts")
@@ -98,8 +100,7 @@ def main() -> None:
         "carpeta": str(proyecto_dir.relative_to(ROOT)),
     }
     ruta_resumen = proyecto_dir / "resumen.json"
-    ruta_resumen.write_text(json.dumps(resumen, indent=2, ensure_ascii=False),
-                            encoding="utf-8")
+    ruta_resumen.write_text(json.dumps(resumen, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\n[resumen] {ruta_resumen.name}")
     print(f"\nProyecto completo en: {proyecto_dir.relative_to(ROOT)}")
 

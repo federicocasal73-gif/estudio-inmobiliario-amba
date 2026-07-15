@@ -3,6 +3,7 @@
 Cubre el patron principal del estudio: validar posts antes de publicar.
 Siguiendo python-testing-patterns: parametrized + fixtures + edge cases.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -56,14 +57,17 @@ class TestValidateCaption:
         assert result.ok is False
         assert "2201" in result.errores[0]
 
-    @pytest.mark.parametrize("text,expected_ok", [
-        ("", False),
-        ("short", True),
-        ("a" * 2199, True),       # borde
-        ("a" * 2200, True),       # limite exacto
-        ("a" * 2201, False),      # 1 mas del limite
-        ("a" * 5000, False),      # mucho mas
-    ])
+    @pytest.mark.parametrize(
+        "text,expected_ok",
+        [
+            ("", False),
+            ("short", True),
+            ("a" * 2199, True),  # borde
+            ("a" * 2200, True),  # limite exacto
+            ("a" * 2201, False),  # 1 mas del limite
+            ("a" * 5000, False),  # mucho mas
+        ],
+    )
     def test_caption_length_parametrized(self, text: str, expected_ok: bool):
         # Act
         result = validate_caption(text)
@@ -171,16 +175,19 @@ class TestValidateHashtags:
 class TestValidateMunicipio:
     """Tests de validacion de municipio."""
 
-    @pytest.mark.parametrize("municipio,esperado_en_lista,esperado_ok", [
-        ("Canuelas", True, True),
-        ("Pilar", True, True),
-        ("Escobar", True, True),
-        ("Lujan", True, True),
-        ("Lobos", True, True),
-        ("Mar del Plata", False, True),       # warning, no error por default
-        ("Buenos Aires", False, True),
-        ("", None, False),                    # vacio SI es error
-    ])
+    @pytest.mark.parametrize(
+        "municipio,esperado_en_lista,esperado_ok",
+        [
+            ("Canuelas", True, True),
+            ("Pilar", True, True),
+            ("Escobar", True, True),
+            ("Lujan", True, True),
+            ("Lobos", True, True),
+            ("Mar del Plata", False, True),  # warning, no error por default
+            ("Buenos Aires", False, True),
+            ("", None, False),  # vacio SI es error
+        ],
+    )
     def test_municipio_en_lista_o_warning(
         self, municipio: str, esperado_en_lista: bool | None, esperado_ok: bool
     ):
@@ -205,14 +212,17 @@ class TestValidateMunicipio:
 class TestValidateHectareas:
     """Tests de validacion de hectareas."""
 
-    @pytest.mark.parametrize("hectareas,esperado_ok", [
-        (5, True),
-        (0.5, True),
-        (100, True),
-        (0, False),
-        (-1, False),
-        (-5.5, False),
-    ])
+    @pytest.mark.parametrize(
+        "hectareas,esperado_ok",
+        [
+            (5, True),
+            (0.5, True),
+            (100, True),
+            (0, False),
+            (-1, False),
+            (-5.5, False),
+        ],
+    )
     def test_hectareas_positivas(self, hectareas, esperado_ok):
         # Act
         result = validate_hectareas(hectareas)

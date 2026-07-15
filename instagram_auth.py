@@ -21,6 +21,7 @@ Uso:
     else:
         print("Token expirado, regenerar")
 """
+
 from __future__ import annotations
 
 import json
@@ -73,9 +74,7 @@ class InstagramAuth:
 
     def guardar(self, auth: AuthData) -> None:
         """Guarda auth.json con permisos 600 (solo vos lo leeis)."""
-        self.auth_path.write_text(
-            json.dumps(auth.to_dict(), indent=2),
-            encoding="utf-8")
+        self.auth_path.write_text(json.dumps(auth.to_dict(), indent=2), encoding="utf-8")
         try:
             self.auth_path.chmod(0o600)
         except OSError:
@@ -102,16 +101,12 @@ class InstagramAuth:
         """Verifica que los permisos necesarios esten concedidos."""
         if not self.data:
             return False, []
-        url = (
-            f"{GRAPH_API_BASE}/me/permissions"
-            f"?access_token={self.data.access_token}"
-        )
+        url = f"{GRAPH_API_BASE}/me/permissions?access_token={self.data.access_token}"
         try:
             with urllib.request.urlopen(url, timeout=10) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 permisos = [
-                    p["permission"] for p in data.get("data", [])
-                    if p.get("status") == "granted"
+                    p["permission"] for p in data.get("data", []) if p.get("status") == "granted"
                 ]
                 necesarios = [
                     "instagram_basic",
@@ -143,8 +138,10 @@ class InstagramAuth:
 def crear_auth_example_si_no_existe() -> None:
     """Copia auth-example.json a auth.json si este ultimo no existe."""
     if not AUTH_FILE.exists() and AUTH_EXAMPLE.exists():
-        print(f"INFO: No existe {AUTH_FILE.name}. Sigue las instrucciones en "
-              "README_PUBLICACION_IG.md para generarlo.")
+        print(
+            f"INFO: No existe {AUTH_FILE.name}. Sigue las instrucciones en "
+            "README_PUBLICACION_IG.md para generarlo."
+        )
         print(f"      Hay un ejemplo en {AUTH_EXAMPLE.name} con la estructura esperada.")
 
 
@@ -159,8 +156,10 @@ if __name__ == "__main__":
                 print("✓ Permisos OK")
                 info = auth.info_cuenta()
                 if info:
-                    print(f"✓ Cuenta: @{info.get('username')} "
-                          f"({info.get('followers_count', '?')} seguidores)")
+                    print(
+                        f"✓ Cuenta: @{info.get('username')} "
+                        f"({info.get('followers_count', '?')} seguidores)"
+                    )
             else:
                 print(f"✗ Faltan permisos: {faltan}")
         else:

@@ -20,6 +20,7 @@ Uso:
     url = uploader.subir(Path("imagen.jpg"))
     # url = "https://res.cloudinary.com/.../image.jpg"
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -59,8 +60,9 @@ class CloudinaryUploader:
         self.api_secret = raw.get("cloudinary", {}).get("api_secret", "")
         return bool(self.cloud_name and self.api_key and self.api_secret)
 
-    def subir(self, ruta: Path, carpeta: str = "realestate_studio",
-              public_id: str | None = None) -> str | None:
+    def subir(
+        self, ruta: Path, carpeta: str = "realestate_studio", public_id: str | None = None
+    ) -> str | None:
         """Sube una imagen a Cloudinary y devuelve la URL segura."""
         if not self.configurado:
             print("⚠️  Cloudinary no configurado. Agregar credenciales a auth.json")
@@ -77,9 +79,7 @@ class CloudinaryUploader:
 
         # Construir firma
         params_to_sign = f"folder={carpeta}&public_id={public_id}&timestamp={timestamp}"
-        signature = hashlib.sha1(
-            f"{params_to_sign}{self.api_secret}".encode()
-        ).hexdigest()
+        signature = hashlib.sha1(f"{params_to_sign}{self.api_secret}".encode()).hexdigest()
 
         # Construir body multipart
         boundary = "----RealestateStudioBoundary"
@@ -108,24 +108,22 @@ class CloudinaryUploader:
             return None
 
     @staticmethod
-    def _build_multipart(boundary: str, fields: dict[str, str],
-                         file_path: Path) -> bytes:
+    def _build_multipart(boundary: str, fields: dict[str, str], file_path: Path) -> bytes:
         """Construye el body multipart/form-data manualmente."""
         crlf = b"\r\n"
         parts: list[bytes] = []
 
         for key, value in fields.items():
             parts.append(f"--{boundary}".encode())
-            parts.append(
-                f'Content-Disposition: form-data; name="{key}"'.encode())
+            parts.append(f'Content-Disposition: form-data; name="{key}"'.encode())
             parts.append(b"")
             parts.append(value.encode("utf-8"))
             parts.append(crlf)
 
         parts.append(f"--{boundary}".encode())
         parts.append(
-            f'Content-Disposition: form-data; name="file"; '
-            f'filename="{file_path.name}"'.encode())
+            f'Content-Disposition: form-data; name="file"; filename="{file_path.name}"'.encode()
+        )
         parts.append(b"Content-Type: application/octet-stream")
         parts.append(b"")
         parts.append(file_path.read_bytes())

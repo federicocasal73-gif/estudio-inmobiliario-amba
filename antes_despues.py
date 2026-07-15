@@ -35,6 +35,7 @@ Uso:
 
     ad.guardar(ad_resultado)
 """
+
 from __future__ import annotations
 
 import json
@@ -74,7 +75,9 @@ class AntesDespues:
     caption_completo: str = ""
 
     metadata: dict[str, Any] = field(default_factory=dict)
-    fecha_creacion: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+    fecha_creacion: str = field(
+        default_factory=lambda: datetime.now().isoformat(timespec="seconds")
+    )
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -97,18 +100,21 @@ class AntesDespuesFactory:
 
     # ---------------- API principal ----------------
 
-    def generar(self, foto_antes_path: str,
-                estilo_casa: str = "casa de campo tradicional con galería",
-                hectareas: float | int = 1,
-                municipio: str = "Cañuelas",
-                proyecto: str | None = None,
-                nombre_obra: str | None = None,
-                foto_despues_path: str | None = None,
-                cliente: str | None = None,
-                fecha_inicio: str | None = None,
-                fecha_entrega: str | None = None,
-                tiempo_construccion_meses: int | None = None,
-                modo: str | None = None) -> AntesDespues:
+    def generar(
+        self,
+        foto_antes_path: str,
+        estilo_casa: str = "casa de campo tradicional con galería",
+        hectareas: float | int = 1,
+        municipio: str = "Cañuelas",
+        proyecto: str | None = None,
+        nombre_obra: str | None = None,
+        foto_despues_path: str | None = None,
+        cliente: str | None = None,
+        fecha_inicio: str | None = None,
+        fecha_entrega: str | None = None,
+        tiempo_construccion_meses: int | None = None,
+        modo: str | None = None,
+    ) -> AntesDespues:
         if modo is None:
             modo = "real" if foto_despues_path else "ia"
 
@@ -135,8 +141,7 @@ class AntesDespuesFactory:
             ad.instrucciones_img2img = self._instrucciones_img2img(foto_antes_path)
 
         ad.caption_narrativo = self._caption(ad)
-        ad.hashtags = self.studio.post.hashtags(
-            ["casas", "construccion", "general"], municipio)
+        ad.hashtags = self.studio.post.hashtags(["casas", "construccion", "general"], municipio)
         ad.caption_completo = ad.caption_narrativo + "\n\n" + " ".join(ad.hashtags)
 
         ad.carrusel = self._carrusel_antes_despues(ad)
@@ -150,11 +155,11 @@ class AntesDespuesFactory:
 
     # ---------------- Generadores ----------------
 
-    def _prompt_despues_sd(self, estilo_casa: str, hectareas: float | int,
-                           municipio: str) -> str:
+    def _prompt_despues_sd(self, estilo_casa: str, hectareas: float | int, municipio: str) -> str:
         """Prompt SDXL para generar el 'después' (sin foto de referencia)."""
         req = self.studio.construccion.render_proyecto(
-            estilo=estilo_casa, hectareas=hectareas, municipio=municipio)
+            estilo=estilo_casa, hectareas=hectareas, municipio=municipio
+        )
         return req.prompt
 
     @staticmethod
@@ -176,58 +181,71 @@ class AntesDespuesFactory:
     def _carrusel_antes_despues(self, ad: AntesDespues) -> dict[str, Any]:
         """Empaqueta el carrusel de 3-5 slides segun modo."""
         from carruseles import Slide
+
         slides: list[Slide] = []
         n = 1
 
         # Slide 1: Portada
-        slides.append(Slide(
-            numero=n, tipo="portada",
-            descripcion=f"Portada: {ad.nombre_obra}",
-            prompt="",
-            texto_overlay=self._overlay_portada(ad),
-            metadata={"requiere_foto_real": False, "tipo": "portada"},
-        ))
+        slides.append(
+            Slide(
+                numero=n,
+                tipo="portada",
+                descripcion=f"Portada: {ad.nombre_obra}",
+                prompt="",
+                texto_overlay=self._overlay_portada(ad),
+                metadata={"requiere_foto_real": False, "tipo": "portada"},
+            )
+        )
         n += 1
 
         # Slide 2: Antes (placeholder con path)
         placeholder_antes = ad.foto_antes_path
-        slides.append(Slide(
-            numero=n, tipo="placeholder_foto",
-            descripcion="Foto del antes: lote baldío / obra temprana",
-            prompt="",
-            texto_overlay="Esto era antes",
-            metadata={
-                "requiere_foto_real": True,
-                "placeholder_foto_path": placeholder_antes,
-            },
-        ))
+        slides.append(
+            Slide(
+                numero=n,
+                tipo="placeholder_foto",
+                descripcion="Foto del antes: lote baldío / obra temprana",
+                prompt="",
+                texto_overlay="Esto era antes",
+                metadata={
+                    "requiere_foto_real": True,
+                    "placeholder_foto_path": placeholder_antes,
+                },
+            )
+        )
         n += 1
 
         # Slide 3: Despues (real o placeholder)
         if ad.modo == "real" and ad.foto_despues_path:
-            slides.append(Slide(
-                numero=n, tipo="placeholder_foto",
-                descripcion="Foto del después: casa terminada",
-                prompt="",
-                texto_overlay="Y esto es hoy",
-                metadata={
-                    "requiere_foto_real": True,
-                    "placeholder_foto_path": ad.foto_despues_path,
-                },
-            ))
+            slides.append(
+                Slide(
+                    numero=n,
+                    tipo="placeholder_foto",
+                    descripcion="Foto del después: casa terminada",
+                    prompt="",
+                    texto_overlay="Y esto es hoy",
+                    metadata={
+                        "requiere_foto_real": True,
+                        "placeholder_foto_path": ad.foto_despues_path,
+                    },
+                )
+            )
         else:
             # Modo IA: prompt SDXL para generar el después
-            slides.append(Slide(
-                numero=n, tipo="beneficio",
-                descripcion="Render del proyecto terminado (prompt para img2img)",
-                prompt=ad.prompt_despues,
-                texto_overlay="Y esto es lo que viene",
-                metadata={
-                    "requiere_foto_real": False,
-                    "tipo_prompt": "render_despues",
-                    "workflow": "img2img con foto del antes",
-                },
-            ))
+            slides.append(
+                Slide(
+                    numero=n,
+                    tipo="beneficio",
+                    descripcion="Render del proyecto terminado (prompt para img2img)",
+                    prompt=ad.prompt_despues,
+                    texto_overlay="Y esto es lo que viene",
+                    metadata={
+                        "requiere_foto_real": False,
+                        "tipo_prompt": "render_despues",
+                        "workflow": "img2img con foto del antes",
+                    },
+                )
+            )
         n += 1
 
         # Slide 4 (opcional): Tiempo / datos
@@ -237,28 +255,35 @@ class AntesDespuesFactory:
                 if ad.tiempo_construccion_meses
                 else f"De {ad.fecha_inicio} a {ad.fecha_entrega or 'hoy'}"
             )
-            slides.append(Slide(
-                numero=n, tipo="dato",
-                descripcion="Tiempo y proceso",
-                prompt="",
-                texto_overlay=f"⏱ {tiempo}",
-                metadata={
-                    "requiere_foto_real": False, "tipo": "dato",
-                    "fecha_inicio": ad.fecha_inicio,
-                    "fecha_entrega": ad.fecha_entrega,
-                    "meses": ad.tiempo_construccion_meses,
-                },
-            ))
+            slides.append(
+                Slide(
+                    numero=n,
+                    tipo="dato",
+                    descripcion="Tiempo y proceso",
+                    prompt="",
+                    texto_overlay=f"⏱ {tiempo}",
+                    metadata={
+                        "requiere_foto_real": False,
+                        "tipo": "dato",
+                        "fecha_inicio": ad.fecha_inicio,
+                        "fecha_entrega": ad.fecha_entrega,
+                        "meses": ad.tiempo_construccion_meses,
+                    },
+                )
+            )
             n += 1
 
         # Slide CTA
-        slides.append(Slide(
-            numero=n, tipo="cta",
-            descripcion="Slide final: contacto",
-            prompt="",
-            texto_overlay="¿Arrancamos tu proyecto?\nDM o link en bio",
-            metadata={"requiere_foto_real": False, "tipo": "cta"},
-        ))
+        slides.append(
+            Slide(
+                numero=n,
+                tipo="cta",
+                descripcion="Slide final: contacto",
+                prompt="",
+                texto_overlay="¿Arrancamos tu proyecto?\nDM o link en bio",
+                metadata={"requiere_foto_real": False, "tipo": "cta"},
+            )
+        )
 
         # Renumerar
         for i, s in enumerate(slides):
@@ -314,17 +339,16 @@ class AntesDespuesFactory:
 
     def guardar(self, ad: AntesDespues) -> Path:
         if ad.proyecto:
-            carpeta = (ROOT / "inmuebles" / "obras" / ad.proyecto /
-                       "antes_despues")
+            carpeta = ROOT / "inmuebles" / "obras" / ad.proyecto / "antes_despues"
         else:
             carpeta = ROOT / "inmuebles" / "obras" / "_generados"
         carpeta.mkdir(parents=True, exist_ok=True)
 
         # JSON principal
         json_path = carpeta / "antes_despues.json"
-        json_path.write_text(json.dumps(ad.to_dict(), indent=2,
-                                        ensure_ascii=False),
-                             encoding="utf-8")
+        json_path.write_text(
+            json.dumps(ad.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8"
+        )
 
         # Markdown
         md_path = carpeta / "antes_despues.md"
@@ -339,9 +363,7 @@ class AntesDespuesFactory:
         slides_dir.mkdir(exist_ok=True)
         for slide in ad.carrusel.get("slides", []):
             slide_path = slides_dir / f"slide_{slide['numero']:02d}_{slide['tipo']}.json"
-            slide_path.write_text(json.dumps(slide, indent=2,
-                                             ensure_ascii=False),
-                                  encoding="utf-8")
+            slide_path.write_text(json.dumps(slide, indent=2, ensure_ascii=False), encoding="utf-8")
 
         # Si la foto del antes existe, copiarla a inputs para referencia
         src = Path(ad.foto_antes_path)
@@ -379,29 +401,33 @@ class AntesDespuesFactory:
             lineas.append(f"- **Fecha entrega:** {ad.fecha_entrega}")
 
         if ad.modo in ("ia", "mixto"):
-            lineas.extend([
-                "",
-                "## Prompt para generar el después (SDXL)",
-                "",
-                "```",
-                ad.prompt_despues,
-                "```",
-                "",
-                "## Instrucciones para img2img",
-                "",
-            ])
+            lineas.extend(
+                [
+                    "",
+                    "## Prompt para generar el después (SDXL)",
+                    "",
+                    "```",
+                    ad.prompt_despues,
+                    "```",
+                    "",
+                    "## Instrucciones para img2img",
+                    "",
+                ]
+            )
             for paso in ad.instrucciones_img2img:
                 lineas.append(f"- {paso}")
 
-        lineas.extend([
-            "",
-            "## Carrusel",
-            "",
-            f"Total slides: **{ad.carrusel.get('n_slides', 0)}**",
-            "",
-            "| # | Tipo | Descripción | Texto overlay | Foto real requerida |",
-            "|---|------|-------------|---------------|--------------------|",
-        ])
+        lineas.extend(
+            [
+                "",
+                "## Carrusel",
+                "",
+                f"Total slides: **{ad.carrusel.get('n_slides', 0)}**",
+                "",
+                "| # | Tipo | Descripción | Texto overlay | Foto real requerida |",
+                "|---|------|-------------|---------------|--------------------|",
+            ]
+        )
         for s in ad.carrusel.get("slides", []):
             req = "✅" if s["metadata"].get("requiere_foto_real") else "—"
             placeholder = s["metadata"].get("placeholder_foto_path", "")
@@ -411,14 +437,16 @@ class AntesDespuesFactory:
                 f"| `{txt}` | {req} {placeholder} |"
             )
 
-        lineas.extend([
-            "",
-            "## Caption completo",
-            "",
-            "```",
-            ad.caption_completo,
-            "```",
-        ])
+        lineas.extend(
+            [
+                "",
+                "## Caption completo",
+                "",
+                "```",
+                ad.caption_completo,
+                "```",
+            ]
+        )
 
         return "\n".join(lineas)
 
@@ -426,6 +454,7 @@ class AntesDespuesFactory:
 def demo() -> None:
     """Demo: simula un antes/despues en modo IA sin foto real."""
     from realestate_studio import RealestateStudio
+
     studio = RealestateStudio()
     factory = AntesDespuesFactory(studio)
 

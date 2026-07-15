@@ -13,6 +13,7 @@ Es robusto a:
   - Crash a mitad de generacion (estado persistente)
   - Concurrencia (locks por archivo)
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -38,12 +39,13 @@ log = get_logger("studio.generation")
 CACHE_FILE_NAME = "generation_cache.json"
 QUEUE_DB_FILE_NAME = "generation_queue.db"
 
-DEFAULT_SECONDS_PER_IMAGE_FAST = 8    # SDXL en GPU buena
+DEFAULT_SECONDS_PER_IMAGE_FAST = 8  # SDXL en GPU buena
 DEFAULT_SECONDS_PER_IMAGE_MEDIUM = 25  # SDXL en CPU / Apple Silicon
-DEFAULT_SECONDS_PER_IMAGE_SLOW = 60   # en CPU puro
+DEFAULT_SECONDS_PER_IMAGE_SLOW = 60  # en CPU puro
 
 
 # ============== CACHE ==============
+
 
 class ImageCache:
     """Cache de imagenes: hash(prompt + params) -> path.
@@ -63,7 +65,8 @@ class ImageCache:
         normalized = unicodedata.normalize("NFC", prompt.strip())
         blob = json.dumps(
             {"prompt": normalized, "params": self._normalize(params)},
-            sort_keys=True, ensure_ascii=False,
+            sort_keys=True,
+            ensure_ascii=False,
         )
         return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
@@ -86,8 +89,10 @@ class ImageCache:
             try:
                 data = json.loads(self.cache_path.read_text(encoding="utf-8"))
                 self._cache = data.get("entries", {})
-                log.info(f"Cache cargada: {len(self._cache)} entradas",
-                         extra={"path": str(self.cache_path)})
+                log.info(
+                    f"Cache cargada: {len(self._cache)} entradas",
+                    extra={"path": str(self.cache_path)},
+                )
             except (json.JSONDecodeError, OSError) as e:
                 log.warning(f"No pude cargar cache, empezando vacia: {e}")
                 self._cache = {}
@@ -104,8 +109,7 @@ class ImageCache:
                 "entries": self._cache,
             }
             tmp = self.cache_path.with_suffix(".tmp")
-            tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                           encoding="utf-8")
+            tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
             tmp.replace(self.cache_path)  # atomic write
         except OSError as e:
             log.warning(f"No pude guardar cache: {e}")
@@ -161,6 +165,7 @@ class ImageCache:
 
 # ============== RETRY POLICY ==============
 
+
 @dataclass
 class RetryPolicy:
     """Politica de reintentos con backoff exponencial + jitter."""
@@ -182,10 +187,12 @@ class RetryPolicy:
         return delay
 
 
-def with_retry(func: Callable[..., Any], policy: RetryPolicy,
-               logger_name: str = "studio.generation.retry",
-               exceptions: tuple[type[Exception], ...] = (Exception,),
-               ) -> Any:
+def with_retry(
+    func: Callable[..., Any],
+    policy: RetryPolicy,
+    logger_name: str = "studio.generation.retry",
+    exceptions: tuple[type[Exception], ...] = (Exception,),
+) -> Any:
     """Ejecuta func() con reintentos segun policy.
 
     Levanta la ultima excepcion si todos los reintentos fallan.
@@ -202,8 +209,7 @@ def with_retry(func: Callable[..., Any], policy: RetryPolicy,
                 raise
             wait = policy.delay_for_attempt(attempt)
             log.warning(
-                f"Intento {attempt}/{policy.max_attempts} fallo: {e}. "
-                f"Reintento en {wait:.1f}s",
+                f"Intento {attempt}/{policy.max_attempts} fallo: {e}. Reintento en {wait:.1f}s",
                 extra={"attempt": attempt, "wait_seconds": wait},
             )
             time.sleep(wait)
@@ -215,10 +221,12 @@ def with_retry(func: Callable[..., Any], policy: RetryPolicy,
 
 # ============== BATCH GENERATOR ==============
 
+
 @dataclass
 class BatchItem:
     """Item a generar en batch."""
-    id: str                  # id unico para tracking
+
+    id: str  # id unico para tracking
     prompt: str
     params: dict[str, Any] = field(default_factory=dict)
     output_path: Path | None = None
@@ -239,6 +247,7 @@ class BatchItem:
 @dataclass
 class BatchResult:
     """Resultado de un item del batch."""
+
     item_id: str
     success: bool
     output_path: str | None = None
@@ -261,23 +270,23 @@ class BatchGenerator:
         results = gen.generate_all(items)
     """
 
-    def __init__(self,
-                 generator: ImageGenerator | None = None,
-                 cache: ImageCache | None = None,
-                 max_workers: int = 3,
-                 retry_policy: RetryPolicy | None = None,
-                 on_progress: Callable[[int, int, BatchResult], None] | None = None):
+    def __init__(
+        self,
+        generator: ImageGenerator | None = None,
+        cache: ImageCache | None = None,
+        max_workers: int = 3,
+        retry_policy: RetryPolicy | None = None,
+        on_progress: Callable[[int, int, BatchResult], None] | None = None,
+    ):
         self.generator = generator or get_generator()
-        self.cache = cache or ImageCache(
-            Path(".cache") / CACHE_FILE_NAME)
+        self.cache = cache or ImageCache(Path(".cache") / CACHE_FILE_NAME)
         self.max_workers = max_workers
         self.retry_policy = retry_policy or RetryPolicy()
         self.on_progress = on_progress
 
     def generate_one(self, item: BatchItem) -> BatchResult:
         """Genera una imagen individual con cache + retry."""
-        log.info(f"Generando item {item.id}",
-                 extra={"prompt_preview": item.prompt[:60]})
+        log.info(f"Generando item {item.id}", extra={"prompt_preview": item.prompt[:60]})
 
         # 1. Check cache
         if item.use_cache:
@@ -285,9 +294,12 @@ class BatchGenerator:
             if cached_path:
                 log.info(f"Cache hit para {item.id}: {cached_path}")
                 return BatchResult(
-                    item_id=item.id, success=True,
+                    item_id=item.id,
+                    success=True,
                     output_path=cached_path,
-                    cache_hit=True, attempts=0, duration_seconds=0.0,
+                    cache_hit=True,
+                    attempts=0,
+                    duration_seconds=0.0,
                 )
 
         # 2. Generar con retry
@@ -305,16 +317,18 @@ class BatchGenerator:
                 )
                 if item.output_path:
                     self.cache.put(
-                        item.prompt, item.hash_key_params(),
+                        item.prompt,
+                        item.hash_key_params(),
                         str(item.output_path),
                     )
                 duration = time.time() - start
-                log.info(f"Item {item.id} generado en {duration:.1f}s "
-                         f"(intento {attempt})")
+                log.info(f"Item {item.id} generado en {duration:.1f}s (intento {attempt})")
                 return BatchResult(
-                    item_id=item.id, success=True,
+                    item_id=item.id,
+                    success=True,
                     output_path=str(item.output_path) if item.output_path else None,
-                    cache_hit=False, attempts=attempt,
+                    cache_hit=False,
+                    attempts=attempt,
                     duration_seconds=duration,
                     metadata={"resultado": result.to_dict()} if result else {},
                 )
@@ -322,32 +336,34 @@ class BatchGenerator:
                 last_error = str(e)
                 if attempt < item.max_retries:
                     wait = self.retry_policy.delay_for_attempt(attempt)
-                    log.warning(f"Item {item.id} intento {attempt} fallo: {e}. "
-                                f"Reintento en {wait:.1f}s")
+                    log.warning(
+                        f"Item {item.id} intento {attempt} fallo: {e}. Reintento en {wait:.1f}s"
+                    )
                     time.sleep(wait)
 
         duration = time.time() - start
         log.error(f"Item {item.id} fallo despues de {attempts} intentos: {last_error}")
         return BatchResult(
-            item_id=item.id, success=False,
-            cache_hit=False, attempts=attempts,
-            duration_seconds=duration, error=last_error,
+            item_id=item.id,
+            success=False,
+            cache_hit=False,
+            attempts=attempts,
+            duration_seconds=duration,
+            error=last_error,
         )
 
     def generate_all(self, items: list[BatchItem]) -> list[BatchResult]:
         """Genera todos los items en paralelo."""
         if not items:
             return []
-        log.info(f"Iniciando batch de {len(items)} items "
-                 f"con {self.max_workers} workers")
+        log.info(f"Iniciando batch de {len(items)} items con {self.max_workers} workers")
 
         results: list[BatchResult | None] = [None] * len(items)
         completed = 0
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_idx = {
-                executor.submit(self.generate_one, item): idx
-                for idx, item in enumerate(items)
+                executor.submit(self.generate_one, item): idx for idx, item in enumerate(items)
             }
 
             for future in as_completed(future_to_idx):
@@ -367,10 +383,13 @@ class BatchGenerator:
 
 # ============== ESTIMACION ==============
 
-def estimate_time(num_items: int,
-                 seconds_per_image: float = DEFAULT_SECONDS_PER_IMAGE_MEDIUM,
-                 max_workers: int = 3,
-                 cache_hit_rate: float = 0.0) -> dict[str, Any]:
+
+def estimate_time(
+    num_items: int,
+    seconds_per_image: float = DEFAULT_SECONDS_PER_IMAGE_MEDIUM,
+    max_workers: int = 3,
+    cache_hit_rate: float = 0.0,
+) -> dict[str, Any]:
     """Estima cuanto tardara una generacion batch.
 
     Args:
@@ -422,9 +441,11 @@ def _humanize_seconds(seconds: float) -> str:
 
 # ============== COLA DE GENERACION (preparada para Fase futura) ==============
 
+
 @dataclass
 class QueueItem:
     """Item en la cola de generacion."""
+
     id: int | None = None
     prompt: str = ""
     params_json: str = "{}"
@@ -488,10 +509,17 @@ class GenerationQueue:
             ).fetchall()
         return [
             QueueItem(
-                id=r[0], prompt=r[1], params_json=r[2], output_path=r[3],
-                status=r[4], attempts=r[5], last_error=r[6],
-                created_at=r[7], finished_at=r[8],
-            ) for r in rows
+                id=r[0],
+                prompt=r[1],
+                params_json=r[2],
+                output_path=r[3],
+                status=r[4],
+                attempts=r[5],
+                last_error=r[6],
+                created_at=r[7],
+                finished_at=r[8],
+            )
+            for r in rows
         ]
 
     def mark_done(self, item_id: int) -> None:
@@ -512,7 +540,5 @@ class GenerationQueue:
 
     def stats(self) -> dict[str, Any]:
         with sqlite3.connect(str(self.db_path)) as conn:
-            row = conn.execute(
-                "SELECT status, COUNT(*) FROM queue GROUP BY status"
-            ).fetchall()
+            row = conn.execute("SELECT status, COUNT(*) FROM queue GROUP BY status").fetchall()
         return {status: count for status, count in row}

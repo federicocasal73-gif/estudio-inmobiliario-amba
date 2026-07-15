@@ -13,6 +13,7 @@ Uso:
     log = get_logger(__name__)
     log.info("Mensaje", extra={"proyecto": "X", "municipio": "Cañuelas"})
 """
+
 from __future__ import annotations
 
 import json
@@ -30,16 +31,34 @@ class JSONFormatter(logging.Formatter):
     """Formatea logs como JSON para parseo automatico por herramientas externas."""
 
     SKIP_KEYS: ClassVar[set[str]] = {
-        "args", "asctime", "created", "exc_info", "exc_text", "filename",
-        "funcName", "levelname", "levelno", "lineno", "message", "module",
-        "msecs", "msg", "name", "pathname", "process", "processName",
-        "relativeCreated", "stack_info", "thread", "threadName", "taskName",
+        "args",
+        "asctime",
+        "created",
+        "exc_info",
+        "exc_text",
+        "filename",
+        "funcName",
+        "levelname",
+        "levelno",
+        "lineno",
+        "message",
+        "module",
+        "msecs",
+        "msg",
+        "name",
+        "pathname",
+        "process",
+        "processName",
+        "relativeCreated",
+        "stack_info",
+        "thread",
+        "threadName",
+        "taskName",
     }
 
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
-            "timestamp": datetime.fromtimestamp(
-                record.created, tz=timezone.utc).isoformat(),
+            "timestamp": datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -132,5 +151,7 @@ def log_timing(logger_name: str = "estudio.timing"):
             except Exception:
                 logger.exception(f"Error en {func.__name__}")
                 raise
+
         return wrapper
+
     return decorator

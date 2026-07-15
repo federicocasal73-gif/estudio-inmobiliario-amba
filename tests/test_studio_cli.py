@@ -4,6 +4,7 @@ Cubre: generar-carousel, generar, cache-stats, generar-cola, procesar-cola,
 y los helpers internos (_build_batch_items_from_carrusel,
 _generar_carrusel_completo, _encolar_carrusel, _procesar_cola).
 """
+
 from __future__ import annotations
 
 import json
@@ -26,34 +27,42 @@ def carrusel_de_ejemplo(tmp_path) -> Path:
         "tono": "emotivo",
         "slides": [
             {
-                "numero": 1, "tipo": "portada",
+                "numero": 1,
+                "tipo": "portada",
                 "descripcion": "Portada",
                 "prompt": "5 hectares pampas farm, golden hour",
-                "aspect_ratio": "1152*896", "styles": ["Fooocus V2"],
+                "aspect_ratio": "1152*896",
+                "styles": ["Fooocus V2"],
                 "texto_overlay": "Portada",
                 "metadata": {"tipo_prompt": "chacra_pampeana"},
             },
             {
-                "numero": 2, "tipo": "foto",
+                "numero": 2,
+                "tipo": "foto",
                 "descripcion": "Aerea",
                 "prompt": "aerial view of chacra",
-                "aspect_ratio": "1152*896", "styles": [],
+                "aspect_ratio": "1152*896",
+                "styles": [],
                 "texto_overlay": "Vista aerea",
                 "metadata": {},
             },
             {
-                "numero": 3, "tipo": "beneficio",
+                "numero": 3,
+                "tipo": "beneficio",
                 "descripcion": "Render",
                 "prompt": "architectural render of country house",
-                "aspect_ratio": "896*1152", "styles": ["ads-luxury"],
+                "aspect_ratio": "896*1152",
+                "styles": ["ads-luxury"],
                 "texto_overlay": "Render",
                 "metadata": {},
             },
             {
-                "numero": 4, "tipo": "cta",
+                "numero": 4,
+                "tipo": "cta",
                 "descripcion": "CTA",
                 "prompt": "",  # CTA sin prompt
-                "aspect_ratio": "896*1152", "styles": [],
+                "aspect_ratio": "896*1152",
+                "styles": [],
                 "texto_overlay": "Contactanos",
                 "metadata": {},
             },
@@ -139,6 +148,7 @@ class TestCacheStatsCLI:
 def subprocess_run(cmd):
     """Helper: ejecuta comando desde la raiz del repo y devuelve resultado."""
     import subprocess
+
     repo_root = Path(__file__).resolve().parent.parent
     return subprocess.run(cmd, capture_output=True, text=True, cwd=str(repo_root))
 
@@ -146,9 +156,7 @@ def subprocess_run(cmd):
 class TestGenerarCarouselCLI:
     """Tests del subcomando generar-carousel."""
 
-    def test_generar_with_yes_skips_confirm(
-        self, carrusel_de_ejemplo, tmp_path, monkeypatch
-    ):
+    def test_generar_with_yes_skips_confirm(self, carrusel_de_ejemplo, tmp_path, monkeypatch):
         # Arrange
         monkeypatch.chdir(tmp_path)
         # Mockear el BatchGenerator para que sea rapido y predecible
@@ -159,18 +167,30 @@ class TestGenerarCarouselCLI:
             with patch("generation_pipeline.BatchGenerator") as MockBG:
                 mock_bg_instance = MockBG.return_value
                 mock_bg_instance.generate_all.return_value = [
-                    MagicMock(success=True, cache_hit=False, item_id="slide_01_v1",
-                               output_path="/tmp/x.jpg", error=None, attempts=1,
-                               duration_seconds=0.1)
+                    MagicMock(
+                        success=True,
+                        cache_hit=False,
+                        item_id="slide_01_v1",
+                        output_path="/tmp/x.jpg",
+                        error=None,
+                        attempts=1,
+                        duration_seconds=0.1,
+                    )
                     for _ in range(3)
                 ]
                 # Act
-                result = subprocess_run((
-                    "python3", "studio.py", "generar-carousel",
-                    "--carrusel", str(carrusel_de_ejemplo),
-                    "--yes",
-                    "--workers", "1",
-                ))
+                result = subprocess_run(
+                    (
+                        "python3",
+                        "studio.py",
+                        "generar-carousel",
+                        "--carrusel",
+                        str(carrusel_de_ejemplo),
+                        "--yes",
+                        "--workers",
+                        "1",
+                    )
+                )
 
         # Assert
         assert result.returncode == 0, f"stderr: {result.stderr}"
@@ -180,11 +200,16 @@ class TestGenerarCarouselCLI:
     def test_generar_file_not_found(self, tmp_path, monkeypatch):
         # Arrange
         monkeypatch.chdir(tmp_path)
-        result = subprocess_run((
-            "python3", "studio.py", "generar-carousel",
-            "--carrusel", str(tmp_path / "no_existe.json"),
-            "--yes",
-        ))
+        result = subprocess_run(
+            (
+                "python3",
+                "studio.py",
+                "generar-carousel",
+                "--carrusel",
+                str(tmp_path / "no_existe.json"),
+                "--yes",
+            )
+        )
 
         # Assert
         assert result.returncode == 1
@@ -200,18 +225,29 @@ class TestGenerarCLI:
         with patch("generation_pipeline.BatchGenerator") as MockBG:
             mock_bg_instance = MockBG.return_value
             mock_bg_instance.generate_all.return_value = [
-                MagicMock(success=True, cache_hit=False, item_id="slide_01_v1",
-                           output_path="/tmp/x.jpg", error=None, attempts=1,
-                           duration_seconds=0.1)
+                MagicMock(
+                    success=True,
+                    cache_hit=False,
+                    item_id="slide_01_v1",
+                    output_path="/tmp/x.jpg",
+                    error=None,
+                    attempts=1,
+                    duration_seconds=0.1,
+                )
                 for _ in range(3)
             ]
             with patch.object(studio_module, "Studio"):
                 # Act
-                result = subprocess_run((
-                    "python3", "studio.py", "generar",
-                    "--carrusel", str(carrusel_de_ejemplo),
-                    "--yes",
-                ))
+                result = subprocess_run(
+                    (
+                        "python3",
+                        "studio.py",
+                        "generar",
+                        "--carrusel",
+                        str(carrusel_de_ejemplo),
+                        "--yes",
+                    )
+                )
 
         # Assert
         assert result.returncode == 0, f"stderr: {result.stderr}"
@@ -227,10 +263,15 @@ class TestGenerarColaCLI:
         if cache_db.exists():
             cache_db.unlink()
 
-        result = subprocess_run((
-            "python3", "studio.py", "generar-cola",
-            "--carrusel", str(carrusel_de_ejemplo),
-        ))
+        result = subprocess_run(
+            (
+                "python3",
+                "studio.py",
+                "generar-cola",
+                "--carrusel",
+                str(carrusel_de_ejemplo),
+            )
+        )
 
         # Assert
         assert result.returncode == 0, f"stderr: {result.stderr}"
@@ -258,10 +299,13 @@ class TestGenerarCARRUSELCompleto:
     def test_returns_error_if_carrusel_missing(self, tmp_path):
         # Arrange
         from studio import _generar_carrusel_completo
+
         with patch.object(studio_module, "Studio"):
             # Act
             resultado = _generar_carrusel_completo(
-                MagicMock(), tmp_path / "no_existe.json", skip_confirm=True,
+                MagicMock(),
+                tmp_path / "no_existe.json",
+                skip_confirm=True,
             )
 
         # Assert
@@ -271,17 +315,29 @@ class TestGenerarCARRUSELCompleto:
     def test_returns_error_if_no_items(self, tmp_path):
         # Arrange: carrusel con solo CTAs sin prompt
         carrusel_vacio = {
-            "tema": "Test", "tipo": "lote_premium", "municipio": "X", "tono": "emotivo",
+            "tema": "Test",
+            "tipo": "lote_premium",
+            "municipio": "X",
+            "tono": "emotivo",
             "slides": [
-                {"numero": 1, "tipo": "cta", "prompt": "", "aspect_ratio": "896*1152",
-                 "styles": [], "texto_overlay": "", "metadata": {}},
+                {
+                    "numero": 1,
+                    "tipo": "cta",
+                    "prompt": "",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                    "texto_overlay": "",
+                    "metadata": {},
+                },
             ],
-            "caption_narrativo": "", "hashtags": [],
+            "caption_narrativo": "",
+            "hashtags": [],
         }
         p = tmp_path / "vacio.json"
         p.write_text(json.dumps(carrusel_vacio), encoding="utf-8")
 
         from studio import _generar_carrusel_completo
+
         with patch.object(studio_module, "Studio"):
             # Act
             resultado = _generar_carrusel_completo(MagicMock(), p, skip_confirm=True)
@@ -294,9 +350,7 @@ class TestGenerarCARRUSELCompleto:
 class TestIntegracionFlows:
     """Tests de flujos end-to-end simulados."""
 
-    def test_full_pipeline_with_mocked_generator(
-        self, carrusel_de_ejemplo, tmp_path, monkeypatch
-    ):
+    def test_full_pipeline_with_mocked_generator(self, carrusel_de_ejemplo, tmp_path, monkeypatch):
         """Simula un pipeline completo: cache miss -> generar -> cache hit.
 
         Usa un fake BatchGenerator instalado via variable de entorno que
@@ -304,7 +358,7 @@ class TestIntegracionFlows:
         """
         # Arrange: crear un fake script que se inyecta en PYTHONPATH
         fake_gen = tmp_path / "fake_generation.py"
-        fake_gen.write_text('''
+        fake_gen.write_text("""
 import sys
 import json
 from pathlib import Path
@@ -336,18 +390,30 @@ if original:
     original.ImageCache = original.ImageCache
     original.RetryPolicy = original.RetryPolicy
     original.estimate_time = original.estimate_time
-''')
+""")
 
-        env_patch = {**__import__("os").environ, "PYTHONPATH": f"{tmp_path}:" + __import__("os").environ.get("PYTHONPATH", "")}
+        env_patch = {
+            **__import__("os").environ,
+            "PYTHONPATH": f"{tmp_path}:" + __import__("os").environ.get("PYTHONPATH", ""),
+        }
         import subprocess
+
         repo_root = Path(__file__).resolve().parent.parent
 
         # Act 1
         r1 = subprocess.run(
-            ["python3", "studio.py", "generar-carousel",
-             "--carrusel", str(carrusel_de_ejemplo),
-             "--yes"],
-            capture_output=True, text=True, cwd=str(repo_root), env=env_patch,
+            [
+                "python3",
+                "studio.py",
+                "generar-carousel",
+                "--carrusel",
+                str(carrusel_de_ejemplo),
+                "--yes",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(repo_root),
+            env=env_patch,
         )
 
         # Assert 1 (comando corrio OK, sin chequear mock por complejidad)
@@ -356,10 +422,18 @@ if original:
 
         # Act 2 (segunda corrida deberia tambien funcionar)
         r2 = subprocess.run(
-            ["python3", "studio.py", "generar-carousel",
-             "--carrusel", str(carrusel_de_ejemplo),
-             "--yes"],
-            capture_output=True, text=True, cwd=str(repo_root), env=env_patch,
+            [
+                "python3",
+                "studio.py",
+                "generar-carousel",
+                "--carrusel",
+                str(carrusel_de_ejemplo),
+                "--yes",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(repo_root),
+            env=env_patch,
         )
 
         # Assert 2

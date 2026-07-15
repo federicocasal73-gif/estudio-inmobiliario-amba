@@ -1,4 +1,5 @@
 """Fixtures compartidos para todos los tests del estudio."""
+
 from __future__ import annotations
 
 import json
@@ -21,9 +22,18 @@ def repo_root() -> Path:
 def municipios_amba() -> list[str]:
     """Lista de municipios AMBA soportados."""
     return [
-        "Pilar", "Escobar", "Campana", "Zarate",
-        "Lujan", "Mercedes", "Canuelas", "Lobos", "Brandsen",
-        "Roque Perez", "Chascomus", "Tandil",
+        "Pilar",
+        "Escobar",
+        "Campana",
+        "Zarate",
+        "Lujan",
+        "Mercedes",
+        "Canuelas",
+        "Lobos",
+        "Brandsen",
+        "Roque Perez",
+        "Chascomus",
+        "Tandil",
     ]
 
 

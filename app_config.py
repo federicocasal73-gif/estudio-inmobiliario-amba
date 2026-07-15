@@ -22,6 +22,7 @@ Variables de entorno reconocidas (todas con prefijo STUDIO_):
     STUDIO_LOG_LEVEL        -- "DEBUG", "INFO", "WARNING", etc
     STUDIO_FOOOCUS_URL      -- URL de Fooocus
 """
+
 from __future__ import annotations
 
 import os
@@ -164,16 +165,16 @@ def _build_config(data: dict[str, Any]) -> StudioConfig:
         paths=_dataclass_from_dict(PathsSection, data.get("paths", {})),
         data=_dataclass_from_dict(DataSection, data.get("data", {})),
         image_generator=_dataclass_from_dict(
-            ImageGeneratorSection, data.get("image_generator", {})),
+            ImageGeneratorSection, data.get("image_generator", {})
+        ),
         calendar=_dataclass_from_dict(CalendarSection, data.get("calendar", {})),
-        instagram=_dataclass_from_dict(
-            InstagramSection, data.get("instagram", {})),
+        instagram=_dataclass_from_dict(InstagramSection, data.get("instagram", {})),
     )
 
 
 def load_config(env: str | None = None) -> StudioConfig:
     """Carga la configuracion con prioridad (menor a mayor):
-        default -> env-specific -> env vars -> user
+    default -> env-specific -> env vars -> user
     """
     if env is None:
         env = os.environ.get("STUDIO_ENV", "development")

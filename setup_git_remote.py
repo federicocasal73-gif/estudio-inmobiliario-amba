@@ -12,6 +12,7 @@ Uso:
 
 Si no se pasa --url, el script imprime las instrucciones para hacerlo manual.
 """
+
 import subprocess
 import sys
 from pathlib import Path
@@ -88,10 +89,14 @@ def main() -> int:
         print("2. Copiar la URL del repo (HTTPS o SSH)")
         print()
         print("3. Ejecutar este script con la URL:")
-        print("   python setup_git_remote.py --url https://github.com/TU_USUARIO/estudio-inmobiliario-amba.git")
+        print(
+            "   python setup_git_remote.py --url https://github.com/TU_USUARIO/estudio-inmobiliario-amba.git"
+        )
         print()
         print("Alternativa con SSH:")
-        print("   python setup_git_remote.py --url git@github.com:TU_USUARIO/estudio-inmobiliario-amba.git")
+        print(
+            "   python setup_git_remote.py --url git@github.com:TU_USUARIO/estudio-inmobiliario-amba.git"
+        )
         print()
         print("O manualmente:")
         print("   git remote add origin URL")

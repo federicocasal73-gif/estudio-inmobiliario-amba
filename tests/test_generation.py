@@ -1,4 +1,5 @@
 """Tests del modulo de generacion (cache, retry, batch, estimacion)."""
+
 from __future__ import annotations
 
 import json
@@ -27,8 +28,7 @@ class TestRetryPolicy:
 
     def test_initial_delay(self):
         # Arrange
-        policy = RetryPolicy(initial_delay_seconds=5.0, backoff_factor=2.0,
-                             jitter=False)
+        policy = RetryPolicy(initial_delay_seconds=5.0, backoff_factor=2.0, jitter=False)
 
         # Act
         delay = policy.delay_for_attempt(1)
@@ -38,8 +38,9 @@ class TestRetryPolicy:
 
     def test_exponential_growth(self):
         # Arrange
-        policy = RetryPolicy(initial_delay_seconds=1.0, backoff_factor=2.0,
-                             jitter=False, max_delay_seconds=1000.0)
+        policy = RetryPolicy(
+            initial_delay_seconds=1.0, backoff_factor=2.0, jitter=False, max_delay_seconds=1000.0
+        )
 
         # Act & Assert
         assert policy.delay_for_attempt(1) == 1.0
@@ -49,8 +50,9 @@ class TestRetryPolicy:
 
     def test_max_delay_cap(self):
         # Arrange
-        policy = RetryPolicy(initial_delay_seconds=1.0, backoff_factor=10.0,
-                             max_delay_seconds=50.0, jitter=False)
+        policy = RetryPolicy(
+            initial_delay_seconds=1.0, backoff_factor=10.0, max_delay_seconds=50.0, jitter=False
+        )
 
         # Act
         delay = policy.delay_for_attempt(5)
@@ -129,16 +131,19 @@ class TestWithRetryDecorator:
 class TestHumanizeSeconds:
     """Tests del formateador de tiempo."""
 
-    @pytest.mark.parametrize("seconds,expected", [
-        (0, "0s"),
-        (5, "5s"),
-        (59, "59s"),
-        (60, "1m 0s"),
-        (90, "1m 30s"),
-        (3600, "1h 0m"),
-        (3660, "1h 1m"),
-        (7200, "2h 0m"),
-    ])
+    @pytest.mark.parametrize(
+        "seconds,expected",
+        [
+            (0, "0s"),
+            (5, "5s"),
+            (59, "59s"),
+            (60, "1m 0s"),
+            (90, "1m 30s"),
+            (3600, "1h 0m"),
+            (3660, "1h 1m"),
+            (7200, "2h 0m"),
+        ],
+    )
     def test_humanize(self, seconds, expected):
         # Act & Assert
         assert _humanize_seconds(seconds) == expected
@@ -347,9 +352,17 @@ class TestBatchGenerator:
         image_path.write_bytes(b"x")
 
         cache = ImageCache(tmp_path / "cache.json")
-        cache.put("cached", {"aspect_ratio": "1152*896", "styles": [],
-                              "negative_prompt": "", "steps": 30, "cfg_scale": 4.0},
-                  str(image_path))
+        cache.put(
+            "cached",
+            {
+                "aspect_ratio": "1152*896",
+                "styles": [],
+                "negative_prompt": "",
+                "steps": 30,
+                "cfg_scale": 4.0,
+            },
+            str(image_path),
+        )
 
         gen = BatchGenerator(generator=mock_gen, cache=cache)
         items = [BatchItem(id="0", prompt="cached", output_path=tmp_path / "out.jpg")]
@@ -370,14 +383,21 @@ class TestBatchGenerator:
         mock_gen.generar.return_value = mock_result
 
         cache = ImageCache(tmp_path / "cache.json")
-        cache.put("p", {"aspect_ratio": "1152*896", "styles": [],
-                        "negative_prompt": "", "steps": 30, "cfg_scale": 4.0},
-                  str(tmp_path / "cached.jpg"))
+        cache.put(
+            "p",
+            {
+                "aspect_ratio": "1152*896",
+                "styles": [],
+                "negative_prompt": "",
+                "steps": 30,
+                "cfg_scale": 4.0,
+            },
+            str(tmp_path / "cached.jpg"),
+        )
 
         gen = BatchGenerator(generator=mock_gen, cache=cache)
         items = [
-            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg",
-                       use_cache=False),
+            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg", use_cache=False),
         ]
 
         # Act
@@ -404,12 +424,12 @@ class TestBatchGenerator:
 
         cache = ImageCache(tmp_path / "cache.json")
         gen = BatchGenerator(
-            generator=mock_gen, cache=cache,
+            generator=mock_gen,
+            cache=cache,
             retry_policy=RetryPolicy(max_attempts=3, initial_delay_seconds=0.01),
         )
         items = [
-            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg",
-                       max_retries=3),
+            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg", max_retries=3),
         ]
 
         # Act
@@ -426,12 +446,12 @@ class TestBatchGenerator:
 
         cache = ImageCache(tmp_path / "cache.json")
         gen = BatchGenerator(
-            generator=mock_gen, cache=cache,
+            generator=mock_gen,
+            cache=cache,
             retry_policy=RetryPolicy(max_attempts=2, initial_delay_seconds=0.01),
         )
         items = [
-            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg",
-                       max_retries=2),
+            BatchItem(id="0", prompt="p", output_path=tmp_path / "out.jpg", max_retries=2),
         ]
 
         # Act
@@ -467,8 +487,7 @@ class TestBatchGenerator:
 
         gen.on_progress = on_progress
         items = [
-            BatchItem(id=f"id{i}", prompt="p", output_path=tmp_path / f"x{i}.jpg")
-            for i in range(3)
+            BatchItem(id=f"id{i}", prompt="p", output_path=tmp_path / f"x{i}.jpg") for i in range(3)
         ]
 
         # Act

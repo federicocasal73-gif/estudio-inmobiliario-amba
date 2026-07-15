@@ -2,6 +2,7 @@
 
 Cubre los 4 tipos principales de carruseles + story + reel.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -16,7 +17,8 @@ class TestCarruselDataClasses:
     def test_slide_to_dict(self):
         # Arrange
         slide = Slide(
-            numero=1, tipo="portada",
+            numero=1,
+            tipo="portada",
             descripcion="Test slide",
             prompt="test prompt",
             texto_overlay="Titulo",
@@ -33,10 +35,16 @@ class TestCarruselDataClasses:
     def test_carrusel_n_slides_property(self):
         # Arrange
         carrusel = Carrusel(
-            tema="test", tipo="test", municipio="X", tono="emotivo",
-            slides=[Slide(numero=1, tipo="foto", descripcion="a"),
-                    Slide(numero=2, tipo="cta", descripcion="b")],
-            caption_narrativo="", hashtags=[],
+            tema="test",
+            tipo="test",
+            municipio="X",
+            tono="emotivo",
+            slides=[
+                Slide(numero=1, tipo="foto", descripcion="a"),
+                Slide(numero=2, tipo="cta", descripcion="b"),
+            ],
+            caption_narrativo="",
+            hashtags=[],
         )
 
         # Assert
@@ -46,8 +54,13 @@ class TestCarruselDataClasses:
         # Arrange
         hashtags = ["#lotes", "#chacras"]
         carrusel = Carrusel(
-            tema="test", tipo="test", municipio="X", tono="emotivo",
-            slides=[], caption_narrativo="caption", hashtags=hashtags,
+            tema="test",
+            tipo="test",
+            municipio="X",
+            tono="emotivo",
+            slides=[],
+            caption_narrativo="caption",
+            hashtags=hashtags,
         )
 
         # Act & Assert
@@ -65,7 +78,8 @@ class TestLotePremium:
     def test_creates_default_6_slides(self):
         # Act
         carrusel = self.factory.lote_premium(
-            tema="5 ha", municipio="Cañuelas", hectareas=5, n_slides=6)
+            tema="5 ha", municipio="Cañuelas", hectareas=5, n_slides=6
+        )
 
         # Assert
         assert carrusel.n_slides == 6
@@ -74,16 +88,14 @@ class TestLotePremium:
 
     def test_respects_minimum_slides(self):
         # Act
-        carrusel = self.factory.lote_premium(
-            tema="test", municipio="X", hectareas=5, n_slides=2)
+        carrusel = self.factory.lote_premium(tema="test", municipio="X", hectareas=5, n_slides=2)
 
         # Assert (debe subir al minimo 4)
         assert carrusel.n_slides >= 4
 
     def test_all_slides_have_prompts_except_cta(self):
         # Act
-        carrusel = self.factory.lote_premium(
-            tema="test", municipio="X", hectareas=5, n_slides=5)
+        carrusel = self.factory.lote_premium(tema="test", municipio="X", hectareas=5, n_slides=5)
 
         # Assert
         prompts_with = [s for s in carrusel.slides if s.prompt]
@@ -101,16 +113,17 @@ class TestConstructionCarruseles:
         self.studio = RealestateStudio()
         self.factory = CarruselFactory(self.studio)
 
-    @pytest.mark.parametrize("carrusel_method,expected_tipo,n_slides", [
-        ("etapas_construccion", "etapas_construccion", 8),
-        ("steel_frame_completo", "steel_frame", 6),
-        ("llave_en_mano_completo", "llave_en_mano", 8),
-        ("terminaciones_detalle", "terminaciones", 6),
-        ("obra_completa", "obra_completa", 8),
-    ])
-    def test_construction_carruseles(
-        self, carrusel_method, expected_tipo, n_slides
-    ):
+    @pytest.mark.parametrize(
+        "carrusel_method,expected_tipo,n_slides",
+        [
+            ("etapas_construccion", "etapas_construccion", 8),
+            ("steel_frame_completo", "steel_frame", 6),
+            ("llave_en_mano_completo", "llave_en_mano", 8),
+            ("terminaciones_detalle", "terminaciones", 6),
+            ("obra_completa", "obra_completa", 8),
+        ],
+    )
+    def test_construction_carruseles(self, carrusel_method, expected_tipo, n_slides):
         # Act
         method = getattr(self.factory, carrusel_method)
         kwargs = {"municipio": "Cañuelas", "n_slides": n_slides}
@@ -135,7 +148,9 @@ class TestStoryAndReel:
         story = self.factory.story(tema="5 ha", municipio="Cañuelas")
 
         # Assert (aspect_ratio esta en metadata, no directo)
-        assert "1344" in story.metadata.get("aspect_ratio", "") or "768" in story.metadata.get("aspect_ratio", "")
+        assert "1344" in story.metadata.get("aspect_ratio", "") or "768" in story.metadata.get(
+            "aspect_ratio", ""
+        )
         assert story.tipo == "story"
 
     def test_reel_has_short_caption(self):
@@ -158,15 +173,18 @@ class TestGuardarCarrusel:
         # Arrange
         # Cambiar a directorio temporal
         import os
+
         original_cwd = os.getcwd()
         try:
             os.chdir(tmp_path)
             carrusel = self.factory.lote_premium(
-                tema="test", municipio="Cañuelas", hectareas=5, n_slides=5)
+                tema="test", municipio="Cañuelas", hectareas=5, n_slides=5
+            )
 
             # Act
             carpeta = self.factory.guardar(
-                carrusel, "test_carrusel",
+                carrusel,
+                "test_carrusel",
                 proyecto="test_proj",
             )
         finally:

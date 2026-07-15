@@ -20,6 +20,7 @@ Uso desde opencode:
     )
     cal.exportar_markdown(semana, ruta=Path("inmuebles/calendarios/semana_01/plan.md"))
 """
+
 from __future__ import annotations
 
 import json
@@ -38,40 +39,40 @@ DIAS_SEMANA = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "d
 
 # Distribucion recomendada por dia (en orden de prioridad por dia de la semana)
 DISTRIBUCION_DEFAULT = {
-    "lunes":    {"tipo": "lote_venta",       "tono": "emotivo",   "nicho": ["general", "inversion"]},
-    "martes":   {"tipo": "carrusel",          "tono": "premium",   "nicho": ["country", "general"]},
-    "miercoles": {"tipo": "country",          "tono": "premium",   "nicho": ["country"]},
-    "jueves":   {"tipo": "campo",             "tono": "inversion", "nicho": ["campo", "inversion"]},
-    "viernes":  {"tipo": "carrusel",          "tono": "emotivo",   "nicho": ["servicios", "casas"]},
-    "sabado":   {"tipo": "render_proyecto",   "tono": "aspiracional", "nicho": ["casas"]},
-    "domingo":  {"tipo": "obra_avance",       "tono": "practico",  "nicho": ["construccion"]},
+    "lunes": {"tipo": "lote_venta", "tono": "emotivo", "nicho": ["general", "inversion"]},
+    "martes": {"tipo": "carrusel", "tono": "premium", "nicho": ["country", "general"]},
+    "miercoles": {"tipo": "country", "tono": "premium", "nicho": ["country"]},
+    "jueves": {"tipo": "campo", "tono": "inversion", "nicho": ["campo", "inversion"]},
+    "viernes": {"tipo": "carrusel", "tono": "emotivo", "nicho": ["servicios", "casas"]},
+    "sabado": {"tipo": "render_proyecto", "tono": "aspiracional", "nicho": ["casas"]},
+    "domingo": {"tipo": "obra_avance", "tono": "practico", "nicho": ["construccion"]},
 }
 
 HORAS_SUGERIDAS = {
-    "lunes":    "19:00",
-    "martes":   "12:30",
+    "lunes": "19:00",
+    "martes": "12:30",
     "miercoles": "19:00",
-    "jueves":   "12:30",
-    "viernes":  "18:30",
-    "sabado":   "11:00",
-    "domingo":  "10:00",
+    "jueves": "12:30",
+    "viernes": "18:30",
+    "sabado": "11:00",
+    "domingo": "10:00",
 }
 
 # Fechas clave argentinas (mes, dia, nombre) — Madre y Padre se calculan dinamicamente
 FECHAS_CLAVE_AR_FIJAS = [
-    (1, 1,  "Ano Nuevo"),
+    (1, 1, "Ano Nuevo"),
     (2, 14, "San Valentin"),
     (3, 24, "Dia de la Memoria"),
-    (4, 2,  "Dia del Veterano"),
-    (5, 1,  "Dia del Trabajador"),
+    (4, 2, "Dia del Veterano"),
+    (5, 1, "Dia del Trabajador"),
     (5, 25, "Dia de la Revolucion de Mayo"),
     (6, 20, "Dia de la Bandera"),
-    (7, 9,  "Dia de la Independencia"),
+    (7, 9, "Dia de la Independencia"),
     (8, 17, "Dia del Nino"),
     (9, 11, "Dia del Maestro"),
     (10, 12, "Dia de la Diversidad Cultural"),
     (11, 23, "Dia de la Soberania Nacional"),
-    (12, 8,  "Inmaculada Concepcion"),
+    (12, 8, "Inmaculada Concepcion"),
     (12, 24, "Nochebuena"),
     (12, 25, "Navidad"),
     (12, 31, "Fin de Ano"),
@@ -81,8 +82,12 @@ FECHAS_CLAVE_AR_FIJAS = [
 def _tercer_domingo(anio: int, mes: int) -> tuple[int, int]:
     """Devuelve (mes, dia) del 3er domingo del mes."""
     import calendar
-    domingos = [d for d in calendar.Calendar().itermonthdates(anio, mes)
-                if d.month == mes and d.weekday() == 6]
+
+    domingos = [
+        d
+        for d in calendar.Calendar().itermonthdates(anio, mes)
+        if d.month == mes and d.weekday() == 6
+    ]
     return mes, domingos[2].day
 
 
@@ -98,24 +103,23 @@ def _fechas_dinamicas_para_anio(anio: int) -> list[tuple[int, int, str]]:
 
 def _fechas_clave_completas(anio: int) -> list[tuple[int, int, str]]:
     """Lista completa de fechas clave AR + inmo para un anio."""
-    return (FECHAS_CLAVE_AR_FIJAS
-            + _fechas_dinamicas_para_anio(anio)
-            + FECHAS_INMO)
+    return FECHAS_CLAVE_AR_FIJAS + _fechas_dinamicas_para_anio(anio) + FECHAS_INMO
+
 
 # Fechas del rubro inmobiliario / comercial
 FECHAS_INMO = [
     (11, 27, "Black Friday"),
-    (12, 2,  "Cyber Monday"),
+    (12, 2, "Cyber Monday"),
 ]
 
 
 @dataclass
 class SlotEditorial:
-    fecha: str                          # YYYY-MM-DD
-    dia_semana: str                     # lunes..domingo
-    hora_sugerida: str                  # HH:MM
-    tipo_post: str                      # lote_venta / country / campo / carrusel / render_proyecto / obra_avance / servicios / fecha_especial
-    tono: str                           # emotivo / inversion / practico / premium / aspiracional
+    fecha: str  # YYYY-MM-DD
+    dia_semana: str  # lunes..domingo
+    hora_sugerida: str  # HH:MM
+    tipo_post: str  # lote_venta / country / campo / carrusel / render_proyecto / obra_avance / servicios / fecha_especial
+    tono: str  # emotivo / inversion / practico / premium / aspiracional
     nicho: list[str]
     municipio: str
     proyecto: str | None = None
@@ -131,8 +135,8 @@ class SlotEditorial:
 @dataclass
 class SemanaEditorial:
     numero: int
-    fecha_inicio: str                   # lunes
-    fecha_fin: str                      # domingo
+    fecha_inicio: str  # lunes
+    fecha_fin: str  # domingo
     proyectos_disponibles: list[str]
     municipio_principal: str
     slots: list[SlotEditorial] = field(default_factory=list)
@@ -149,28 +153,38 @@ class CalendarioEditorial:
     def __init__(self, studio: RealestateStudio):
         self.studio = studio
 
-    def generar_semana(self, semana_n: int = 1,
-                       proyectos: list[str] | None = None,
-                       posts_por_semana: int = 5,
-                       municipio_principal: str = "Cañuelas",
-                       fecha_inicio: str | None = None,
-                       dias_personalizados: dict[str, dict] | None = None
-                       ) -> SemanaEditorial:
+    def generar_semana(
+        self,
+        semana_n: int = 1,
+        proyectos: list[str] | None = None,
+        posts_por_semana: int = 5,
+        municipio_principal: str = "Cañuelas",
+        fecha_inicio: str | None = None,
+        dias_personalizados: dict[str, dict] | None = None,
+    ) -> SemanaEditorial:
         if posts_por_semana < 1:
             posts_por_semana = 1
         if posts_por_semana > 7:
             posts_por_semana = 7
 
         proyectos = proyectos or []
-        inicio = self._parsear_fecha(fecha_inicio) if fecha_inicio \
-                 else self._lunes_de_semana(semana_n)
+        inicio = (
+            self._parsear_fecha(fecha_inicio) if fecha_inicio else self._lunes_de_semana(semana_n)
+        )
         fin = inicio + timedelta(days=6)
 
         distribucion = dias_personalizados or DISTRIBUCION_DEFAULT
 
         # Seleccionar dias segun posts_por_semana (priorizando dias de mayor engagement)
-        dias_prioritarios = ["lunes", "miercoles", "viernes", "sabado", "martes",
-                             "jueves", "domingo"]
+        dias_prioritarios = [
+            "lunes",
+            "miercoles",
+            "viernes",
+            "sabado",
+            "martes",
+            "jueves",
+            "domingo",
+        ]
 
         # Detectar fechas clave en la semana
         fechas_clave_en_semana = self._fechas_clave_en_rango(inicio, fin)
@@ -199,22 +213,18 @@ class CalendarioEditorial:
 
             # Si este dia es una fecha clave, usar ese slot
             fecha_clave_match = next(
-                (fc for fc in fechas_clave_en_semana
-                 if fc["fecha"] == fecha_str),
-                None
+                (fc for fc in fechas_clave_en_semana if fc["fecha"] == fecha_str), None
             )
 
             if fecha_clave_match:
-                slot = self._slot_fecha_clave(fecha_dia, fecha_clave_match,
-                                              municipio_principal)
+                slot = self._slot_fecha_clave(fecha_dia, fecha_clave_match, municipio_principal)
             else:
                 config_dia = distribucion.get(dia, distribucion["lunes"])
                 proyecto = None
                 if proyectos_usados:
                     proyecto = proyectos_usados[idx_proyecto % len(proyectos_usados)]
                     idx_proyecto += 1
-                slot = self._slot_normal(fecha_dia, dia, config_dia,
-                                         municipio_principal, proyecto)
+                slot = self._slot_normal(fecha_dia, dia, config_dia, municipio_principal, proyecto)
 
             slots.append(slot)
 
@@ -225,10 +235,12 @@ class CalendarioEditorial:
             proyectos_disponibles=proyectos,
             municipio_principal=municipio_principal,
             slots=slots,
-            fechas_clave_cubiertas=[fc["nombre"] for fc in fechas_clave_en_semana
-                                     if any(s.es_fecha_clave for s in slots)],
-            metadata={"posts_por_semana": posts_por_semana,
-                      "dias_elegidos": dias_elegidos},
+            fechas_clave_cubiertas=[
+                fc["nombre"]
+                for fc in fechas_clave_en_semana
+                if any(s.es_fecha_clave for s in slots)
+            ],
+            metadata={"posts_por_semana": posts_por_semana, "dias_elegidos": dias_elegidos},
         )
 
         # Generar posts completos por slot
@@ -239,9 +251,9 @@ class CalendarioEditorial:
 
     # ---------------- Generadores de slot ----------------
 
-    def _slot_normal(self, fecha_dia: datetime, dia: str,
-                     config: dict, municipio: str,
-                     proyecto: str | None) -> SlotEditorial:
+    def _slot_normal(
+        self, fecha_dia: datetime, dia: str, config: dict, municipio: str, proyecto: str | None
+    ) -> SlotEditorial:
         return SlotEditorial(
             fecha=fecha_dia.strftime("%Y-%m-%d"),
             dia_semana=dia,
@@ -254,8 +266,9 @@ class CalendarioEditorial:
             notas=f"Distribucion default para {dia}",
         )
 
-    def _slot_fecha_clave(self, fecha_dia: datetime, fecha_clave: dict,
-                          municipio: str) -> SlotEditorial:
+    def _slot_fecha_clave(
+        self, fecha_dia: datetime, fecha_clave: dict, municipio: str
+    ) -> SlotEditorial:
         nombre = fecha_clave["nombre"]
         # Plantillas especiales por fecha
         if "Madre" in nombre or "Padre" in nombre:
@@ -281,9 +294,13 @@ class CalendarioEditorial:
             fecha=fecha_dia.strftime("%Y-%m-%d"),
             dia_semana=DIAS_SEMANA[fecha_dia.weekday()],
             hora_sugerida="10:00",
-            tipo_post=tipo, tono=tono, nicho=nichos,
-            municipio=municipio, proyecto=None,
-            notas=notas, es_fecha_clave=True,
+            tipo_post=tipo,
+            tono=tono,
+            nicho=nichos,
+            municipio=municipio,
+            proyecto=None,
+            notas=notas,
+            es_fecha_clave=True,
             fecha_clave_nombre=nombre,
         )
 
@@ -312,7 +329,8 @@ class CalendarioEditorial:
                 )
             elif tipo == "campo":
                 return self.studio.post.post_campo(
-                    hectareas="50 ha", municipio=municipio,
+                    hectareas="50 ha",
+                    municipio=municipio,
                     tono=tono,
                 )
             elif tipo == "lote_periurbano":
@@ -344,8 +362,8 @@ class CalendarioEditorial:
                 }
             elif tipo == "render_proyecto":
                 req = self.studio.construccion.render_proyecto(
-                    estilo="casa de campo tradicional", hectareas=5,
-                    municipio=municipio)
+                    estilo="casa de campo tradicional", hectareas=5, municipio=municipio
+                )
                 caption = self._caption_placeholder_render(municipio, tono)
                 hashtags = self.studio.post.hashtags(["casas", "general"], municipio)
                 return {
@@ -381,8 +399,7 @@ class CalendarioEditorial:
             elif tipo == "fecha_especial":
                 nombre = slot.fecha_clave_nombre or "Fecha especial"
                 caption = self._caption_fecha_especial(nombre, municipio, tono)
-                hashtags = self.studio.post.hashtags(
-                    slot.nicho, municipio)
+                hashtags = self.studio.post.hashtags(slot.nicho, municipio)
                 return {
                     "fecha_creacion": datetime.now().isoformat(timespec="seconds"),
                     "tema": nombre,
@@ -417,8 +434,7 @@ class CalendarioEditorial:
             }
 
     @staticmethod
-    def _caption_placeholder_carrusel(municipio: str, tono: str,
-                                       nichos: list[str]) -> str:
+    def _caption_placeholder_carrusel(municipio: str, tono: str, nichos: list[str]) -> str:
         nichos_txt = ", ".join(nichos[:3]) if nichos else "lotes"
         if tono == "premium":
             return (
@@ -477,8 +493,7 @@ class CalendarioEditorial:
         )
 
     @staticmethod
-    def _caption_placeholder_generico(tipo: str, municipio: str,
-                                       tono: str) -> str:
+    def _caption_placeholder_generico(tipo: str, municipio: str, tono: str) -> str:
         tipo_legible = tipo.replace("_", " ").capitalize()
         return (
             f"📍 {municipio}, Buenos Aires\n\n"
@@ -486,8 +501,7 @@ class CalendarioEditorial:
         )
 
     @staticmethod
-    def _caption_fecha_especial(nombre: str, municipio: str,
-                                tono: str) -> str:
+    def _caption_fecha_especial(nombre: str, municipio: str, tono: str) -> str:
         if "Madre" in nombre:
             return (
                 f"🌻 Feliz dia de las madres\n\n"
@@ -562,8 +576,7 @@ class CalendarioEditorial:
     def _parsear_fecha(fecha_str: str) -> datetime:
         return datetime.strptime(fecha_str, "%Y-%m-%d")
 
-    def _fechas_clave_en_rango(self, inicio: datetime,
-                                fin: datetime) -> list[dict]:
+    def _fechas_clave_en_rango(self, inicio: datetime, fin: datetime) -> list[dict]:
         """Detecta fechas clave AR + inmobiliarias en el rango (multi-anio)."""
         encontradas: list[dict] = []
         anios = {inicio.year, fin.year}
@@ -575,12 +588,14 @@ class CalendarioEditorial:
         while actual <= fin_date:
             for mes, dia, nombre in todas:
                 if actual.month == mes and actual.day == dia:
-                    encontradas.append({
-                        "fecha": actual.strftime("%Y-%m-%d"),
-                        "nombre": nombre,
-                        "mes": mes,
-                        "dia": dia,
-                    })
+                    encontradas.append(
+                        {
+                            "fecha": actual.strftime("%Y-%m-%d"),
+                            "nombre": nombre,
+                            "mes": mes,
+                            "dia": dia,
+                        }
+                    )
             actual += timedelta(days=1)
         return encontradas
 
@@ -590,13 +605,12 @@ class CalendarioEditorial:
         carpeta = CALENDARIOS_DIR / f"semana_{semana.numero:02d}"
         carpeta.mkdir(parents=True, exist_ok=True)
         json_path = carpeta / "plan.json"
-        json_path.write_text(json.dumps(semana.to_dict(), indent=2,
-                                        ensure_ascii=False),
-                             encoding="utf-8")
+        json_path.write_text(
+            json.dumps(semana.to_dict(), indent=2, ensure_ascii=False), encoding="utf-8"
+        )
         return carpeta
 
-    def exportar_markdown(self, semana: SemanaEditorial,
-                          ruta: Path | None = None) -> Path:
+    def exportar_markdown(self, semana: SemanaEditorial, ruta: Path | None = None) -> Path:
         if ruta is None:
             carpeta = CALENDARIOS_DIR / f"semana_{semana.numero:02d}"
             carpeta.mkdir(parents=True, exist_ok=True)
@@ -626,8 +640,7 @@ class CalendarioEditorial:
 
         lineas.extend(["", "## Posts completos", ""])
         for slot in semana.slots:
-            lineas.append(f"### {slot.fecha} · {slot.dia_semana} · "
-                          f"{slot.tipo_post} ({slot.tono})")
+            lineas.append(f"### {slot.fecha} · {slot.dia_semana} · {slot.tipo_post} ({slot.tono})")
             lineas.append(f"_Hora sugerida: {slot.hora_sugerida}_")
             if slot.es_fecha_clave and slot.fecha_clave_nombre:
                 lineas.append(f"_🎉 Fecha clave: {slot.fecha_clave_nombre}_")
@@ -664,8 +677,7 @@ class CalendarioEditorial:
         ruta.write_text("\n".join(lineas), encoding="utf-8")
         return ruta
 
-    def exportar_csv(self, semana: SemanaEditorial,
-                      ruta: Path | None = None) -> Path:
+    def exportar_csv(self, semana: SemanaEditorial, ruta: Path | None = None) -> Path:
         """Exporta el calendario a CSV (importable a Excel / Google Sheets)."""
         if ruta is None:
             carpeta = CALENDARIOS_DIR / f"semana_{semana.numero:02d}"
@@ -673,34 +685,55 @@ class CalendarioEditorial:
             ruta = carpeta / "plan.csv"
 
         import csv
+
         ruta.parent.mkdir(parents=True, exist_ok=True)
         with open(ruta, "w", encoding="utf-8", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow([
-                "fecha", "dia_semana", "hora", "tipo_post", "tono", "nicho",
-                "municipio", "proyecto", "es_fecha_clave", "fecha_clave_nombre",
-                "caption_preview", "n_hashtags", "placeholder", "notas",
-            ])
+            writer.writerow(
+                [
+                    "fecha",
+                    "dia_semana",
+                    "hora",
+                    "tipo_post",
+                    "tono",
+                    "nicho",
+                    "municipio",
+                    "proyecto",
+                    "es_fecha_clave",
+                    "fecha_clave_nombre",
+                    "caption_preview",
+                    "n_hashtags",
+                    "placeholder",
+                    "notas",
+                ]
+            )
             for slot in semana.slots:
                 caption = (slot.post or {}).get("caption_completo", "")
                 hashtags = (slot.post or {}).get("hashtags", [])
                 placeholder = (slot.post or {}).get("placeholder", False) if slot.post else False
                 caption_preview = caption[:200].replace("\n", " ")
                 nichos = ",".join(slot.nicho)
-                writer.writerow([
-                    slot.fecha, slot.dia_semana, slot.hora_sugerida,
-                    slot.tipo_post, slot.tono, nichos,
-                    slot.municipio, slot.proyecto or "",
-                    "SI" if slot.es_fecha_clave else "no",
-                    slot.fecha_clave_nombre or "",
-                    caption_preview, len(hashtags),
-                    "SI" if placeholder else "no",
-                    slot.notas,
-                ])
+                writer.writerow(
+                    [
+                        slot.fecha,
+                        slot.dia_semana,
+                        slot.hora_sugerida,
+                        slot.tipo_post,
+                        slot.tono,
+                        nichos,
+                        slot.municipio,
+                        slot.proyecto or "",
+                        "SI" if slot.es_fecha_clave else "no",
+                        slot.fecha_clave_nombre or "",
+                        caption_preview,
+                        len(hashtags),
+                        "SI" if placeholder else "no",
+                        slot.notas,
+                    ]
+                )
         return ruta
 
-    def exportar_ics(self, semana: SemanaEditorial,
-                     ruta: Path | None = None) -> Path:
+    def exportar_ics(self, semana: SemanaEditorial, ruta: Path | None = None) -> Path:
         """Exporta a formato .ics para Google Calendar / Apple Calendar."""
         if ruta is None:
             carpeta = CALENDARIOS_DIR / f"semana_{semana.numero:02d}"
@@ -715,8 +748,7 @@ class CalendarioEditorial:
         ]
 
         for slot in semana.slots:
-            dt = datetime.strptime(f"{slot.fecha} {slot.hora_sugerida}",
-                                   "%Y-%m-%d %H:%M")
+            dt = datetime.strptime(f"{slot.fecha} {slot.hora_sugerida}", "%Y-%m-%d %H:%M")
             dt_fin = dt + timedelta(hours=1)
             titulo = f"[IG] {slot.tipo_post} ({slot.tono}) - {slot.municipio}"
             if slot.es_fecha_clave and slot.fecha_clave_nombre:
@@ -726,16 +758,18 @@ class CalendarioEditorial:
                 descripcion += f"\\nProyecto: {slot.proyecto}"
             uid = f"{slot.fecha}-{slot.hora_sugerida}-{slot.tipo_post}@realestate-studio"
 
-            lineas.extend([
-                "BEGIN:VEVENT",
-                f"UID:{uid}",
-                f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}",
-                f"DTSTART:{dt.strftime('%Y%m%dT%H%M%S')}",
-                f"DTEND:{dt_fin.strftime('%Y%m%dT%H%M%S')}",
-                f"SUMMARY:{titulo}",
-                f"DESCRIPTION:{descripcion}",
-                "END:VEVENT",
-            ])
+            lineas.extend(
+                [
+                    "BEGIN:VEVENT",
+                    f"UID:{uid}",
+                    f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}",
+                    f"DTSTART:{dt.strftime('%Y%m%dT%H%M%S')}",
+                    f"DTEND:{dt_fin.strftime('%Y%m%dT%H%M%S')}",
+                    f"SUMMARY:{titulo}",
+                    f"DESCRIPTION:{descripcion}",
+                    "END:VEVENT",
+                ]
+            )
 
         lineas.append("END:VCALENDAR")
         ruta.write_text("\n".join(lineas), encoding="utf-8")
@@ -744,6 +778,7 @@ class CalendarioEditorial:
 
 def demo() -> None:
     from realestate_studio import RealestateStudio
+
     studio = RealestateStudio()
     cal = CalendarioEditorial(studio)
 
@@ -764,8 +799,10 @@ def demo() -> None:
     print()
     for slot in semana.slots:
         marca = "🎉 " if slot.es_fecha_clave else ""
-        print(f"  {slot.fecha} {slot.hora_sugerida} {marca}{slot.dia_semana}: "
-              f"{slot.tipo_post} ({slot.tono}) en {slot.municipio}")
+        print(
+            f"  {slot.fecha} {slot.hora_sugerida} {marca}{slot.dia_semana}: "
+            f"{slot.tipo_post} ({slot.tono}) en {slot.municipio}"
+        )
     print()
     print(f"Markdown: {md_path}")
     print(f"ICS:      {ics_path}")

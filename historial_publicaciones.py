@@ -27,6 +27,7 @@ Uso:
         ["chacra-canuelas-5ha", "country-pilar-ejemplo", "campo-brandsen-30ha"])
     # Devuelve los proyectos ordenados del menos reciente al mas reciente
 """
+
 from __future__ import annotations
 
 import json
@@ -78,28 +79,34 @@ class HistorialPublicaciones:
             "ultima_actualizacion": datetime.now().isoformat(timespec="seconds"),
             "publicaciones": [p.to_dict() for p in self._publicaciones],
         }
-        self.ruta.write_text(json.dumps(data, indent=2, ensure_ascii=False),
-                             encoding="utf-8")
+        self.ruta.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    def registrar(self, tipo: str, municipio: str,
-                  proyecto: str | None = None,
-                  instagram_post_id: str | None = None,
-                  permalink: str | None = None,
-                  metadata: dict[str, Any] | None = None) -> Publicacion:
+    def registrar(
+        self,
+        tipo: str,
+        municipio: str,
+        proyecto: str | None = None,
+        instagram_post_id: str | None = None,
+        permalink: str | None = None,
+        metadata: dict[str, Any] | None = None,
+    ) -> Publicacion:
         pub = Publicacion(
             fecha=datetime.now().isoformat(timespec="seconds"),
-            tipo=tipo, municipio=municipio, proyecto=proyecto,
-            instagram_post_id=instagram_post_id, permalink=permalink,
+            tipo=tipo,
+            municipio=municipio,
+            proyecto=proyecto,
+            instagram_post_id=instagram_post_id,
+            permalink=permalink,
             metadata=metadata or {},
         )
         self._publicaciones.append(pub)
         self._guardar()
         return pub
 
-    def publicaciones_de_proyecto(self, proyecto: str,
-                                    limite_dias: int = 30) -> list[Publicacion]:
+    def publicaciones_de_proyecto(self, proyecto: str, limite_dias: int = 30) -> list[Publicacion]:
         """Devuelve las publicaciones de un proyecto en los ultimos N dias."""
         from datetime import timedelta
+
         cutoff = datetime.now() - timedelta(days=limite_dias)
         resultados = []
         for pub in self._publicaciones:
@@ -149,6 +156,7 @@ class RotadorProyectos:
         Los que llevan mas tiempo sin publicar van primero.
         Si nunca se publicaron, van al principio.
         """
+
         def key(proyecto: str) -> tuple[int, int, str]:
             dias = self.historial.dias_desde_ultima(proyecto)
             # None (nunca publicado) -> 0 (va primero al ser menor)
@@ -159,9 +167,9 @@ class RotadorProyectos:
 
         return sorted(proyectos, key=key, reverse=False)
 
-    def proyectos_disponibles_esta_semana(self, proyectos: list[str],
-                                          dias_minimos_entre_posts: int = 3
-                                          ) -> list[str]:
+    def proyectos_disponibles_esta_semana(
+        self, proyectos: list[str], dias_minimos_entre_posts: int = 3
+    ) -> list[str]:
         """Filtra proyectos que aun no deberian ser publicados esta semana."""
         disponibles = []
         for p in proyectos:
@@ -170,8 +178,9 @@ class RotadorProyectos:
                 disponibles.append(p)
         return disponibles
 
-    def sugerir_proyecto_para_slot(self, proyectos: list[str],
-                                    tipo_post: str | None = None) -> str | None:
+    def sugerir_proyecto_para_slot(
+        self, proyectos: list[str], tipo_post: str | None = None
+    ) -> str | None:
         """Sugiere el mejor proyecto para un slot dado."""
         if not proyectos:
             return None
@@ -207,15 +216,13 @@ def demo() -> None:
     historial.registrar("lote_venta", "Cañuelas", proyecto="chacra-canuelas-5ha")
     historial.registrar("country", "Pilar", proyecto="country-pilar-ejemplo")
 
-    proyectos = ["chacra-canuelas-5ha", "country-pilar-ejemplo",
-                 "campo-brandsen-30ha"]
+    proyectos = ["chacra-canuelas-5ha", "country-pilar-ejemplo", "campo-brandsen-30ha"]
 
     rotador = RotadorProyectos(historial)
     orden = rotador.ordenar_por_antiguedad(proyectos)
     print("Orden por antiguedad:")
     for p in orden:
-        print(f"  - {p} (dias desde ultima: "
-              f"{rotador.historial.dias_desde_ultima(p)})")
+        print(f"  - {p} (dias desde ultima: {rotador.historial.dias_desde_ultima(p)})")
 
     sugerido = rotador.sugerir_proyecto_para_slot(proyectos, "country")
     print(f"\nSugerido para slot country: {sugerido}")

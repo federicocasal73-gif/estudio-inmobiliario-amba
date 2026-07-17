@@ -11,9 +11,9 @@ Cubre:
 from __future__ import annotations
 
 import json
+import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-import urllib.error
 
 import pytest
 
@@ -24,7 +24,6 @@ from zonaprop_publisher import (
     ResultadoPublicacionZP,
     ZonapropPublisher,
 )
-
 
 # ===== PublicacionZonaprop =====
 
@@ -88,9 +87,7 @@ class TestPublicacionZonaprop:
 
 class TestResultadoPublicacionZP:
     def test_resumen_dry_run(self):
-        r = ResultadoPublicacionZP(
-            ok=True, mode="dry-run", dry_run_data={"title": "Chacra 5ha"}
-        )
+        r = ResultadoPublicacionZP(ok=True, mode="dry-run", dry_run_data={"title": "Chacra 5ha"})
         assert "[DRY-RUN]" in r.resumen()
         assert "Zonaprop" in r.resumen()
         assert "Chacra 5ha" in r.resumen()
@@ -114,14 +111,18 @@ class TestResultadoPublicacionZP:
 class TestCargarConfig:
     def test_config_ok(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {
-                "email": "test@email.com",
-                "password": "pass123",
-                "empresa": "Inmobiliaria",
-                "telefono": "+54 11 1234-5678",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "zonaprop": {
+                        "email": "test@email.com",
+                        "password": "pass123",
+                        "empresa": "Inmobiliaria",
+                        "telefono": "+54 11 1234-5678",
+                    }
+                }
+            )
+        )
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.configurado() is True
 
@@ -144,9 +145,7 @@ class TestCargarConfig:
 
     def test_config_no_email(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"password": "pass"}
-        }))
+        auth.write_text(json.dumps({"zonaprop": {"password": "pass"}}))
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.configurado() is False
 
@@ -157,12 +156,16 @@ class TestCargarConfig:
 class TestRequest:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {
-                "email": "test@email.com",
-                "password": "pass123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "zonaprop": {
+                        "email": "test@email.com",
+                        "password": "pass123",
+                    }
+                }
+            )
+        )
         return ZonapropPublisher(auth_path=auth)
 
     @patch("zonaprop_publisher.urllib.request.urlopen")
@@ -253,9 +256,9 @@ class TestLogin:
     @patch("zonaprop_publisher.urllib.request.urlopen")
     def test_login_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"session_cookie": "session=abc"}).encode()
@@ -274,9 +277,9 @@ class TestLogin:
     @patch("zonaprop_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_login_api_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.login() is False
 
@@ -287,9 +290,9 @@ class TestLogin:
 class TestCrearPublicacion:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         return ZonapropPublisher(auth_path=auth)
 
     def test_dry_run(self, tmp_path):
@@ -324,10 +327,12 @@ class TestCrearPublicacion:
         login_resp.__enter__ = MagicMock(return_value=login_resp)
         login_resp.__exit__ = MagicMock(return_value=False)
         create_resp = MagicMock()
-        create_resp.read.return_value = json.dumps({
-            "id": "ZP999",
-            "permalink": "https://www.zonaprop.com.ar/propiedad/999",
-        }).encode()
+        create_resp.read.return_value = json.dumps(
+            {
+                "id": "ZP999",
+                "permalink": "https://www.zonaprop.com.ar/propiedad/999",
+            }
+        ).encode()
         create_resp.__enter__ = MagicMock(return_value=create_resp)
         create_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.side_effect = [login_resp, create_resp]
@@ -349,7 +354,9 @@ class TestCrearPublicacion:
         login_resp.__enter__ = MagicMock(return_value=login_resp)
         login_resp.__exit__ = MagicMock(return_value=False)
         create_resp = MagicMock()
-        create_resp.read.return_value = json.dumps({"id": "ZP888", "permalink": "https://zp/888"}).encode()
+        create_resp.read.return_value = json.dumps(
+            {"id": "ZP888", "permalink": "https://zp/888"}
+        ).encode()
         create_resp.__enter__ = MagicMock(return_value=create_resp)
         create_resp.__exit__ = MagicMock(return_value=False)
         upload_resp = MagicMock()
@@ -403,7 +410,9 @@ class TestCrearPublicacion:
         pub = self._make_publisher(tmp_path)
         pub._session_cookie = "existing_session"
         create_resp = MagicMock()
-        create_resp.read.return_value = json.dumps({"id": "ZP777", "permalink": "https://zp/777"}).encode()
+        create_resp.read.return_value = json.dumps(
+            {"id": "ZP777", "permalink": "https://zp/777"}
+        ).encode()
         create_resp.__enter__ = MagicMock(return_value=create_resp)
         create_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = create_resp
@@ -423,9 +432,9 @@ class TestCrearPublicacion:
 class TestUploadImage:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         return ZonapropPublisher(auth_path=auth)
 
     @patch("zonaprop_publisher.urllib.request.urlopen")
@@ -455,9 +464,9 @@ class TestListarPublicaciones:
     @patch("zonaprop_publisher.urllib.request.urlopen")
     def test_listar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         login_resp = MagicMock()
         login_resp.read.return_value = json.dumps({"session_cookie": "s"}).encode()
@@ -481,9 +490,9 @@ class TestListarPublicaciones:
     @patch("zonaprop_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_listar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.listar_publicaciones() == []
 
@@ -495,9 +504,9 @@ class TestEliminarPublicacion:
     @patch("zonaprop_publisher.urllib.request.urlopen")
     def test_eliminar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"ok": True}).encode()
@@ -515,9 +524,9 @@ class TestEliminarPublicacion:
     @patch("zonaprop_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_eliminar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.eliminar_publicacion("ZP123") is False
 
@@ -529,9 +538,9 @@ class TestBuscarPropiedades:
     @patch("zonaprop_publisher.urllib.request.urlopen")
     def test_buscar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"results": [{"id": "ZP1"}]}).encode()
@@ -544,9 +553,9 @@ class TestBuscarPropiedades:
     @patch("zonaprop_publisher.urllib.request.urlopen")
     def test_buscar_con_filtros(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"results": []}).encode()
@@ -561,9 +570,9 @@ class TestBuscarPropiedades:
     @patch("zonaprop_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_buscar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "zonaprop": {"email": "test@email.com", "password": "pass123"}
-        }))
+        auth.write_text(
+            json.dumps({"zonaprop": {"email": "test@email.com", "password": "pass123"}})
+        )
         pub = ZonapropPublisher(auth_path=auth)
         assert pub.buscar_propiedades("test") == []
 

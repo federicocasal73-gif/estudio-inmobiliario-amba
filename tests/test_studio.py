@@ -31,7 +31,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
 import pytest
 
@@ -42,7 +42,6 @@ from studio import (
     _generar_carrusel_completo,
     cli,
 )
-
 
 # ===== PipelineResultado =====
 
@@ -94,8 +93,18 @@ class TestStudioInit:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_init(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         s = Studio()
         assert s.studio_core == mock_rs.return_value
@@ -139,8 +148,20 @@ class TestBuildBatchItems:
     def test_normal(self, tmp_path):
         data = {
             "slides": [
-                {"numero": 1, "tipo": "foto", "prompt": "un lote", "aspect_ratio": "896*1152", "styles": []},
-                {"numero": 2, "tipo": "texto", "prompt": "", "aspect_ratio": "896*1152", "styles": []},
+                {
+                    "numero": 1,
+                    "tipo": "foto",
+                    "prompt": "un lote",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
+                {
+                    "numero": 2,
+                    "tipo": "texto",
+                    "prompt": "",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
             ]
         }
         carrusel = tmp_path / "carrusel.json"
@@ -152,8 +173,20 @@ class TestBuildBatchItems:
     def test_placeholder_skip(self, tmp_path):
         data = {
             "slides": [
-                {"numero": 1, "tipo": "placeholder_foto", "prompt": "skip", "aspect_ratio": "896*1152", "styles": []},
-                {"numero": 2, "tipo": "foto", "prompt": "render", "aspect_ratio": "896*1152", "styles": []},
+                {
+                    "numero": 1,
+                    "tipo": "placeholder_foto",
+                    "prompt": "skip",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
+                {
+                    "numero": 2,
+                    "tipo": "foto",
+                    "prompt": "render",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
             ]
         }
         carrusel = tmp_path / "carrusel.json"
@@ -164,7 +197,13 @@ class TestBuildBatchItems:
     def test_batch_variants(self, tmp_path):
         data = {
             "slides": [
-                {"numero": 1, "tipo": "foto", "prompt": "prompt", "aspect_ratio": "896*1152", "styles": []},
+                {
+                    "numero": 1,
+                    "tipo": "foto",
+                    "prompt": "prompt",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
             ]
         }
         carrusel = tmp_path / "carrusel.json"
@@ -209,10 +248,21 @@ class TestPublicarSlot:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_slot_vacio(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         slot = self._make_slot(post=None)
         semana = MagicMock()
@@ -232,10 +282,21 @@ class TestPublicarSlot:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_slot_sin_caption(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         slot = self._make_slot(post={"caption": "hola"})
         semana = MagicMock()
@@ -254,10 +315,21 @@ class TestPublicarSlot:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_slot_con_carrusel_sin_imagenes(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         slot = self._make_slot(
             post={"caption_completo": "test", "caption": "test", "hashtags": ["#test"]},
@@ -287,8 +359,19 @@ class TestDuplicarProyecto:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_origen_no_existe(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         with pytest.raises(FileNotFoundError):
@@ -306,10 +389,22 @@ class TestDuplicarProyecto:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_destino_ya_existe(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         from studio import ROOT
+
         # Create fake project dirs
         origen_dir = ROOT / "inmuebles" / "lotes" / "_test_dup_origen"
         destino_dir = ROOT / "inmuebles" / "lotes" / "_test_dup_destino"
@@ -321,6 +416,7 @@ class TestDuplicarProyecto:
                 s.duplicar_proyecto("_test_dup_origen", "_test_dup_destino")
         finally:
             import shutil
+
             if origen_dir.exists():
                 shutil.rmtree(origen_dir)
             if destino_dir.exists():
@@ -343,8 +439,19 @@ class TestActualizarPrompts:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_hectareas_update(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         data = {"slides": [{"prompt": "5 hectares en Cañuelas"}]}
@@ -366,8 +473,19 @@ class TestActualizarPrompts:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_municipio_update(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         data = {"slides": [{"prompt": "Lote en Cañuelas"}]}
@@ -389,8 +507,19 @@ class TestActualizarPrompts:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_json_invalido(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         json_path = tmp_path / "bad.json"
@@ -415,8 +544,19 @@ class TestActualizarResumen:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_update(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         data = {"hectareas": 5, "municipio": "Cañuelas"}
@@ -439,8 +579,19 @@ class TestActualizarResumen:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_json_invalido(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         s = Studio()
         json_path = tmp_path / "bad.json"
@@ -465,8 +616,18 @@ class TestGuardarPipeline:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_guardar(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         s = Studio()
         r = PipelineResultado(
@@ -481,6 +642,7 @@ class TestGuardarPipeline:
         assert data["semana_numero"] == 1
         # cleanup
         import shutil
+
         shutil.rmtree(ruta.parent, ignore_errors=True)
 
     @patch("studio.RealestateStudio")
@@ -495,8 +657,18 @@ class TestGuardarPipeline:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_guardar_auto_nombre(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         s = Studio()
         r = PipelineResultado(
@@ -509,6 +681,7 @@ class TestGuardarPipeline:
         assert ruta.exists()
         assert "pipeline_semana_03" in ruta.name
         import shutil
+
         shutil.rmtree(ruta.parent, ignore_errors=True)
 
 
@@ -528,10 +701,21 @@ class TestPublicarCarruselExistente:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_no_existe(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         r = s.publicar_carrusel_existente("/nonexistent/carrusel.json")
         assert r.exito is False
@@ -549,10 +733,22 @@ class TestPublicarCarruselExistente:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_json_invalido(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         bad = tmp_path / "bad.json"
         bad.write_text("not json{{{")
@@ -572,10 +768,22 @@ class TestPublicarCarruselExistente:
     @patch("studio.HistorialPublicaciones")
     @patch("studio.RotadorProyectos")
     def test_pocas_imagenes(
-        self, mock_rot, mock_hist, mock_gen, mock_prev, mock_pub, mock_auth,
-        mock_mejora, mock_ad, mock_cal, mock_car, mock_rs, tmp_path
+        self,
+        mock_rot,
+        mock_hist,
+        mock_gen,
+        mock_prev,
+        mock_pub,
+        mock_auth,
+        mock_mejora,
+        mock_ad,
+        mock_cal,
+        mock_car,
+        mock_rs,
+        tmp_path,
     ):
         from instagram_publisher import ModoPublicacion
+
         s = Studio()
         data = {
             "caption_narrativo": "test caption",
@@ -598,9 +806,7 @@ class TestPublicarCarruselExistente:
 
 class TestGenerarCarruselCompleto:
     def test_no_existe(self):
-        resultado = _generar_carrusel_completo(
-            MagicMock(), "/nonexistent/carrusel.json"
-        )
+        resultado = _generar_carrusel_completo(MagicMock(), "/nonexistent/carrusel.json")
         assert resultado["success"] is False
         assert "No existe" in resultado["error"]
 
@@ -615,15 +821,19 @@ class TestGenerarCarruselCompleto:
     def test_cancelado_por_usuario(self, tmp_path):
         data = {
             "slides": [
-                {"numero": 1, "tipo": "foto", "prompt": "un lote", "aspect_ratio": "896*1152", "styles": []},
+                {
+                    "numero": 1,
+                    "tipo": "foto",
+                    "prompt": "un lote",
+                    "aspect_ratio": "896*1152",
+                    "styles": [],
+                },
             ]
         }
         carrusel = tmp_path / "carrusel.json"
         carrusel.write_text(json.dumps(data))
         with patch("builtins.input", return_value="n"):
-            resultado = _generar_carrusel_completo(
-                MagicMock(), str(carrusel), skip_confirm=False
-            )
+            resultado = _generar_carrusel_completo(MagicMock(), str(carrusel), skip_confirm=False)
         assert resultado["success"] is False
         assert "cancelado" in resultado["error"]
 
@@ -634,12 +844,14 @@ class TestGenerarCarruselCompleto:
 class TestEncolarCarrusel:
     def test_no_existe(self):
         from studio import _encolar_carrusel
+
         resultado = _encolar_carrusel(MagicMock(), "/nonexistent/carrusel.json")
         assert resultado["encolados"] == 0
         assert "No existe" in resultado["error"]
 
     def test_sin_items(self, tmp_path):
         from studio import _encolar_carrusel
+
         data = {"slides": []}
         carrusel = tmp_path / "carrusel.json"
         carrusel.write_text(json.dumps(data))
@@ -653,6 +865,7 @@ class TestEncolarCarrusel:
 class TestProcesarCola:
     def test_cola_vacia(self):
         from studio import _procesar_cola
+
         with patch("generation_pipeline.GenerationQueue") as mock_queue:
             mock_queue.return_value.list_pending.return_value = []
             resultado = _procesar_cola(MagicMock())
@@ -666,6 +879,7 @@ class TestProcesarCola:
 class TestCLIBuildArgParser:
     def test_demo(self):
         import sys
+
         with patch.object(sys, "argv", ["studio.py", "demo"]):
             parser = argparse.ArgumentParser()
             sub = parser.add_subparsers(dest="comando")
@@ -681,23 +895,30 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_demo(self, mock_studio_cls):
         import sys
+
         with patch.object(sys, "argv", ["studio.py", "demo"]):
             with patch("studio.demo") as mock_demo:
-                r = cli()
+                cli()
                 mock_demo.assert_called_once()
 
     @patch("studio.Studio")
     def test_semana_dry_run(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         resultado = PipelineResultado(
-            semana_numero=1, fecha_inicio="2026-07-07",
-            fecha_fin="2026-07-13", n_slots=5, resumen="test",
+            semana_numero=1,
+            fecha_inicio="2026-07-07",
+            fecha_fin="2026-07-13",
+            n_slots=5,
+            resumen="test",
         )
         mock_studio.pipeline_semana.return_value = resultado
         mock_studio.guardar_pipeline.return_value = Path("/tmp/test.json")
-        with patch.object(sys, "argv", ["studio.py", "semana", "--n", "1", "--publicar", "dry-run"]):
+        with patch.object(
+            sys, "argv", ["studio.py", "semana", "--n", "1", "--publicar", "dry-run"]
+        ):
             with patch("studio.Path.relative_to", return_value=Path("test.json")):
                 r = cli()
         assert r == 0
@@ -705,10 +926,13 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_duplicar(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         mock_studio.duplicar_proyecto.return_value = Path("/tmp/proj")
-        with patch.object(sys, "argv", ["studio.py", "duplicar", "--origen", "a", "--destino", "b"]):
+        with patch.object(
+            sys, "argv", ["studio.py", "duplicar", "--origen", "a", "--destino", "b"]
+        ):
             with patch("studio.Path.relative_to", return_value=Path("proj")):
                 r = cli()
         assert r == 0
@@ -716,12 +940,17 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_publicar_dry_run(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         from instagram_publisher import PublicacionResultado
+
         mock_studio.publicar_carrusel_existente.return_value = PublicacionResultado(
-            modo="dry-run", exito=True, tipo="carrusel",
-            caption_length=100, n_imagenes=6,
+            modo="dry-run",
+            exito=True,
+            tipo="carrusel",
+            caption_length=100,
+            n_imagenes=6,
         )
         with patch.object(sys, "argv", ["studio.py", "publicar", "--carrusel", "/tmp/c.json"]):
             r = cli()
@@ -730,6 +959,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_preview(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         mock_studio.preview_carrusel.return_value = Path("/tmp/preview.html")
@@ -741,6 +971,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_cache_stats(self, mock_studio_cls):
         import sys
+
         with patch.object(sys, "argv", ["studio.py", "cache-stats"]):
             with patch("studio.ImageCache") as mock_cache:
                 mock_cache.return_value.stats.return_value = {
@@ -754,6 +985,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_generar_cola(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "generar-cola", "--carrusel", "/tmp/c.json"]):
@@ -764,6 +996,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_procesar_cola(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "procesar-cola"]):
@@ -774,6 +1007,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_listar(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         mock_studio.listar_carruseles.return_value = [
@@ -786,6 +1020,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_listar_vacio(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         mock_studio.listar_carruseles.return_value = []
@@ -796,6 +1031,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_reporte_semanal(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "reporte-semanal"]):
@@ -808,13 +1044,14 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_responder_dm(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
-        with patch.object(sys, "argv", [
-            "studio.py", "responder-dm",
-            "--cliente", "Juan",
-            "--mensaje", "Hola, precio?"
-        ]):
+        with patch.object(
+            sys,
+            "argv",
+            ["studio.py", "responder-dm", "--cliente", "Juan", "--mensaje", "Hola, precio?"],
+        ):
             with patch("studio.DMTemplates") as mock_dm:
                 mock_dm.return_value.responder.return_value = {
                     "template_id": "precio",
@@ -826,14 +1063,23 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_programar(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
-        with patch.object(sys, "argv", [
-            "studio.py", "programar",
-            "--id", "test-id",
-            "--carrusel", "/tmp/c.json",
-            "--scheduled-at", "2026-07-20T19:00:00",
-        ]):
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "studio.py",
+                "programar",
+                "--id",
+                "test-id",
+                "--carrusel",
+                "/tmp/c.json",
+                "--scheduled-at",
+                "2026-07-20T19:00:00",
+            ],
+        ):
             with patch("studio.Scheduler") as mock_sched:
                 mock_sched.return_value.stats.return_value = {"pending": 1}
                 r = cli()
@@ -842,6 +1088,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_procesar_programadas(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "procesar-programadas"]):
@@ -853,6 +1100,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_publicaciones_listar(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "publicaciones"]):
@@ -864,6 +1112,7 @@ class TestCLISubcommands:
     @patch("studio.Studio")
     def test_publicaciones_cancel(self, mock_studio_cls):
         import sys
+
         mock_studio = MagicMock()
         mock_studio_cls.return_value = mock_studio
         with patch.object(sys, "argv", ["studio.py", "publicaciones", "--cancel", "test-id"]):

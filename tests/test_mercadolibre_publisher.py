@@ -11,20 +11,19 @@ Cubre:
 from __future__ import annotations
 
 import json
+import urllib.error
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-import urllib.error
 
 import pytest
 
 from mercadolibre_publisher import (
     CATEGORIAS,
+    MercadoLibrePublisher,
     ModoPublicacion,
     PublicacionML,
-    MercadoLibrePublisher,
     ResultadoPublicacionML,
 )
-
 
 # ===== PublicacionML =====
 
@@ -92,9 +91,7 @@ class TestPublicacionML:
 
 class TestResultadoPublicacionML:
     def test_resumen_dry_run(self):
-        r = ResultadoPublicacionML(
-            ok=True, mode="dry-run", dry_run_data={"title": "Chacra 5ha"}
-        )
+        r = ResultadoPublicacionML(ok=True, mode="dry-run", dry_run_data={"title": "Chacra 5ha"})
         assert "[DRY-RUN]" in r.resumen()
         assert "Chacra 5ha" in r.resumen()
 
@@ -117,14 +114,18 @@ class TestResultadoPublicacionML:
 class TestCargarConfig:
     def test_config_ok(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "tok123",
-                "refresh_token": "ref123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "tok123",
+                        "refresh_token": "ref123",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub.configurado() is True
 
@@ -147,12 +148,16 @@ class TestCargarConfig:
 
     def test_config_no_access_token(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub.configurado() is False
 
@@ -188,14 +193,18 @@ class TestBuildMultipart:
 class TestRequest:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "tok123",
-                "refresh_token": "ref123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "tok123",
+                        "refresh_token": "ref123",
+                    }
+                }
+            )
+        )
         return MercadoLibrePublisher(auth_path=auth)
 
     @patch("mercadolibre_publisher.urllib.request.urlopen")
@@ -264,24 +273,30 @@ class TestRequest:
 class TestRefreshToken:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "old_token",
-                "refresh_token": "ref123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "old_token",
+                        "refresh_token": "ref123",
+                    }
+                }
+            )
+        )
         return MercadoLibrePublisher(auth_path=auth)
 
     @patch("mercadolibre_publisher.urllib.request.urlopen")
     def test_refresh_ok(self, mock_urlopen, tmp_path):
         pub = self._make_publisher(tmp_path)
         mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps({
-            "access_token": "new_token",
-            "refresh_token": "new_refresh",
-        }).encode()
+        mock_resp.read.return_value = json.dumps(
+            {
+                "access_token": "new_token",
+                "refresh_token": "new_refresh",
+            }
+        ).encode()
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_resp
@@ -293,9 +308,11 @@ class TestRefreshToken:
     def test_refresh_ok_sin_nuevo_refresh(self, mock_urlopen, tmp_path):
         pub = self._make_publisher(tmp_path)
         mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps({
-            "access_token": "new_token",
-        }).encode()
+        mock_resp.read.return_value = json.dumps(
+            {
+                "access_token": "new_token",
+            }
+        ).encode()
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_resp
@@ -303,16 +320,16 @@ class TestRefreshToken:
         assert pub._config["access_token"] == "new_token"
         assert pub._config["refresh_token"] == "ref123"  # unchanged
 
-    @patch("mercadolibre_publisher.urllib.request.urlopen", side_effect=urllib.error.URLError("fail"))
+    @patch(
+        "mercadolibre_publisher.urllib.request.urlopen", side_effect=urllib.error.URLError("fail")
+    )
     def test_refresh_falla(self, mock_urlopen, tmp_path):
         pub = self._make_publisher(tmp_path)
         assert pub._refresh_token() is False
 
     def test_refresh_missing_fields(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"access_token": "tok"}
-        }))
+        auth.write_text(json.dumps({"mercadolibre": {"access_token": "tok"}}))
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub._refresh_token() is False
 
@@ -323,14 +340,18 @@ class TestRefreshToken:
 class TestCrearPublicacion:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "tok123",
-                "refresh_token": "ref123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "tok123",
+                        "refresh_token": "ref123",
+                    }
+                }
+            )
+        )
         return MercadoLibrePublisher(auth_path=auth)
 
     def test_dry_run(self, tmp_path):
@@ -360,10 +381,12 @@ class TestCrearPublicacion:
     def test_real_ok(self, mock_urlopen, tmp_path):
         pub = self._make_publisher(tmp_path)
         mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps({
-            "id": "MLA999",
-            "permalink": "https://articulo.mercadolibre.com.ar/MLA-999",
-        }).encode()
+        mock_resp.read.return_value = json.dumps(
+            {
+                "id": "MLA999",
+                "permalink": "https://articulo.mercadolibre.com.ar/MLA-999",
+            }
+        ).encode()
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_resp
@@ -382,10 +405,12 @@ class TestCrearPublicacion:
         img = tmp_path / "foto.jpg"
         img.write_bytes(b"\xff" * 10)
         mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps({
-            "id": "MLA888",
-            "permalink": "https://articulo.mercadolibre.com.ar/MLA-888",
-        }).encode()
+        mock_resp.read.return_value = json.dumps(
+            {
+                "id": "MLA888",
+                "permalink": "https://articulo.mercadolibre.com.ar/MLA-888",
+            }
+        ).encode()
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_resp
@@ -418,10 +443,12 @@ class TestCrearPublicacion:
     def test_interactivo_ok(self, mock_urlopen, tmp_path):
         pub = self._make_publisher(tmp_path)
         mock_resp = MagicMock()
-        mock_resp.read.return_value = json.dumps({
-            "id": "MLA777",
-            "permalink": "https://articulo.mercadolibre.com.ar/MLA-777",
-        }).encode()
+        mock_resp.read.return_value = json.dumps(
+            {
+                "id": "MLA777",
+                "permalink": "https://articulo.mercadolibre.com.ar/MLA-777",
+            }
+        ).encode()
         mock_resp.__enter__ = MagicMock(return_value=mock_resp)
         mock_resp.__exit__ = MagicMock(return_value=False)
         mock_urlopen.return_value = mock_resp
@@ -441,14 +468,18 @@ class TestCrearPublicacion:
 class TestUploadImage:
     def _make_publisher(self, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "tok123",
-                "refresh_token": "ref123",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "tok123",
+                        "refresh_token": "ref123",
+                    }
+                }
+            )
+        )
         return MercadoLibrePublisher(auth_path=auth)
 
     @patch("mercadolibre_publisher.urllib.request.urlopen")
@@ -478,14 +509,18 @@ class TestListarPublicaciones:
     @patch("mercadolibre_publisher.urllib.request.urlopen")
     def test_listar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {
-                "client_id": "123",
-                "client_secret": "sec",
-                "access_token": "tok",
-                "refresh_token": "ref",
-            }
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "123",
+                        "client_secret": "sec",
+                        "access_token": "tok",
+                        "refresh_token": "ref",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"results": [{"id": "MLA1"}]}).encode()
@@ -505,9 +540,18 @@ class TestListarPublicaciones:
     @patch("mercadolibre_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_listar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub.listar_publicaciones() == []
 
@@ -519,9 +563,18 @@ class TestEliminarPublicacion:
     @patch("mercadolibre_publisher.urllib.request.urlopen")
     def test_eliminar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"ok": True}).encode()
@@ -539,9 +592,18 @@ class TestEliminarPublicacion:
     @patch("mercadolibre_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_eliminar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub.eliminar_publicacion("MLA123") is False
 
@@ -553,9 +615,18 @@ class TestBuscarPublicaciones:
     @patch("mercadolibre_publisher.urllib.request.urlopen")
     def test_buscar_ok(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"results": [{"id": "MLA1"}]}).encode()
@@ -568,9 +639,18 @@ class TestBuscarPublicaciones:
     @patch("mercadolibre_publisher.urllib.request.urlopen")
     def test_buscar_con_filtros(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         mock_resp = MagicMock()
         mock_resp.read.return_value = json.dumps({"results": []}).encode()
@@ -585,9 +665,18 @@ class TestBuscarPublicaciones:
     @patch("mercadolibre_publisher.urllib.request.urlopen", side_effect=RuntimeError("fail"))
     def test_buscar_error(self, mock_urlopen, tmp_path):
         auth = tmp_path / "auth.json"
-        auth.write_text(json.dumps({
-            "mercadolibre": {"client_id": "1", "client_secret": "s", "access_token": "t", "refresh_token": "r"}
-        }))
+        auth.write_text(
+            json.dumps(
+                {
+                    "mercadolibre": {
+                        "client_id": "1",
+                        "client_secret": "s",
+                        "access_token": "t",
+                        "refresh_token": "r",
+                    }
+                }
+            )
+        )
         pub = MercadoLibrePublisher(auth_path=auth)
         assert pub.buscar_publicaciones("test") == []
 

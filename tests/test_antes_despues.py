@@ -20,7 +20,6 @@ import pytest
 
 from antes_despues import AntesDespues, AntesDespuesFactory
 
-
 # ===== AntesDespues dataclass =====
 
 
@@ -136,9 +135,14 @@ class TestAntesDespuesFactory:
 
     def test_overlay_portada(self):
         ad = AntesDespues(
-            nombre_obra="obra", municipio="C", proyecto=None,
-            modo="ia", estilo_casa="e", hectareas=1,
-            foto_antes_path="/a.jpg", cliente="Don Perez",
+            nombre_obra="obra",
+            municipio="C",
+            proyecto=None,
+            modo="ia",
+            estilo_casa="e",
+            hectareas=1,
+            foto_antes_path="/a.jpg",
+            cliente="Don Perez",
         )
         overlay = AntesDespuesFactory._overlay_portada(ad)
         assert "Don Perez" in overlay
@@ -146,8 +150,12 @@ class TestAntesDespuesFactory:
 
     def test_overlay_portada_sin_cliente(self):
         ad = AntesDespues(
-            nombre_obra="obra", municipio="C", proyecto=None,
-            modo="ia", estilo_casa="e", hectareas=1,
+            nombre_obra="obra",
+            municipio="C",
+            proyecto=None,
+            modo="ia",
+            estilo_casa="e",
+            hectareas=1,
             foto_antes_path="/a.jpg",
         )
         overlay = AntesDespuesFactory._overlay_portada(ad)
@@ -228,9 +236,7 @@ class TestCarruselAntesDespues:
 
     def test_carrusel_real(self):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real"
-        )
+        ad = factory.generar(foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real")
         slides = ad.carrusel.get("slides", [])
         assert len(slides) >= 3
         assert slides[2]["tipo"] == "placeholder_foto"
@@ -262,9 +268,7 @@ class TestCarruselAntesDespues:
 
     def test_carrusel_sin_tiempo(self):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real"
-        )
+        ad = factory.generar(foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real")
         slides = ad.carrusel.get("slides", [])
         tipos = [s["tipo"] for s in slides]
         assert "dato" not in tipos
@@ -277,9 +281,7 @@ class TestCarruselAntesDespues:
 
     def test_carrusel_tema(self):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/a.jpg", proyecto="mi-proyecto", modo="ia"
-        )
+        ad = factory.generar(foto_antes_path="/a.jpg", proyecto="mi-proyecto", modo="ia")
         assert ad.carrusel.get("tipo") == "antes_despues"
 
     def test_carrusel_metadata(self):
@@ -290,9 +292,7 @@ class TestCarruselAntesDespues:
 
     def test_carrusel_metadata_real(self):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real"
-        )
+        ad = factory.generar(foto_antes_path="/a.jpg", foto_despues_path="/d.jpg", modo="real")
         assert ad.metadata["tiene_foto_despues_real"] is True
         assert ad.metadata["requiere_generar_despues"] is False
 
@@ -306,9 +306,7 @@ class TestGuardarAntesDespues:
 
     def test_guardar_con_proyecto(self, tmp_path):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/fake/antes.jpg", proyecto="test-proj", modo="ia"
-        )
+        ad = factory.generar(foto_antes_path="/fake/antes.jpg", proyecto="test-proj", modo="ia")
 
         with patch("antes_despues.ROOT", tmp_path):
             carpeta = factory.guardar(ad)
@@ -331,9 +329,7 @@ class TestGuardarAntesDespues:
 
     def test_guardar_contenido_json(self, tmp_path):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia"
-        )
+        ad = factory.generar(foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia")
 
         with patch("antes_despues.ROOT", tmp_path):
             carpeta = factory.guardar(ad)
@@ -344,9 +340,7 @@ class TestGuardarAntesDespues:
 
     def test_guardar_contenido_md(self, tmp_path):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia"
-        )
+        ad = factory.generar(foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia")
 
         with patch("antes_despues.ROOT", tmp_path):
             carpeta = factory.guardar(ad)
@@ -357,9 +351,7 @@ class TestGuardarAntesDespues:
 
     def test_guardar_slides(self, tmp_path):
         factory = self._make_factory()
-        ad = factory.generar(
-            foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia"
-        )
+        ad = factory.generar(foto_antes_path="/fake/antes.jpg", proyecto="p", modo="ia")
 
         with patch("antes_despues.ROOT", tmp_path):
             carpeta = factory.guardar(ad)

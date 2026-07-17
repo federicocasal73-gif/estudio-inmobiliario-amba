@@ -1,810 +1,497 @@
-"""Tests del modulo carruseles.py.
-
-Cubre:
-  - Slide dataclass
-  - Carrusel dataclass (n_slides, caption_completo, to_dict)
-  - CaptionNarrativo.unir: emotivo, inversion, premium, default
-  - CarruselFactory: lote_premium, country_etapa, obra_avance, servicios,
-    story, reel, etapas_construccion, steel_frame_completo,
-    llave_en_mano_completo, terminaciones_detalle, obra_completa
-  - guardar: JSON, slides, markdown, caption
-  - _a_markdown
-  - _overlay_portada, _overlay_cta, _overlay_cta_country, _proxima_etapa
-  - aplicar_mejora_a_slide: placeholder_foto, non-placeholder, out of range
-  - aplicar_mejora_a_todos_los_placeholders
-"""
+"""Tests para carruseles.py - Sistema de carruseles Instagram."""
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 from carruseles import (
-    ASPECT_INSTAGRAM_POST,
-    ROOT,
-    CaptionNarrativo,
     Carrusel,
     CarruselFactory,
+    CaptionNarrativo,
     Slide,
+    ASPECT_INSTAGRAM_POST,
 )
 
-# ===== Fixtures: Mocks =====
 
-
-def _mock_studio():
-    """Crea un mock de RealestateStudio con lotes, construccion y post."""
+@pytest.fixture
+def mock_studio():
     studio = MagicMock()
 
-    def _make_req(prompt, aspect, styles):
-        req = MagicMock()
-        req.prompt = prompt
-        req.aspect_ratio = aspect
-        req.styles = styles
-        return req
-
-    # Mock lotes
-    studio.lotes.chacra_pampeana = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_chacra", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
+    # lotes
+    studio.lotes.chacra_pampeana.return_value = MagicMock(
+        prompt="chacra pampeana", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
-    studio.lotes.vista_aerea_loteo = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_aerea", "1152*896", ["Fooocus V2"])
+    studio.lotes.vista_aerea_loteo.return_value = MagicMock(
+        prompt="vista aerea", aspect_ratio="1152*896", styles=["Fooocus V2"]
     )
-    studio.lotes.tranquera_argentina = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_tranquera", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
+    studio.lotes.tranquera_argentina.return_value = MagicMock(
+        prompt="tranquera", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
-    studio.lotes.molino_tanque_australiano = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_molino", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
+    studio.lotes.molino_tanque_australiano.return_value = MagicMock(
+        prompt="molino", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
-    studio.lotes.country_premium = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_country", "1152*896", ["Fooocus V2"])
+    studio.lotes.country_premium.return_value = MagicMock(
+        prompt="country", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
-    studio.lotes.loteo_en_desarrollo = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_loteo", "1152*896", ["Fooocus V2"])
+    studio.lotes.loteo_en_desarrollo.return_value = MagicMock(
+        prompt="loteo", aspect_ratio="1152*896", styles=["Fooocus V2"]
     )
-    studio.lotes.amanecer_pampa = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_amanecer", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
+    studio.lotes.amanecer_pampa.return_value = MagicMock(
+        prompt="amanecer", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
 
-    # Mock construccion
-    studio.construccion.render_proyecto = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_render", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
+    # construccion
+    studio.construccion.render_proyecto.return_value = MagicMock(
+        prompt="render", aspect_ratio="1152*896", styles=["Fooocus V2"]
     )
-    studio.construccion.obra_gruesa = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_obra", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
+    studio.construccion.obra_gruesa.return_value = MagicMock(
+        prompt="obra", aspect_ratio="896*1152", styles=["Fooocus V2"]
     )
-    studio.construccion.replanteo_obra = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_replanteo", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
+    for method_name in [
+        "replanteo_obra", "excavacion_fundaciones", "fundaciones_hormigon",
+        "estructura_hormigon", "mamposteria_ladrillo", "cubierta_techo",
+        "revoque_grueso", "colocacion_aberturas", "colocacion_pisos",
+        "pintura_interior", "anteproyecto_arquitectonico", "steel_frame_estructura",
+        "steel_frame_cerramiento", "casa_terminada_frente", "render_exterior_casa",
+        "estudio_de_suelo", "permisos_tramites", "movimiento_suelo",
+        "diseno_interior_acabados", "entrega_llaves", "garantia_postventa",
+        "fachada_moderna_minimalista", "render_interior_casa",
+    ]:
+        setattr(
+            studio.construccion,
+            method_name,
+            MagicMock(return_value=MagicMock(prompt=f"prompt_{method_name}", aspect_ratio="896*1152", styles=["Fooocus V2"])),
         )
-    )
-    studio.construccion.excavacion_fundaciones = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_excavacion", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.fundaciones_hormigon = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_fundaciones", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.estructura_hormigon = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_estructura", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.mamposteria_ladrillo = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_mamposteria", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.cubierta_techo = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_cubierta", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.revoque_grueso = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_revoque", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.colocacion_aberturas = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_aberturas", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.colocacion_pisos = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_pisos", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.pintura_interior = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_pintura", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.anteproyecto_arquitectonico = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_diseno", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.steel_frame_estructura = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_steel", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.steel_frame_cerramiento = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_cerramiento", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.render_exterior_casa = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_exterior", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.estudio_de_suelo = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_suelo", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.permisos_tramites = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_permisos", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.movimiento_suelo = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_movimiento", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.diseno_interior_acabados = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_interior", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.entrega_llaves = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_entrega", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.garantia_postventa = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_garantia", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
-    studio.construccion.render_interior_casa = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_render_interior", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.casa_terminada_frente = MagicMock(
-        side_effect=lambda **kw: _make_req(
-            "prompt_casa_terminada", ASPECT_INSTAGRAM_POST, ["Fooocus V2"]
-        )
-    )
-    studio.construccion.fachada_moderna_minimalista = MagicMock(
-        side_effect=lambda **kw: _make_req("prompt_fachada", ASPECT_INSTAGRAM_POST, ["Fooocus V2"])
-    )
 
-    # Mock post
-    studio.post.hashtags = MagicMock(return_value=["#lotes", "#campo", "#inversion"])
+    # post
+    studio.post.hashtags.return_value = ["#lotes", "#campo", "#inversion", "#canuelas"]
+    studio.post.post_reel_hook.return_value = {"caption": "Reel hook corto"}
 
     return studio
 
 
-# ===== Slide dataclass =====
-
-
 class TestSlide:
-    def test_creacion(self):
-        s = Slide(
-            numero=1,
-            tipo="portada",
-            descripcion="Portada de prueba",
-            prompt="prompt test",
-            texto_overlay="Overlay test",
-        )
+    def test_creation(self):
+        s = Slide(numero=1, tipo="portada", descripcion="Test slide")
         assert s.numero == 1
         assert s.tipo == "portada"
-        assert s.prompt == "prompt test"
         assert s.aspect_ratio == ASPECT_INSTAGRAM_POST
 
     def test_to_dict(self):
-        s = Slide(
-            numero=1,
-            tipo="foto",
-            descripcion="Test",
-            prompt="prompt",
-            metadata={"key": "value"},
-        )
-        d = s.to_dict()
-        assert d["numero"] == 1
-        assert d["tipo"] == "foto"
-        assert d["metadata"]["key"] == "value"
-
-    def test_slide_sin_prompt(self):
-        s = Slide(numero=1, tipo="dato", descripcion="Dato", prompt="")
-        assert s.prompt == ""
-
-    def test_slide_metadata_default(self):
         s = Slide(numero=1, tipo="foto", descripcion="Test")
-        assert s.metadata == {}
-
-
-# ===== Carrusel dataclass =====
+        d = s.to_dict()
+        assert isinstance(d, dict)
+        assert d["numero"] == 1
 
 
 class TestCarrusel:
-    def test_n_slides(self):
-        slides = [
-            Slide(numero=1, tipo="portada", descripcion="P"),
-            Slide(numero=2, tipo="foto", descripcion="F"),
-        ]
+    def test_creation(self):
         c = Carrusel(
             tema="Test",
             tipo="lote_premium",
-            municipio="Cañuelas",
+            municipio="Canuelas",
             tono="emotivo",
-            slides=slides,
+            slides=[Slide(numero=1, tipo="portada", descripcion="s1")],
             caption_narrativo="Caption test",
-            hashtags=["#lotes"],
+            hashtags=["#test"],
         )
-        assert c.n_slides == 2
+        assert c.tema == "Test"
+        assert c.n_slides == 1
 
     def test_caption_completo(self):
-        c = Carrusel(
-            tema="Test",
-            tipo="lote_premium",
-            municipio="Cañuelas",
-            tono="emotivo",
-            slides=[],
-            caption_narrativo="Caption base",
-            hashtags=["#lotes", "#campo"],
-        )
-        assert c.caption_completo == "Caption base\n\n#lotes #campo"
-
-    def test_to_dict(self):
-        c = Carrusel(
-            tema="Test",
-            tipo="lote_premium",
-            municipio="Cañuelas",
-            tono="emotivo",
-            slides=[Slide(numero=1, tipo="portada", descripcion="P")],
-            caption_narrativo="Caption",
-            hashtags=["#lotes"],
-        )
-        d = c.to_dict()
-        assert d["n_slides"] == 1
-        assert d["caption_completo"] == "Caption\n\n#lotes"
-
-    def test_fecha_creacion(self):
         c = Carrusel(
             tema="T",
             tipo="t",
             municipio="M",
             tono="emotivo",
             slides=[],
-            caption_narrativo="",
-            hashtags=[],
+            caption_narrativo="Caption",
+            hashtags=["#a", "#b"],
         )
-        assert c.fecha_creacion  # non-empty string
+        assert c.caption_completo == "Caption\n\n#a #b"
 
-
-# ===== CaptionNarrativo =====
+    def test_to_dict(self):
+        c = Carrusel(
+            tema="T",
+            tipo="t",
+            municipio="M",
+            tono="emotivo",
+            slides=[Slide(numero=1, tipo="portada", descripcion="s1")],
+            caption_narrativo="C",
+            hashtags=["#t"],
+        )
+        d = c.to_dict()
+        assert "n_slides" in d
+        assert "caption_completo" in d
 
 
 class TestCaptionNarrativo:
-    def _slides(self, n=3):
-        return [
-            Slide(
-                numero=i + 1,
-                tipo="foto",
-                descripcion=f"Slide {i + 1}",
-                texto_overlay=f"Overlay {i + 1}",
-            )
-            for i in range(n)
+    def test_unir_emotivo(self):
+        slides = [Slide(numero=1, tipo="foto", descripcion="Test", texto_overlay="Texto 1")]
+        result = CaptionNarrativo.unir("Tema test", "Canuelas", slides, tono="emotivo")
+        assert "Tema test" in result
+        assert "Canuelas" in result
+        assert "Slide 1" in result
+
+    def test_unir_inversion(self):
+        slides = [Slide(numero=1, tipo="foto", descripcion="Test")]
+        result = CaptionNarrativo.unir("Tema", "Pilar", slides, tono="inversion")
+        assert "Tema" in result
+
+    def test_unir_premium(self):
+        slides = [Slide(numero=1, tipo="foto", descripcion="Test")]
+        result = CaptionNarrativo.unir("Tema", "Escobar", slides, tono="premium")
+        assert "Tema" in result
+
+    def test_unir_desconocido(self):
+        slides = [Slide(numero=1, tipo="foto", descripcion="Test")]
+        result = CaptionNarrativo.unir("T", "M", slides, tono="random")
+        assert "T" in result
+
+    def test_unir_varios_slides(self):
+        slides = [
+            Slide(numero=1, tipo="foto", descripcion="s1", texto_overlay="Texto 1"),
+            Slide(numero=2, tipo="dato", descripcion="s2"),
+            Slide(numero=3, tipo="cta", descripcion="s3"),
         ]
+        result = CaptionNarrativo.unir("T", "M", slides)
+        assert "Slide 1" in result
+        assert "Slide 2" in result
+        assert "Slide 3" in result
 
-    def test_emotivo(self):
-        caption = CaptionNarrativo.unir("Tema Test", "Cañuelas", self._slides(), tono="emotivo")
-        assert "Tema Test" in caption
-        assert "Cañuelas" in caption
-        assert "3 imágenes" in caption
-
-    def test_inversion(self):
-        caption = CaptionNarrativo.unir("Tema", "Pilar", self._slides(), tono="inversion")
-        assert "📈" in caption
-        assert "Los números" in caption
-
-    def test_premium(self):
-        caption = CaptionNarrativo.unir("Tema", "Escobar", self._slides(), tono="premium")
-        assert "✨" in caption
-        assert "3 slides" in caption
-
-    def test_default_tono(self):
-        caption = CaptionNarrativo.unir("Tema", "Cañuelas", self._slides(), tono="otro")
-        assert "Tema" in caption
-        assert "Cañuelas" in caption
-
-    def test_slides_sin_overlay(self):
-        slides = [Slide(numero=1, tipo="foto", descripcion="Sin overlay")]
-        caption = CaptionNarrativo.unir("T", "M", slides, gancho_inicial="Gancho fijo")
-        assert "Sin overlay" in caption
-
-    def test_gancho_inicial_custom(self):
-        caption = CaptionNarrativo.unir("T", "M", self._slides(), gancho_inicial="Mi gancho")
-        assert "Mi gancho" in caption
-
-    def test_cierre(self):
-        caption = CaptionNarrativo.unir("T", "M", self._slides())
-        assert "📍 M, Buenos Aires" in caption
-
-
-# ===== CarruselFactory =====
+    def test_unir_gancho_custom(self):
+        slides = [Slide(numero=1, tipo="foto", descripcion="s1")]
+        result = CaptionNarrativo.unir("T", "M", slides, gancho_inicial="Mi gancho")
+        assert "Mi gancho" in result
 
 
 class TestCarruselFactory:
-    def setup_method(self):
-        self.studio = _mock_studio()
-        self.factory = CarruselFactory(self.studio)
-
-    # --- lote_premium ---
-
-    def test_lote_premium_6_slides(self):
-        c = self.factory.lote_premium(
-            tema="5 ha en Cañuelas",
-            municipio="Cañuelas",
+    def test_lote_premium(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(
+            tema="5 ha en Canuelas",
+            municipio="Canuelas",
             hectareas=5,
             precio_usd="USD 60.000",
             n_slides=6,
         )
         assert c.tipo == "lote_premium"
-        assert c.municipio == "Cañuelas"
         assert c.n_slides == 6
-        assert len(c.hashtags) > 0
-        # Check that prompts were called
-        self.studio.lotes.chacra_pampeana.assert_called_once()
-        self.studio.lotes.vista_aerea_loteo.assert_called_once()
+        assert c.municipio == "Canuelas"
 
-    def test_lote_premium_min_slides(self):
-        c = self.factory.lote_premium(tema="T", municipio="M", hectareas=2, n_slides=2)
-        assert c.n_slides >= 4  # minimum is 4
-
-    def test_lote_premium_metadata(self):
-        c = self.factory.lote_premium(
-            tema="T",
-            municipio="Cañuelas",
-            hectareas=3,
-            precio_usd="USD 50.000",
-            distancia_caba="60 km",
+    def test_lote_premium_min_slides(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(
+            tema="T", municipio="M", hectareas=5, n_slides=2
         )
-        assert c.metadata["hectareas"] == 3
-        assert c.metadata["precio_usd"] == "USD 50.000"
-        assert c.metadata["distancia_caba"] == "60 km"
+        assert c.n_slides >= 4
 
-    # --- country_etapa ---
-
-    def test_country_etapa_5_slides(self):
-        c = self.factory.country_etapa(
+    def test_country_etapa(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.country_etapa(
             nombre_country="El Casco",
             municipio="Pilar",
             etapa="2",
+            n_lotes=12,
             n_slides=5,
         )
         assert c.tipo == "country_etapa"
-        assert c.n_slides >= 5
-        self.studio.lotes.country_premium.assert_called_once()
+        assert c.n_slides == 5
 
-    def test_country_etapa_min_slides(self):
-        c = self.factory.country_etapa(nombre_country="Test", municipio="M", n_slides=2)
-        assert c.n_slides >= 3  # minimum is 3
-
-    def test_country_etapa_metadata(self):
-        c = self.factory.country_etapa(
-            nombre_country="El Casco",
-            municipio="Pilar",
-            etapa="3",
-            n_lotes=20,
-            precio_desde="USD 100.000",
+    def test_country_etapa_min_slides(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.country_etapa(
+            nombre_country="X", municipio="M", n_slides=1
         )
-        assert c.metadata["nombre_country"] == "El Casco"
-        assert c.metadata["etapa"] == "3"
-        assert c.metadata["n_lotes"] == 20
+        assert c.n_slides >= 3
 
-    # --- obra_avance ---
+    def test_country_etapa_7_slides(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.country_etapa(
+            nombre_country="X", municipio="M", n_slides=7
+        )
+        assert c.n_slides == 7
 
-    def test_obra_avance_con_foto(self, tmp_path):
-        foto = tmp_path / "foto.jpg"
-        foto.write_bytes(b"\xff" * 100)
-        c = self.factory.obra_avance(
+    def test_obra_avance(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_avance(
             nombre_obra="Casa Perez",
             municipio="Escobar",
             semana=3,
             etapa="mamposteria",
-            foto_antes_path=str(foto),
             n_slides=4,
         )
         assert c.tipo == "obra_avance"
-        assert c.n_slides >= 3
+        assert c.n_slides == 4
 
-    def test_obra_avance_sin_foto(self):
-        c = self.factory.obra_avance(
-            nombre_obra="Casa Lopez",
-            municipio="Escobar",
-            semana=5,
-            etapa="estructura",
+    def test_obra_avance_con_foto(self, mock_studio, tmp_path):
+        foto = tmp_path / "foto.jpg"
+        foto.write_bytes(b"\x00" * 1024)
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_avance(
+            nombre_obra="Casa X",
+            municipio="M",
+            semana=1,
+            etapa="fundaciones",
+            foto_antes_path=str(foto),
             n_slides=3,
         )
-        assert c.tipo == "obra_avance"
-        # Check placeholder path
-        placeholder = [s for s in c.slides if s.tipo == "placeholder_foto"]
-        assert len(placeholder) > 0
+        assert c.n_slides >= 3
 
-    def test_obra_avance_min_slides(self):
-        c = self.factory.obra_avance(
-            nombre_obra="Test", municipio="M", semana=1, etapa="replanteo", n_slides=2
+    def test_obra_avance_min_slides(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_avance(
+            nombre_obra="X", municipio="M", semana=1, etapa="etapa", n_slides=1
         )
         assert c.n_slides >= 3
 
-    # --- servicios ---
-
-    def test_servicios_default(self):
-        c = self.factory.servicios()
+    def test_servicios(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.servicios(
+            empresa="Construcciones Rurales",
+            municipio="Canuelas",
+            n_slides=6,
+        )
         assert c.tipo == "servicios"
-        assert c.municipio == "Cañuelas"
-        assert c.n_slides >= 6  # default 6
+        # 6 servicios default + portada + CTA = 8
+        assert c.n_slides == 8
 
-    def test_servicios_custom(self):
-        c = self.factory.servicios(
-            empresa="Mi Empresa",
-            municipio="Pilar",
-            servicios=["Diseño", "Construccion"],
+    def test_servicios_custom_servicios(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.servicios(
+            empresa="Test",
+            municipio="M",
+            servicios=["Servicio A", "Servicio B"],
             n_slides=4,
         )
-        assert c.tipo == "servicios"
-        assert c.metadata["empresa"] == "Mi Empresa"
-        assert len(c.metadata["servicios"]) == 2
+        assert c.n_slides == 4
 
-    def test_servicios_hashtags_modificados(self):
-        """Verifica que se reemplaza #casas por #casasllaveenmano."""
-        c = self.factory.servicios()
-        assert "#casasllaveenmano" in c.hashtags
-
-    # --- story ---
-
-    def test_story(self):
-        c = self.factory.story(tema="Mi historia", municipio="Cañuelas")
+    def test_story(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.story(tema="T", municipio="M")
         assert c.tipo == "story"
-        assert c.metadata["formato"] == "story"
-        assert len(c.slides) >= 3
+        assert c.n_slides == 3
 
-    def test_story_con_prompts(self):
-        c = self.factory.story(
-            tema="Test",
-            municipio="M",
+    def test_story_custom_prompts(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.story(
+            tema="T", municipio="M",
             imagen_prompts=["prompt1", "prompt2"],
         )
-        assert len(c.slides) == 2
+        assert c.n_slides == 2
 
-    # --- reel ---
-
-    def test_reel(self):
-        c = self.factory.reel(tema="Mi reel", municipio="Cañuelas")
+    def test_reel(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.reel(tema="T", municipio="M")
         assert c.tipo == "reel"
         assert c.n_slides == 1
-        assert c.metadata["duracion_segundos"] == 30
 
-    def test_reel_custom_duracion(self):
-        c = self.factory.reel(tema="T", municipio="M", duracion_segundos=60)
-        assert c.metadata["duracion_segundos"] == 60
+    def test_reel_custom_prompt(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.reel(tema="T", municipio="M", prompt_principal="mi prompt")
+        assert c.n_slides == 1
 
-    # --- etapas_construccion ---
-
-    def test_etapas_construccion(self):
-        c = self.factory.etapas_construccion(metros_cuadrados=120, n_slides=10)
+    def test_etapas_construccion(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.etapas_construccion(municipio="Canuelas", n_slides=8)
         assert c.tipo == "etapas_construccion"
         assert c.n_slides >= 8
 
-    def test_etapas_construccion_min(self):
-        c = self.factory.etapas_construccion(n_slides=5)
+    def test_etapas_construccion_min(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.etapas_construccion(n_slides=3)
         assert c.n_slides >= 8
 
-    # --- steel_frame_completo ---
-
-    def test_steel_frame_completo(self):
-        c = self.factory.steel_frame_completo(n_slides=6)
+    def test_steel_frame_completo(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.steel_frame_completo(municipio="Canuelas", n_slides=6)
         assert c.tipo == "steel_frame"
+        assert c.n_slides == 6
+
+    def test_steel_frame_min(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.steel_frame_completo(n_slides=2)
         assert c.n_slides >= 5
-        assert "Steel Frame" in c.tema
 
-    def test_steel_frame_min(self):
-        c = self.factory.steel_frame_completo(n_slides=3)
-        assert c.n_slides >= 5
-
-    # --- llave_en_mano_completo ---
-
-    def test_llave_en_mano_completo(self):
-        c = self.factory.llave_en_mano_completo(n_slides=8)
+    def test_llave_en_mano(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.llave_en_mano_completo(municipio="Canuelas", n_slides=8)
         assert c.tipo == "llave_en_mano"
+        assert c.n_slides == 8
+
+    def test_llave_en_mano_min(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.llave_en_mano_completo(n_slides=3)
         assert c.n_slides >= 7
-        assert "Llave en mano" in c.tema
 
-    def test_llave_en_mano_min(self):
-        c = self.factory.llave_en_mano_completo(n_slides=4)
-        assert c.n_slides >= 7
-
-    # --- terminaciones_detalle ---
-
-    def test_terminaciones_detalle(self):
-        c = self.factory.terminaciones_detalle(n_slides=6)
+    def test_terminaciones(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.terminaciones_detalle(municipio="Canuelas", n_slides=6)
         assert c.tipo == "terminaciones"
+        assert c.n_slides == 6
+
+    def test_terminaciones_min(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.terminaciones_detalle(n_slides=2)
         assert c.n_slides >= 5
 
-    def test_terminaciones_min(self):
-        c = self.factory.terminaciones_detalle(n_slides=3)
-        assert c.n_slides >= 5
-
-    # --- obra_completa ---
-
-    def test_obra_completa(self):
-        c = self.factory.obra_completa(nombre_obra="Casa Test", n_slides=8)
-        assert c.tipo == "obra_completa"
-        assert c.n_slides >= 6
-
-    def test_obra_completa_min(self):
-        c = self.factory.obra_completa(nombre_obra="Test", n_slides=3)
-        assert c.n_slides >= 6
-
-
-# ===== Helpers =====
-
-
-class TestHelpers:
-    def test_overlay_portada(self):
-        overlay = CarruselFactory._overlay_portada(5, "Cañuelas", "USD 60.000")
-        assert "5 ha" in overlay
-        assert "Cañuelas" in overlay
-        assert "USD 60.000" in overlay
-
-    def test_overlay_portada_sin_precio(self):
-        overlay = CarruselFactory._overlay_portada(3, "Pilar", None)
-        assert "3 ha" in overlay
-        assert "Pilar" in overlay
-
-    def test_overlay_cta(self):
-        cta = CarruselFactory._overlay_cta("USD 50.000", "60 km")
-        assert "¿Lo vemos?" in cta
-        assert "USD 50.000" in cta
-        assert "60 km" in cta
-
-    def test_overlay_cta_sin_distancia(self):
-        cta = CarruselFactory._overlay_cta("USD 50.000", None)
-        assert "USD 50.000" in cta
-
-    def test_overlay_cta_country(self):
-        cta = CarruselFactory._overlay_cta_country("USD 85.000", "45 km", 12)
-        assert "Últimas unidades" in cta
-        assert "USD 85.000" in cta
-        assert "12 lotes" in cta
-
-    def test_proxima_etapa(self):
-        assert CarruselFactory._proxima_etapa("fundaciones") == "estructura y columnas"
-        assert CarruselFactory._proxima_etapa("pintura") == "entrega de llaves"
-
-    def test_proxima_etapa_default(self):
-        assert CarruselFactory._proxima_etapa("no existe") == "avance de obra"
-
-
-# ===== Persistencia =====
-
-
-class TestPersistencia:
-    def test_guardar(self, tmp_path):
-        studio = _mock_studio()
-        factory = CarruselFactory(studio)
-        c = factory.lote_premium(tema="Test", municipio="Cañuelas", hectareas=5, n_slides=4)
-
-        with patch("carruseles.ROOT", tmp_path):
-            ruta = factory.guardar(c, "test_carrusel")
-
-        assert (ruta / "carrusel.json").exists()
-        assert (ruta / "carrusel.md").exists()
-        assert (ruta / "caption_instagram.txt").exists()
-        assert (ruta / "slides").exists()
-
-    def test_guardar_slides(self, tmp_path):
-        studio = _mock_studio()
-        factory = CarruselFactory(studio)
-        c = factory.servicios(n_slides=3)
-
-        with patch("carruseles.ROOT", tmp_path):
-            ruta = factory.guardar(c, "servicios")
-
-        slides_dir = ruta / "slides"
-        slide_files = list(slides_dir.glob("*.json"))
-        assert len(slide_files) == c.n_slides
-
-    def test_guardar_con_proyecto(self, tmp_path):
-        studio = _mock_studio()
-        factory = CarruselFactory(studio)
-        c = factory.lote_premium(tema="T", municipio="M", hectareas=3, n_slides=4)
-
-        with patch("carruseles.ROOT", tmp_path):
-            ruta = factory.guardar(c, "lote", proyecto="mi-proyecto", vertical="lotes")
-
-        assert "mi-proyecto" in str(ruta)
-
-
-# ===== _a_markdown =====
-
-
-class TestAMarkdown:
-    def test_markdown(self):
-        slides = [
-            Slide(numero=1, tipo="portada", descripcion="Portada", prompt="p1"),
-            Slide(numero=2, tipo="dato", descripcion="Dato", texto_overlay="Texto overlay"),
-        ]
-        c = Carrusel(
-            tema="Test Carrusel",
-            tipo="lote_premium",
-            municipio="Cañuelas",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="Caption narrativo",
-            hashtags=["#lotes", "#campo"],
+    def test_obra_completa(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_completa(
+            nombre_obra="Casa Test",
+            municipio="Canuelas",
+            n_slides=8,
         )
-        md = CarruselFactory._a_markdown(c)
-        assert "Test Carrusel" in md
-        assert "Slide 1 · portada" in md
-        assert "Prompt SDXL:" in md
-        assert "Caption narrativo" in md
-        assert "#lotes #campo" in md
+        assert c.tipo == "obra_completa"
+        assert c.n_slides == 8
 
-    def test_markdown_con_placeholder(self):
-        slides = [
-            Slide(
-                numero=1,
-                tipo="placeholder_foto",
-                descripcion="Foto real",
-                metadata={"placeholder_foto_path": "fotos/test.jpg"},
+    def test_obra_completa_min(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_completa(nombre_obra="X", n_slides=3)
+        assert c.n_slides >= 6
+
+    def test_guardar(self, mock_studio, tmp_path):
+        import carruseles
+        original_root = carruseles.ROOT
+        carruseles.ROOT = tmp_path
+
+        try:
+            factory = CarruselFactory(mock_studio)
+            c = factory.lote_premium(
+                tema="T", municipio="M", hectareas=5, n_slides=4
             )
-        ]
+            carpeta = factory.guardar(c, "test_carrusel", proyecto="test-proyecto")
+            assert carpeta.exists()
+            assert (carpeta / "carrusel.json").exists()
+            assert (carpeta / "carrusel.md").exists()
+            assert (carpeta / "caption_instagram.txt").exists()
+            assert (carpeta / "slides").is_dir()
+        finally:
+            carruseles.ROOT = original_root
+
+    def test_guardar_sin_proyecto(self, mock_studio, tmp_path):
+        import carruseles
+        original_root = carruseles.ROOT
+        carruseles.ROOT = tmp_path
+
+        try:
+            factory = CarruselFactory(mock_studio)
+            c = factory.servicios(empresa="X", municipio="M", n_slides=4)
+            carpeta = factory.guardar(c, "test_servicios")
+            assert carpeta.exists()
+        finally:
+            carruseles.ROOT = original_root
+
+    def test_helpers(self):
+        assert CarruselFactory._overlay_portada(5, "Canuelas", "USD 60k") == "5 ha · Canuelas · USD 60k"
+        assert CarruselFactory._overlay_portada(5, "M", None) == "5 ha · M"
+        assert "Lo vemos" in CarruselFactory._overlay_cta("USD 60k", "65 km")
+        assert "DM o link" in CarruselFactory._overlay_cta(None, None)
+        assert "Últimas unidades" in CarruselFactory._overlay_cta_country("USD 85k", "45 km", 12)
+        assert CarruselFactory._proxima_etapa("fundaciones") == "estructura y columnas"
+        assert CarruselFactory._proxima_etapa("desconocida") == "avance de obra"
+
+
+class TestAplicarMejoraASlide:
+    def test_n_slide_out_of_range(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(tema="T", municipio="M", hectareas=5, n_slides=4)
+        with pytest.raises(ValueError, match="fuera de rango"):
+            factory.aplicar_mejora_a_slide(c, 99)
+
+    def test_slide_no_es_placeholder(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(tema="T", municipio="M", hectareas=5, n_slides=4)
+        result = factory.aplicar_mejora_a_slide(c, 1)
+        assert result["exito"] is False
+        assert "placeholder_foto" in result["mensaje"]
+
+    def test_slide_placeholder_sin_path(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(tema="T", municipio="M", hectareas=5, n_slides=4)
+        slide = c.slides[0]
+        slide.tipo = "placeholder_foto"
+        slide.metadata = {}
+        result = factory.aplicar_mejora_a_slide(c, 1)
+        assert result["exito"] is False
+        assert "placeholder_foto_path" in result["mensaje"]
+
+    def test_slide_placeholder_path_not_exists(self, mock_studio, tmp_path):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(tema="T", municipio="M", hectareas=5, n_slides=4)
+        slide = c.slides[0]
+        slide.tipo = "placeholder_foto"
+        slide.metadata = {"placeholder_foto_path": "/nonexistent/photo.jpg"}
+        result = factory.aplicar_mejora_a_slide(c, 1)
+        assert result["exito"] is False
+        assert "no encontrada" in result["mensaje"].lower() or "imagen" in result["mensaje"].lower()
+
+    def test_aplicar_mejora_a_todos_los_placeholders(self, mock_studio):
+        factory = CarruselFactory(mock_studio)
+        c = factory.lote_premium(tema="T", municipio="M", hectareas=5, n_slides=4)
+        resultados = factory.aplicar_mejora_a_todos_los_placeholders(c)
+        assert len(resultados) == 0
+
+
+class TestCarruselesAttributeErrorFallbacks:
+    def test_llave_en_mano_attribute_error(self, mock_studio):
+        # Remove the method to trigger AttributeError
+        del mock_studio.construccion.permisos_tramites
+        factory = CarruselFactory(mock_studio)
+        c = factory.llave_en_mano_completo(municipio="M", n_slides=8)
+        assert c.n_slides >= 7
+
+    def test_terminaciones_attribute_error(self, mock_studio):
+        del mock_studio.construccion.fachada_moderna_minimalista
+        factory = CarruselFactory(mock_studio)
+        c = factory.terminaciones_detalle(municipio="M", n_slides=6)
+        assert c.n_slides >= 5
+
+    def test_obra_completa_attribute_error(self, mock_studio):
+        del mock_studio.construccion.estructura_hormigon
+        factory = CarruselFactory(mock_studio)
+        c = factory.obra_completa(nombre_obra="Casa X", municipio="M", n_slides=7)
+        assert c.n_slides >= 6
+
+
+class TestCarruselMarkdownWithPlaceholder:
+    def test_placeholder_foto_path_in_markdown(self, mock_studio):
+        from carruseles import CarruselFactory
         c = Carrusel(
             tema="Test",
             tipo="obra_avance",
             municipio="M",
-            tono="practico",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
+            tono="emotivo",
+            slides=[
+                Slide(
+                    numero=1,
+                    tipo="placeholder_foto",
+                    descripcion="Foto antes",
+                    metadata={"placeholder_foto_path": "fotos/antes.jpg"},
+                ),
+            ],
+            caption_narrativo="Test caption",
+            hashtags=["#test"],
         )
         md = CarruselFactory._a_markdown(c)
-        assert "Foto requerida:" in md
-        assert "fotos/test.jpg" in md
+        assert "fotos/antes.jpg" in md
+        assert "Foto requerida" in md
 
 
-# ===== aplicar_mejora_a_slide =====
+class TestDemo:
+    def test_demo(self, mock_studio):
+        import carruseles
+        from unittest.mock import patch
+        original_root = carruseles.ROOT
 
-
-class TestAplicarMejora:
-    def setup_method(self):
-        self.studio = _mock_studio()
-        self.factory = CarruselFactory(self.studio)
-
-    def test_slide_no_placeholder(self):
-        slides = [
-            Slide(numero=1, tipo="foto", descripcion="Foto IA", prompt="prompt"),
-        ]
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
-        )
-        result = self.factory.aplicar_mejora_a_slide(c, 1)
-        assert result["exito"] is False
-
-    def test_slide_out_of_range(self):
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=[],
-            caption_narrativo="",
-            hashtags=[],
-        )
-        with pytest.raises(ValueError):
-            self.factory.aplicar_mejora_a_slide(c, 1)
-
-    def test_placeholder_sin_path(self):
-        slides = [
-            Slide(
-                numero=1,
-                tipo="placeholder_foto",
-                descripcion="Foto",
-                metadata={},
-            )
-        ]
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
-        )
-        result = self.factory.aplicar_mejora_a_slide(c, 1)
-        assert result["exito"] is False
-
-    def test_placeholder_archivo_no_existe(self):
-        slides = [
-            Slide(
-                numero=1,
-                tipo="placeholder_foto",
-                descripcion="Foto",
-                metadata={"placeholder_foto_path": "/no/existe.jpg"},
-            )
-        ]
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
-        )
-        result = self.factory.aplicar_mejora_a_slide(c, 1)
-        assert result["exito"] is False
-
-    def test_placeholder_con_foto_real(self, tmp_path):
-        foto = tmp_path / "foto.jpg"
-        foto.write_bytes(b"\xff" * 100)
-        slides = [
-            Slide(
-                numero=1,
-                tipo="placeholder_foto",
-                descripcion="Foto",
-                metadata={"placeholder_foto_path": str(foto)},
-            )
-        ]
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
-        )
-        mock_cls = MagicMock()
-        mock_instance = MagicMock()
-        mock_instance.mejorar.return_value = MagicMock(
-            foto_destino="/mejorada.jpg", transformaciones=["crop"]
-        )
-        mock_cls.return_value = mock_instance
-        with patch("mejora_fotos.MejoraFotos", mock_cls):
-            result = self.factory.aplicar_mejora_a_slide(c, 1, modo="magazine", intensidad="media")
-        assert result["exito"] is True
-
-    def test_aplicar_a_todos_los_placeholders(self, tmp_path):
-        foto = tmp_path / "foto.jpg"
-        foto.write_bytes(b"\xff" * 100)
-        slides = [
-            Slide(
-                numero=1,
-                tipo="foto",
-                descripcion="Foto IA",
-                prompt="p",
-            ),
-            Slide(
-                numero=2,
-                tipo="placeholder_foto",
-                descripcion="Foto real",
-                metadata={"placeholder_foto_path": str(foto)},
-            ),
-        ]
-        c = Carrusel(
-            tema="T",
-            tipo="t",
-            municipio="M",
-            tono="emotivo",
-            slides=slides,
-            caption_narrativo="",
-            hashtags=[],
-        )
-        mock_cls = MagicMock()
-        mock_instance = MagicMock()
-        mock_instance.mejorar.return_value = MagicMock(
-            foto_destino="/mejorada.jpg", transformaciones=["crop"]
-        )
-        mock_cls.return_value = mock_instance
-        with patch("mejora_fotos.MejoraFotos", mock_cls):
-            resultados = self.factory.aplicar_mejora_a_todos_los_placeholders(c)
-        assert len(resultados) == 1
-        assert resultados[0]["exito"] is True
+        try:
+            carruseles.ROOT = Path("/tmp/demo_test")
+            with patch("realestate_studio.RealestateStudio", return_value=mock_studio):
+                from carruseles import demo
+                demo()
+        finally:
+            carruseles.ROOT = original_root

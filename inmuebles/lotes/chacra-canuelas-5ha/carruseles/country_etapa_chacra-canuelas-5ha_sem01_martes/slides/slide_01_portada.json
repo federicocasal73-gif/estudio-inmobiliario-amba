@@ -1,0 +1,17 @@
+{
+  "numero": 1,
+  "tipo": "portada",
+  "descripcion": "Portada: entrada de Country Premium",
+  "prompt": "Country Premium gated community entrance, Club house, pileta, canchas de tenis, golf, blue hour, luxury gated community entrance, paved roads, manicured common areas, modern security booth, country club amenities, golf course background, real estate photography, blue hour, Buenos Aires suburbs",
+  "texto_overlay": "Country Premium\nEtapa 2 disponible",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "photo-cinematic"
+  ],
+  "metadata": {
+    "nombre_country": "Country Premium",
+    "etapa": "2"
+  }
+}

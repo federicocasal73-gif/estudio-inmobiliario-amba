@@ -1,0 +1,16 @@
+{
+  "numero": 2,
+  "tipo": "foto",
+  "descripcion": "Masterplan del country con lotes marcados",
+  "prompt": "architectural masterplan visualization of Country Premium gated community in Cañuelas, Buenos Aires province, 12 marked lots, roads, green spaces, club house, professional architectural rendering",
+  "texto_overlay": "12 lotes · desde USD 85.000",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "misc-architectural"
+  ],
+  "metadata": {
+    "tipo_prompt": "masterplan"
+  }
+}

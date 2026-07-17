@@ -1,0 +1,16 @@
+{
+  "numero": 3,
+  "tipo": "beneficio",
+  "descripcion": "Amenities del country",
+  "prompt": "luxury club house and amenities at Country Premium country, Club house, pileta, canchas de tenis, golf, swimming pool, tennis courts, modern architecture, Cañuelas Buenos Aires, blue hour photography",
+  "texto_overlay": "Amenities · Club house, pileta, canchas de tenis, golf",
+  "aspect_ratio": "1152*896",
+  "styles": [
+    "Fooocus V2",
+    "Fooocus Enhance",
+    "ads-luxury"
+  ],
+  "metadata": {
+    "amenities": "Club house, pileta, canchas de tenis, golf"
+  }
+}

@@ -18,19 +18,19 @@ from __future__ import annotations
 
 import hashlib
 import json
-import logging
 import random
 import sqlite3
 import threading
 import time
 import unicodedata
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
-from app_config import ImageGeneratorSection, get_config
+from app_config import get_config
 from app_logging import get_logger, log_timing
 from image_generator import ImageGenerator, ImageResult, get_generator
 
@@ -541,4 +541,4 @@ class GenerationQueue:
     def stats(self) -> dict[str, Any]:
         with sqlite3.connect(str(self.db_path)) as conn:
             row = conn.execute("SELECT status, COUNT(*) FROM queue GROUP BY status").fetchall()
-        return {status: count for status, count in row}
+        return dict(row)

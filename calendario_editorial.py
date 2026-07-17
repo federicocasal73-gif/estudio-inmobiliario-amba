@@ -207,7 +207,7 @@ class CalendarioEditorial:
         proyectos_usados = list(proyectos)
         idx_proyecto = 0
 
-        for i, dia in enumerate(dias_elegidos):
+        for _i, dia in enumerate(dias_elegidos):
             fecha_dia = inicio + timedelta(days=DIAS_SEMANA.index(dia))
             fecha_str = fecha_dia.strftime("%Y-%m-%d")
 
@@ -789,7 +789,7 @@ def demo() -> None:
         municipio_principal="Cañuelas",
     )
 
-    carpeta = cal.guardar(semana)
+    cal.guardar(semana)
     md_path = cal.exportar_markdown(semana)
     ics_path = cal.exportar_ics(semana)
 

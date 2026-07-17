@@ -39,10 +39,6 @@ from typing import Any
 from antes_despues import AntesDespuesFactory
 from calendario_editorial import CalendarioEditorial
 from carruseles import CarruselFactory
-from historial_publicaciones import HistorialPublicaciones, RotadorProyectos
-from image_generator import ImageGenerator, get_generator
-from instagram_auth import InstagramAuth
-from instagram_publisher import InstagramPublisher, ModoPublicacion, PublicacionResultado
 from generation_pipeline import (
     BatchGenerator,
     BatchItem,
@@ -50,6 +46,12 @@ from generation_pipeline import (
     RetryPolicy,
     estimate_time,
 )
+from historial_publicaciones import HistorialPublicaciones, RotadorProyectos
+from image_generator import ImageGenerator, get_generator
+from instagram_auth import InstagramAuth
+from instagram_publisher import InstagramPublisher, ModoPublicacion, PublicacionResultado
+from mejora_fotos import MejoraFotos
+from preview_html import PreviewHTML
 from publishing import (
     DMTemplates,
     InstagramInsightsClient,
@@ -59,8 +61,6 @@ from publishing import (
     Scheduler,
     procesar_programadas,
 )
-from mejora_fotos import MejoraFotos
-from preview_html import PreviewHTML
 from realestate_studio import RealestateStudio
 from validators import validate_post
 
@@ -195,7 +195,7 @@ class Studio:
         if aplicar_mejora_a_placeholders:
             for slot in semana.slots:
                 if slot.post and slot.tipo_post == "obra_avance":
-                    placeholder = (
+                    (
                         slot.post.get("metadata", {}).get("placeholder_foto_path")
                         if slot.post.get("metadata")
                         else None
@@ -294,7 +294,7 @@ class Studio:
 
             return self.carruseles.guardar(carrusel, nombre=nombre, proyecto=slot.proyecto)
         except Exception as e:
-            raise RuntimeError(f"generando carrusel {tipo}: {e}")
+            raise RuntimeError(f"generando carrusel {tipo}: {e}") from e
 
     def _publicar_slot(self, slot: Any, semana: Any, modo: ModoPublicacion) -> PublicacionResultado:
         if not slot.post or not slot.post.get("caption_completo"):
@@ -709,6 +709,7 @@ class Studio:
 
 # ==================== HELPERS DE PUBLICACION (Fase 3) ====================
 
+
 def _programar_publicacion(args: Any) -> None:
     """Programa una publicacion para fecha futura."""
     from datetime import datetime
@@ -765,9 +766,11 @@ def _procesar_programadas_cli(args: Any) -> None:
         return
 
     resultados = procesar_programadas(scheduler)
-    print(f"\nResultado: {resultados['publicados']} publicados, "
-          f"{resultados['errores']} errores, "
-          f"de {resultados['procesados']} procesados")
+    print(
+        f"\nResultado: {resultados['publicados']} publicados, "
+        f"{resultados['errores']} errores, "
+        f"de {resultados['procesados']} procesados"
+    )
 
 
 def _listar_publicaciones(args: Any) -> None:
@@ -799,12 +802,15 @@ def _generar_reporte_semanal(args: Any) -> None:
         # Intentar conectar con IG si esta configurado
         try:
             from instagram_auth import InstagramAuth
+
             auth = InstagramAuth()
             if auth.configurado() and auth.data:
-                monitor.set_client(InstagramInsightsClient(
-                    access_token=auth.data.access_token,
-                    instagram_user_id=auth.data.instagram_user_id,
-                ))
+                monitor.set_client(
+                    InstagramInsightsClient(
+                        access_token=auth.data.access_token,
+                        instagram_user_id=auth.data.instagram_user_id,
+                    )
+                )
         except Exception as e:
             print(f"No pude conectar con IG, usando cache local: {e}")
 
@@ -820,6 +826,7 @@ def _generar_reporte_semanal(args: Any) -> None:
 def _responder_dm_cli(args: Any) -> None:
     """Responde un DM del cliente usando templates."""
     import json as json_mod
+
     templates = DMTemplates()
     data = json_mod.loads(args.data) if args.data else {}
     resultado = templates.responder(
@@ -828,7 +835,7 @@ def _responder_dm_cli(args: Any) -> None:
         data=data,
     )
     print(f"Template usado: {resultado['template_id'] or '(fallback)'}")
-    print(f"\nRespuesta sugerida:")
+    print("\nRespuesta sugerida:")
     print(resultado["respuesta"])
 
 
@@ -878,7 +885,7 @@ def _build_batch_items_from_carrusel(
 
 
 def _generar_carrusel_completo(
-    studio: "Studio",  # noqa: F821
+    studio: Studio,  # noqa: F821
     carrusel_path: str | Path,
     batch: int = 1,
     workers: int = 3,
@@ -889,7 +896,6 @@ def _generar_carrusel_completo(
     seconds_per_image: float = 25.0,
 ) -> dict[str, Any]:
     """Logica central del comando generar-carousel."""
-    from generation_pipeline import BatchGenerator
 
     ruta = Path(carrusel_path)
     if not ruta.exists():
@@ -964,7 +970,7 @@ def _generar_carrusel_completo(
     return {"success": True, "ok": ok, "cache_hits": cache_h, "fail": fail}
 
 
-def _generar_carrusel_interactivo(studio: "Studio", args: Any) -> int:
+def _generar_carrusel_interactivo(studio: Studio, args: Any) -> int:
     """Wrapper CLI para generar-carousel."""
     resultado = _generar_carrusel_completo(
         studio,
@@ -984,7 +990,7 @@ def _generar_carrusel_interactivo(studio: "Studio", args: Any) -> int:
 
 
 def _encolar_carrusel(
-    studio: "Studio",  # noqa: F821
+    studio: Studio,  # noqa: F821
     carrusel_path: str | Path,
 ) -> dict[str, Any]:
     """Encola todos los slides de un carrusel para procesamiento en background."""
@@ -1013,9 +1019,9 @@ def _encolar_carrusel(
     return {"encolados": encolados}
 
 
-def _procesar_cola(studio: "Studio") -> dict[str, Any]:  # noqa: F821
+def _procesar_cola(studio: Studio) -> dict[str, Any]:  # noqa: F821
     """Procesa todos los items encolados usando BatchGenerator."""
-    from generation_pipeline import BatchGenerator, BatchItem, GenerationQueue
+    from generation_pipeline import BatchItem, GenerationQueue
 
     db_path = Path(".cache") / "generation_queue.db"
     queue = GenerationQueue(db_path)
@@ -1063,7 +1069,7 @@ def cli() -> int:
     sub = parser.add_subparsers(dest="comando", required=True)
 
     # subcomando: demo
-    p_demo = sub.add_parser("demo", help="Corre el pipeline de demo")
+    sub.add_parser("demo", help="Corre el pipeline de demo")
 
     # subcomando: semana
     p_sem = sub.add_parser("semana", help="Genera calendario semanal completo")
@@ -1152,56 +1158,53 @@ def cli() -> int:
     p_cola.add_argument("--carrusel", required=True, help="Path al carrusel.json")
 
     # subcomando: procesar-cola
-    p_proc = sub.add_parser(
-        "procesar-cola", help="Procesa la cola de generacion (usa cache + retry)"
-    )
+    sub.add_parser("procesar-cola", help="Procesa la cola de generacion (usa cache + retry)")
 
     # subcomando: programar
-    p_prog = sub.add_parser("programar",
-                             help="Programa una publicacion para fecha futura")
-    p_prog.add_argument("--id", required=True,
-                         help="ID unico del post (ej: 'lunes-lote-canuelas')")
-    p_prog.add_argument("--carrusel", required=True,
-                         help="Path al carrusel.json")
-    p_prog.add_argument("--caption", default=None,
-                         help="Caption custom (default: leer del carrusel)")
-    p_prog.add_argument("--hashtags", nargs="+", default=None,
-                         help="Hashtags custom (default: leer del carrusel)")
-    p_prog.add_argument("--scheduled-at", required=True,
-                         help="Fecha/hora ISO 8601 (ej: 2026-07-20T19:00:00)")
-    p_prog.add_argument("--mode", choices=["dry-run", "interactivo", "real"],
-                         default="real")
+    p_prog = sub.add_parser("programar", help="Programa una publicacion para fecha futura")
+    p_prog.add_argument("--id", required=True, help="ID unico del post (ej: 'lunes-lote-canuelas')")
+    p_prog.add_argument("--carrusel", required=True, help="Path al carrusel.json")
+    p_prog.add_argument(
+        "--caption", default=None, help="Caption custom (default: leer del carrusel)"
+    )
+    p_prog.add_argument(
+        "--hashtags", nargs="+", default=None, help="Hashtags custom (default: leer del carrusel)"
+    )
+    p_prog.add_argument(
+        "--scheduled-at", required=True, help="Fecha/hora ISO 8601 (ej: 2026-07-20T19:00:00)"
+    )
+    p_prog.add_argument("--mode", choices=["dry-run", "interactivo", "real"], default="real")
 
     # subcomando: procesar-programadas
-    p_pprog = sub.add_parser("procesar-programadas",
-                               help="Procesa items cuya fecha ya paso")
+    sub.add_parser("procesar-programadas", help="Procesa items cuya fecha ya paso")
 
     # subcomando: publicaciones (listar)
-    p_pubs = sub.add_parser("publicaciones",
-                             help="Lista publicaciones programadas")
-    p_pubs.add_argument("--status", default=None,
-                         choices=["pending", "published", "error", "cancelled"],
-                         help="Filtrar por status")
-    p_pubs.add_argument("--cancel", metavar="ID",
-                         help="Cancelar publicacion por ID")
+    p_pubs = sub.add_parser("publicaciones", help="Lista publicaciones programadas")
+    p_pubs.add_argument(
+        "--status",
+        default=None,
+        choices=["pending", "published", "error", "cancelled"],
+        help="Filtrar por status",
+    )
+    p_pubs.add_argument("--cancel", metavar="ID", help="Cancelar publicacion por ID")
 
     # subcomando: reporte-semanal
-    p_rep = sub.add_parser("reporte-semanal",
-                            help="Lee insights de IG y genera reporte")
-    p_rep.add_argument("--days", type=int, default=7,
-                        help="Periodo en dias (default 7)")
-    p_rep.add_argument("--output", default=None,
-                        help="Path de salida del .md (default: stdout)")
-    p_rep.add_argument("--fetch", action="store_true",
-                        help="Refrescar insights desde IG (no solo del cache local)")
+    p_rep = sub.add_parser("reporte-semanal", help="Lee insights de IG y genera reporte")
+    p_rep.add_argument("--days", type=int, default=7, help="Periodo en dias (default 7)")
+    p_rep.add_argument("--output", default=None, help="Path de salida del .md (default: stdout)")
+    p_rep.add_argument(
+        "--fetch", action="store_true", help="Refrescar insights desde IG (no solo del cache local)"
+    )
 
     # subcomando: responder-dm
-    p_dm = sub.add_parser("responder-dm",
-                           help="Procesa un DM del cliente y devuelve respuesta sugerida")
+    p_dm = sub.add_parser(
+        "responder-dm", help="Procesa un DM del cliente y devuelve respuesta sugerida"
+    )
     p_dm.add_argument("--cliente", required=True, help="Nombre o ID del cliente")
     p_dm.add_argument("--mensaje", required=True, help="Mensaje del cliente")
-    p_dm.add_argument("--data", default="{}",
-                       help="Datos del template en JSON (ej: '{\"precio\": \"USD 50000\"}')")
+    p_dm.add_argument(
+        "--data", default="{}", help='Datos del template en JSON (ej: \'{"precio": "USD 50000"}\')'
+    )
 
     # subcomando: listar
     p_list = sub.add_parser("listar", help="Lista carruseles disponibles")
@@ -1307,7 +1310,7 @@ def cli() -> int:
     elif args.comando == "generar-cola":
         resultados = _encolar_carrusel(studio, args.carrusel)
         print(f"Encolados {resultados['encolados']} items.")
-        print(f"Para procesar: python3 studio.py procesar-cola")
+        print("Para procesar: python3 studio.py procesar-cola")
 
     elif args.comando == "procesar-cola":
         resultados = _procesar_cola(studio)

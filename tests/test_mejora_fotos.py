@@ -22,7 +22,6 @@ import pytest
 
 from mejora_fotos import HAS_PILLOW, MejoraFotos, ResultadoMejora
 
-
 # ===== ResultadoMejora dataclass =====
 
 
@@ -272,7 +271,13 @@ class TestAplicarLook:
         from PIL import Image
 
         img = Image.new("RGB", (100, 100), (128, 128, 128))
-        params = {"brillo": 1.1, "contraste": 1.2, "saturacion": 1.1, "sharpness": 1.3, "warmth": 1.0}
+        params = {
+            "brillo": 1.1,
+            "contraste": 1.2,
+            "saturacion": 1.1,
+            "sharpness": 1.3,
+            "warmth": 1.0,
+        }
         result = MejoraFotos._aplicar_look(img, params)
         assert result.size == (100, 100)
 
@@ -280,7 +285,13 @@ class TestAplicarLook:
         from PIL import Image
 
         img = Image.new("RGB", (100, 100), (128, 128, 128))
-        params = {"brillo": 1.0, "contraste": 1.0, "saturacion": 1.0, "sharpness": 1.0, "warmth": 1.3}
+        params = {
+            "brillo": 1.0,
+            "contraste": 1.0,
+            "saturacion": 1.0,
+            "sharpness": 1.0,
+            "warmth": 1.3,
+        }
         result = MejoraFotos._aplicar_look(img, params)
         assert result.size == (100, 100)
 
@@ -445,7 +456,7 @@ class TestBatch:
         return fotos
 
     def test_batch_normal(self, tmp_path):
-        fotos = self._make_fotos(tmp_path)
+        self._make_fotos(tmp_path)
         destino = tmp_path / "destino"
         mf = MejoraFotos()
         resultados = mf.batch(tmp_path, destino, modo="natural", intensidad="media")

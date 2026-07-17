@@ -29,10 +29,6 @@ jobs:
 
       - name: Run ruff
         run: ruff check .
-        continue-on-error: true
-      - name: Show what needs fixing
-        if: failure()
-        run: ruff check . --output-format=concise
 
   ruff-format:
     name: ruff format check

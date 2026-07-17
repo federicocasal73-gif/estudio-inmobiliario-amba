@@ -113,7 +113,7 @@ class InstagramPublisher:
             # Sanitizar: remover access_token del mensaje de error
             if isinstance(err, dict):
                 err.pop("access_token", None)
-            raise RuntimeError(f"Graph API error {e.code}: {err}")
+            raise RuntimeError(f"Graph API error {e.code}: {err}") from e
 
     def _check_public_url(self, url: str) -> bool:
         """Verifica que una URL sea accesible publicamente (requerido por IG)."""
@@ -489,7 +489,7 @@ def demo() -> None:
     if not auth.configurado():
         print("auth.json no existe. Crear siguiendo README_PUBLICACION_IG.md")
         return
-    publisher = InstagramPublisher(auth)
+    InstagramPublisher(auth)
     if not auth.validar_token():
         print("Token invalido o expirado")
         return

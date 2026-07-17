@@ -449,3 +449,222 @@ class TestProcesarProgramadas:
         result = procesar_programadas(sched, publisher_factory=lambda path, mode: mock_pub)
         assert result["procesados"] == 1
         assert result["publicados"] == 1
+
+    def test_factory_error_exito_false(self, tmp_path):
+        sched = Scheduler(tmp_path / "sched.json")
+        sched.programar(
+            id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01"
+        )
+        mock_pub = MagicMock()
+        mock_pub.exito = False
+        mock_pub.error = "fallo IG"
+        result = procesar_programadas(sched, publisher_factory=lambda path, mode: mock_pub)
+        assert result["errores"] == 1
+        assert result["publicados"] == 0
+
+    def test_factory_raises_exception(self, tmp_path):
+        sched = Scheduler(tmp_path / "sched.json")
+        sched.programar(
+            id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01"
+        )
+
+        def bad_factory(path, mode):
+            raise RuntimeError("boom")
+
+        result = procesar_programadas(sched, publisher_factory=bad_factory)
+        assert result["errores"] == 1
+
+    def test_factory_no_exito_attr(self, tmp_path):
+        sched = Scheduler(tmp_path / "sched.json")
+        sched.programar(
+            id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01"
+        )
+        mock_pub = MagicMock(spec=[])  # no exito attr
+        result = procesar_programadas(sched, publisher_factory=lambda path, mode: mock_pub)
+        assert result["errores"] == 1
+
+    def test_default_factory_instagram_publisher(self, tmp_path):
+        sched = Scheduler(tmp_path / "sched.json")
+        sched.programar(
+            id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01"
+        )
+        with patch("instagram_auth.InstagramAuth", side_effect=Exception("no auth")):
+            result = procesar_programadas(sched, publisher_factory=None)
+        assert result["procesados"] == 1
+        assert result["errores"] == 1
+
+
+class TestSchedulerEdgeCases:
+    def test_eliminar_inexistente(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        assert s.eliminar("no-existe") is False
+
+    def test_marcar_error_after_3_attempts_marks_error(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        s.programar(
+            id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01"
+        )
+        s.marcar_error("s1", "err1")
+        s.marcar_error("s1", "err2")
+        s.marcar_error("s1", "err3")
+        post = s.listar()[0]
+        assert post.status == "error"
+        assert post.attempts == 3
+
+    def test_marcar_error_inexistente(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        s.marcar_error("no-existe", "err")
+        assert s.listar() == []
+
+    def test_pendientes_invalid_date_skipped(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        # Manually insert an item with invalid scheduled_at
+        s._items["bad"] = ScheduledPost(
+            id="bad", carrusel_path="/x", caption="c", scheduled_at="not-a-date"
+        )
+        pendientes = s.pendientes_a_procesar()
+        assert len(pendientes) == 0
+
+    def test_listar_with_status_filter(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        s.programar(id="s1", carrusel_path="/x", caption="c", hashtags=[], scheduled_at="2025-01-01")
+        s.programar(id="s2", carrusel_path="/y", caption="d", hashtags=[], scheduled_at="2025-01-02")
+        s.marcar_publicado("s1")
+        assert len(s.listar(status="published")) == 1
+        assert len(s.listar(status="pending")) == 1
+
+    def test_load_corrupted_json(self, tmp_path):
+        path = tmp_path / "sched.json"
+        path.write_text("NOT JSON{{{", encoding="utf-8")
+        s = Scheduler(path)
+        assert s.listar() == []
+
+    def test_save_oserror(self, tmp_path):
+        s = Scheduler(tmp_path / "sched.json")
+        with patch("builtins.open", side_effect=OSError("disk full")):
+            # _save swallows OSError, should not crash
+            s._save()
+
+
+class TestMonitorExtended:
+    def test_load_existing_data(self, tmp_path):
+        path = tmp_path / "ins.json"
+        data = {
+            "version": 1,
+            "insights": {
+                "p1": {
+                    "post_id": "p1",
+                    "permalink": "https://x",
+                    "timestamp": datetime.now().isoformat(),
+                    "impressions": 50,
+                    "likes": 5,
+                }
+            },
+        }
+        path.write_text(json.dumps(data), encoding="utf-8")
+        monitor = Monitor(path)
+        assert len(monitor._insights) == 1
+
+    def test_load_corrupted(self, tmp_path):
+        path = tmp_path / "ins.json"
+        path.write_text("bad json", encoding="utf-8")
+        monitor = Monitor(path)
+        assert len(monitor._insights) == 0
+
+    def test_save_oserror(self, tmp_path):
+        monitor = Monitor(tmp_path / "ins.json")
+        monitor._insights["p1"] = PostInsights(
+            post_id="p1", permalink="https://x", timestamp=datetime.now().isoformat()
+        )
+        with patch("builtins.open", side_effect=OSError("disk full")):
+            monitor._save()
+
+    def test_fetch_and_store_exception(self, tmp_path):
+        monitor = Monitor(tmp_path / "ins.json")
+        client = MagicMock()
+        client.get_insights.side_effect = Exception("API error")
+        monitor.set_client(client)
+        result = monitor.fetch_and_store("p1")
+        assert result is None
+
+    def test_weekly_report_invalid_timestamp(self, tmp_path):
+        monitor = Monitor(tmp_path / "ins.json")
+        monitor._insights["p1"] = PostInsights(
+            post_id="p1", permalink="https://x", timestamp="not-a-date"
+        )
+        report = monitor.weekly_report()
+        assert report["posts_analizados"] == 0
+
+    def test_render_markdown_empty(self, tmp_path):
+        monitor = Monitor(tmp_path / "ins.json")
+        report = {
+            "periodo_dias": 7,
+            "posts_analizados": 0,
+            "impresiones_totales": 0,
+            "engagement_promedio": 0.0,
+            "top_posts": [],
+        }
+        md = monitor.render_markdown(report)
+        assert "Sin posts" in md
+
+
+class TestInstagramInsightsClientReal:
+    @patch("publishing.urllib.request.urlopen")
+    def test_get_account_info(self, mock_urlopen):
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = json.dumps({"id": "123", "username": "test"}).encode()
+        mock_resp.__enter__ = lambda s: s
+        mock_resp.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_resp
+
+        client = InstagramInsightsClient(access_token="fake", instagram_user_id="123")
+        result = client.get_account_info()
+        assert result["id"] == "123"
+
+    @patch("publishing.urllib.request.urlopen")
+    def test_get_media_list(self, mock_urlopen):
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = json.dumps({"data": [{"id": "m1"}]}).encode()
+        mock_resp.__enter__ = lambda s: s
+        mock_resp.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_resp
+
+        client = InstagramInsightsClient(access_token="fake", instagram_user_id="123")
+        result = client.get_media_list(limit=10)
+        assert len(result) == 1
+
+    @patch("publishing.urllib.request.urlopen", side_effect=urllib.error.URLError("fail"))
+    def test_request_network_error(self, mock_urlopen):
+        client = InstagramInsightsClient(access_token="fake", instagram_user_id="123")
+        with pytest.raises(RuntimeError, match="Graph API error"):
+            client._request("123")
+
+    @patch("publishing.urllib.request.urlopen")
+    def test_get_insights(self, mock_urlopen):
+        mock_resp = MagicMock()
+        mock_resp.read.return_value = json.dumps({"data": [{"name": "impressions"}]}).encode()
+        mock_resp.__enter__ = lambda s: s
+        mock_resp.__exit__ = MagicMock(return_value=False)
+        mock_urlopen.return_value = mock_resp
+
+        client = InstagramInsightsClient(access_token="fake", instagram_user_id="123")
+        result = client.get_insights("media123")
+        assert "data" in result
+
+
+class TestDMTemplateExtended:
+    def test_render_no_data(self):
+        t = DMTemplate(id="x", keywords=["k"], title="x", body="Hola mundo")
+        assert t.render() == "Hola mundo"
+        assert t.render(None) == "Hola mundo"
+
+
+class TestPostInsightsExtended:
+    def test_to_dict(self):
+        ins = PostInsights(
+            post_id="p1", permalink="https://x", timestamp="2025-01-01",
+            impressions=100, reach=80, likes=10, comments=2, saves=1, shares=0,
+        )
+        d = ins.to_dict()
+        assert d["impressions"] == 100
+        assert d["likes"] == 10

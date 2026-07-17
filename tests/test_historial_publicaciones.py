@@ -23,7 +23,6 @@ from historial_publicaciones import (
     RotadorProyectos,
 )
 
-
 # ===== Publicacion =====
 
 
@@ -197,9 +196,7 @@ class TestRotadorProyectos:
         h = self._make_historial(tmp_path)
         h.registrar(tipo="lote_venta", municipio="C", proyecto="p1")
         r = RotadorProyectos(h)
-        disponibles = r.proyectos_disponibles_esta_semana(
-            ["p1", "p2"], dias_minimos_entre_posts=3
-        )
+        disponibles = r.proyectos_disponibles_esta_semana(["p1", "p2"], dias_minimos_entre_posts=3)
         assert "p1" not in disponibles
         assert "p2" in disponibles
 
@@ -217,25 +214,19 @@ class TestRotadorProyectos:
     def test_sugerir_proyecto_country(self, tmp_path):
         h = self._make_historial(tmp_path)
         r = RotadorProyectos(h)
-        sugerido = r.sugerir_proyecto_para_slot(
-            ["lote-abc", "country-xyz"], tipo_post="country"
-        )
+        sugerido = r.sugerir_proyecto_para_slot(["lote-abc", "country-xyz"], tipo_post="country")
         assert sugerido == "country-xyz"
 
     def test_sugerir_proyecto_country_sin_match(self, tmp_path):
         h = self._make_historial(tmp_path)
         r = RotadorProyectos(h)
-        sugerido = r.sugerir_proyecto_para_slot(
-            ["lote-abc", "campo-xyz"], tipo_post="country"
-        )
+        sugerido = r.sugerir_proyecto_para_slot(["lote-abc", "campo-xyz"], tipo_post="country")
         assert sugerido in ["lote-abc", "campo-xyz"]
 
     def test_sugerir_proyecto_campo(self, tmp_path):
         h = self._make_historial(tmp_path)
         r = RotadorProyectos(h)
-        sugerido = r.sugerir_proyecto_para_slot(
-            ["lote-abc", "campo-xyz"], tipo_post="campo"
-        )
+        sugerido = r.sugerir_proyecto_para_slot(["lote-abc", "campo-xyz"], tipo_post="campo")
         assert sugerido == "campo-xyz"
 
     def test_resumen_rotacion(self, tmp_path):

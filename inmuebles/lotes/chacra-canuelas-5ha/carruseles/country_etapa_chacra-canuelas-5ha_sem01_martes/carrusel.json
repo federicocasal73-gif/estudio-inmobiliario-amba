@@ -1,0 +1,119 @@
+{
+  "tema": "Country Premium · Etapa 2",
+  "tipo": "country_etapa",
+  "municipio": "Cañuelas",
+  "tono": "premium",
+  "slides": [
+    {
+      "numero": 1,
+      "tipo": "portada",
+      "descripcion": "Portada: entrada de Country Premium",
+      "prompt": "Country Premium gated community entrance, Club house, pileta, canchas de tenis, golf, blue hour, luxury gated community entrance, paved roads, manicured common areas, modern security booth, country club amenities, golf course background, real estate photography, blue hour, Buenos Aires suburbs",
+      "texto_overlay": "Country Premium\nEtapa 2 disponible",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "photo-cinematic"
+      ],
+      "metadata": {
+        "nombre_country": "Country Premium",
+        "etapa": "2"
+      }
+    },
+    {
+      "numero": 2,
+      "tipo": "foto",
+      "descripcion": "Masterplan del country con lotes marcados",
+      "prompt": "architectural masterplan visualization of Country Premium gated community in Cañuelas, Buenos Aires province, 12 marked lots, roads, green spaces, club house, professional architectural rendering",
+      "texto_overlay": "12 lotes · desde USD 85.000",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "misc-architectural"
+      ],
+      "metadata": {
+        "tipo_prompt": "masterplan"
+      }
+    },
+    {
+      "numero": 3,
+      "tipo": "beneficio",
+      "descripcion": "Amenities del country",
+      "prompt": "luxury club house and amenities at Country Premium country, Club house, pileta, canchas de tenis, golf, swimming pool, tennis courts, modern architecture, Cañuelas Buenos Aires, blue hour photography",
+      "texto_overlay": "Amenities · Club house, pileta, canchas de tenis, golf",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-luxury"
+      ],
+      "metadata": {
+        "amenities": "Club house, pileta, canchas de tenis, golf"
+      }
+    },
+    {
+      "numero": 4,
+      "tipo": "foto",
+      "descripcion": "Obra de movimiento de suelo en etapa actual",
+      "prompt": "Etapa 2 real estate development in Cañuelas, Buenos Aires province, earthworks in progress, real estate development under construction, bulldozers clearing land, marked lots with stakes, signage, dirt roads being leveled, pampas landscape, progress photography",
+      "texto_overlay": "Etapa 2 · obra en curso",
+      "aspect_ratio": "1152*896",
+      "styles": [
+        "Fooocus V2",
+        "Fooocus Enhance",
+        "ads-real estate"
+      ],
+      "metadata": {
+        "tipo_prompt": "loteo_en_desarrollo"
+      }
+    },
+    {
+      "numero": 5,
+      "tipo": "cta",
+      "descripcion": "Slide final con datos para reservar",
+      "prompt": "",
+      "texto_overlay": "Últimas unidades\nDesde USD 85.000\nA 45 km de CABA\nSolo 12 lotes · apartá con señal",
+      "aspect_ratio": "896*1152",
+      "styles": [],
+      "metadata": {
+        "requiere_foto_real": false,
+        "tipo": "cta"
+      }
+    }
+  ],
+  "caption_narrativo": "✨ Country Premium · Etapa 2\n\nLas cosas que importan, en 5 slides. Lo que viene →\n\nSlide 1: Country Premium\nEtapa 2 disponible\n\nY esto es lo que más nos gusta →\n\nSlide 2: 12 lotes · desde USD 85.000\n\nAhora esto →\n\nSlide 3: Amenities · Club house, pileta, canchas de tenis, golf\n\nAhora sí, lo importante →\n\nSlide 4: Etapa 2 · obra en curso\n\nAhora esto →\n\nSlide 5: Últimas unidades\nDesde USD 85.000\nA 45 km de CABA\nSolo 12 lotes · apartá con señal\n\n📍 Cañuelas, Buenos Aires\n\nApartá tu lugar hoy.",
+  "hashtags": [
+    "#lotespremium",
+    "#casasencountry",
+    "#countries",
+    "#camposencanuelas",
+    "#country",
+    "#lotesencountry",
+    "#escobar",
+    "#barrioserrado",
+    "#chacrasencanuelas",
+    "#invertirenlotes",
+    "#canuelas",
+    "#casasencanuelas",
+    "#barrioprivado",
+    "#canuelasinmobiliaria",
+    "#barriocerrado",
+    "#inversiones",
+    "#lotesdeinversion",
+    "#canuelasrealestate",
+    "#terrenosencanuelas",
+    "#nordelta"
+  ],
+  "fecha_creacion": "2026-07-15T19:57:36",
+  "metadata": {
+    "nombre_country": "Country Premium",
+    "etapa": "2",
+    "n_lotes": 12,
+    "precio_desde": "USD 85.000",
+    "n_slides": 5
+  },
+  "n_slides": 5,
+  "caption_completo": "✨ Country Premium · Etapa 2\n\nLas cosas que importan, en 5 slides. Lo que viene →\n\nSlide 1: Country Premium\nEtapa 2 disponible\n\nY esto es lo que más nos gusta →\n\nSlide 2: 12 lotes · desde USD 85.000\n\nAhora esto →\n\nSlide 3: Amenities · Club house, pileta, canchas de tenis, golf\n\nAhora sí, lo importante →\n\nSlide 4: Etapa 2 · obra en curso\n\nAhora esto →\n\nSlide 5: Últimas unidades\nDesde USD 85.000\nA 45 km de CABA\nSolo 12 lotes · apartá con señal\n\n📍 Cañuelas, Buenos Aires\n\nApartá tu lugar hoy.\n\n#lotespremium #casasencountry #countries #camposencanuelas #country #lotesencountry #escobar #barrioserrado #chacrasencanuelas #invertirenlotes #canuelas #casasencanuelas #barrioprivado #canuelasinmobiliaria #barriocerrado #inversiones #lotesdeinversion #canuelasrealestate #terrenosencanuelas #nordelta"
+}

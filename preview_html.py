@@ -151,7 +151,7 @@ class PreviewHTML:
         )
 
         # Indicar si es placeholder
-        metadata_carrusel = getattr(carrusel, "metadata", {}) or {}
+        getattr(carrusel, "metadata", {}) or {}
         es_placeholder = any(s.tipo == "placeholder_foto" for s in slides)
 
         html_content = f"""<!DOCTYPE html>

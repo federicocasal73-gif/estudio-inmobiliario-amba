@@ -295,7 +295,7 @@ class FooocusImageGenerator(ImageGenerator):
             raise RuntimeError(f"Error enviando a Fooocus (endpoint={endpoint}): {e}") from e
 
         try:
-            resultado = self._esperar_y_descargar(job, output_path)
+            self._esperar_y_descargar(job, output_path)
         except Exception as e:
             raise RuntimeError(f"Error descargando resultado: {e}") from e
 

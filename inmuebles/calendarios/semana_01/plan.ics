@@ -3,43 +3,43 @@ VERSION:2.0
 PRODID:-//RealestateStudio//AMBA//ES
 CALSCALE:GREGORIAN
 BEGIN:VEVENT
-UID:2026-07-06-19:00-lote_venta@realestate-studio
-DTSTAMP:20260710T165753Z
-DTSTART:20260706T190000
-DTEND:20260706T200000
+UID:2026-07-13-19:00-lote_venta@realestate-studio
+DTSTAMP:20260715T195736Z
+DTSTART:20260713T190000
+DTEND:20260713T200000
 SUMMARY:[IG] lote_venta (emotivo) - Cañuelas
 DESCRIPTION:Distribucion default para lunes\nProyecto: chacra-canuelas-5ha
 END:VEVENT
 BEGIN:VEVENT
-UID:2026-07-08-19:00-country@realestate-studio
-DTSTAMP:20260710T165753Z
-DTSTART:20260708T190000
-DTEND:20260708T200000
+UID:2026-07-15-19:00-country@realestate-studio
+DTSTAMP:20260715T195736Z
+DTSTART:20260715T190000
+DTEND:20260715T200000
 SUMMARY:[IG] country (premium) - Cañuelas
 DESCRIPTION:Distribucion default para miercoles\nProyecto: chacra-canuelas-5ha
 END:VEVENT
 BEGIN:VEVENT
-UID:2026-07-10-18:30-carrusel@realestate-studio
-DTSTAMP:20260710T165753Z
-DTSTART:20260710T183000
-DTEND:20260710T193000
+UID:2026-07-17-18:30-carrusel@realestate-studio
+DTSTAMP:20260715T195736Z
+DTSTART:20260717T183000
+DTEND:20260717T193000
 SUMMARY:[IG] carrusel (emotivo) - Cañuelas
 DESCRIPTION:Distribucion default para viernes\nProyecto: chacra-canuelas-5ha
 END:VEVENT
 BEGIN:VEVENT
-UID:2026-07-11-11:00-render_proyecto@realestate-studio
-DTSTAMP:20260710T165753Z
-DTSTART:20260711T110000
-DTEND:20260711T120000
+UID:2026-07-18-11:00-render_proyecto@realestate-studio
+DTSTAMP:20260715T195736Z
+DTSTART:20260718T110000
+DTEND:20260718T120000
 SUMMARY:[IG] render_proyecto (aspiracional) - Cañuelas
 DESCRIPTION:Distribucion default para sabado\nProyecto: chacra-canuelas-5ha
 END:VEVENT
 BEGIN:VEVENT
-UID:2026-07-09-10:00-fecha_especial@realestate-studio
-DTSTAMP:20260710T165753Z
-DTSTART:20260709T100000
-DTEND:20260709T110000
-SUMMARY:🎉 [IG] fecha_especial (emotivo) - Cañuelas - Dia de la Independencia
-DESCRIPTION:Post para Dia de la Independencia: orgullo nacional, campo argentino, identidad
+UID:2026-07-14-12:30-carrusel@realestate-studio
+DTSTAMP:20260715T195736Z
+DTSTART:20260714T123000
+DTEND:20260714T133000
+SUMMARY:[IG] carrusel (premium) - Cañuelas
+DESCRIPTION:Distribucion default para martes\nProyecto: chacra-canuelas-5ha
 END:VEVENT
 END:VCALENDAR

@@ -24,7 +24,6 @@ from preview_html import (
     _html_escape,
 )
 
-
 # ===== Helpers =====
 
 
@@ -77,8 +76,22 @@ class TestPreviewHTMLCarrusel:
         slides = []
         if slides_data is None:
             slides_data = [
-                {"numero": 1, "tipo": "portada", "descripcion": "Portada", "prompt": "", "texto_overlay": "Hola", "metadata": {}},
-                {"numero": 2, "tipo": "beneficio", "descripcion": "Beneficio", "prompt": "prompt aqui", "texto_overlay": "Beneficio", "metadata": {}},
+                {
+                    "numero": 1,
+                    "tipo": "portada",
+                    "descripcion": "Portada",
+                    "prompt": "",
+                    "texto_overlay": "Hola",
+                    "metadata": {},
+                },
+                {
+                    "numero": 2,
+                    "tipo": "beneficio",
+                    "descripcion": "Beneficio",
+                    "prompt": "prompt aqui",
+                    "texto_overlay": "Beneficio",
+                    "metadata": {},
+                },
             ]
         for s in slides_data:
             mock_slide = MagicMock()
@@ -120,9 +133,18 @@ class TestPreviewHTMLCarrusel:
 
     def test_slide_con_prompt(self, tmp_path):
         preview = PreviewHTML()
-        carrusel = self._make_carrusel([
-            {"numero": 1, "tipo": "beneficio", "descripcion": "X", "prompt": "mi prompt SDXL largo", "texto_overlay": "Y", "metadata": {}},
-        ])
+        carrusel = self._make_carrusel(
+            [
+                {
+                    "numero": 1,
+                    "tipo": "beneficio",
+                    "descripcion": "X",
+                    "prompt": "mi prompt SDXL largo",
+                    "texto_overlay": "Y",
+                    "metadata": {},
+                },
+            ]
+        )
         html_path = preview.carrusel(carrusel, tmp_path / "preview.html")
         content = html_path.read_text()
         assert "mi prompt SDXL largo" in content
@@ -130,7 +152,14 @@ class TestPreviewHTMLCarrusel:
     def test_slide_placeholder_foto(self, tmp_path):
         preview = PreviewHTML()
         slides_data = [
-            {"numero": 1, "tipo": "placeholder_foto", "descripcion": "Foto antes", "prompt": "", "texto_overlay": "Antes", "metadata": {"placeholder_foto_path": "/path/foto.jpg"}},
+            {
+                "numero": 1,
+                "tipo": "placeholder_foto",
+                "descripcion": "Foto antes",
+                "prompt": "",
+                "texto_overlay": "Antes",
+                "metadata": {"placeholder_foto_path": "/path/foto.jpg"},
+            },
         ]
         carrusel = self._make_carrusel(slides_data)
         html_path = preview.carrusel(carrusel, tmp_path / "preview.html")
@@ -140,7 +169,14 @@ class TestPreviewHTMLCarrusel:
     def test_warning_placeholder(self, tmp_path):
         preview = PreviewHTML()
         slides_data = [
-            {"numero": 1, "tipo": "placeholder_foto", "descripcion": "X", "prompt": "", "texto_overlay": "Y", "metadata": {}},
+            {
+                "numero": 1,
+                "tipo": "placeholder_foto",
+                "descripcion": "X",
+                "prompt": "",
+                "texto_overlay": "Y",
+                "metadata": {},
+            },
         ]
         carrusel = self._make_carrusel(slides_data)
         html_path = preview.carrusel(carrusel, tmp_path / "preview.html")
@@ -233,7 +269,9 @@ class TestPreviewHTMLPost:
     def test_post_crea_directorio(self, tmp_path):
         preview = PreviewHTML()
         html_path = preview.post(
-            tema="T", caption="C", hashtags=[],
+            tema="T",
+            caption="C",
+            hashtags=[],
             ruta_salida=tmp_path / "sub" / "post.html",
         )
         assert html_path.exists()
@@ -241,7 +279,9 @@ class TestPreviewHTMLPost:
     def test_post_self_contained(self, tmp_path):
         preview = PreviewHTML()
         html_path = preview.post(
-            tema="T", caption="C", hashtags=[],
+            tema="T",
+            caption="C",
+            hashtags=[],
             ruta_salida=tmp_path / "post.html",
         )
         content = html_path.read_text()

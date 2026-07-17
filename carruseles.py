@@ -613,7 +613,7 @@ class CarruselFactory:
                 "Llave en mano",
             ]
         else:
-            n_slides = len(servicios) + 2  # portada + servicios + cta
+            len(servicios) + 2  # portada + servicios + cta
 
         if tonos_por_slide is None:
             tonos_por_slide = ["premium"] * len(servicios)

@@ -5,8 +5,8 @@
 [![Pillow](https://img.shields.io/badge/Pillow-required-green.svg)](https://python-pillow.org/)
 [![Fooocus](https://img.shields.io/badge/Fooocus-optional-orange.svg)](https://github.com/lllyasviel/Fooocus)
 [![gradio-client](https://img.shields.io/badge/gradio--client-optional-orange.svg)](https://gradio.app/)
-[![Tests](https://img.shields.io/badge/tests-235%20passed-brightgreen.svg)](../../actions)
-[![Coverage](https://img.shields.io/badge/coverage-45%25-yellow.svg)](../../actions)
+[![Tests](https://img.shields.io/badge/tests-912%20passed-brightgreen.svg)](../../actions)
+[![Coverage](https://img.shields.io/badge/coverage-83%25-brightgreen.svg)](../../actions)
 [![Argentina](https://img.shields.io/badge/Argentina-AMBBA-blue.svg)](https://github.com/)
 [![Vertical: real estate](https://img.shields.io/badge/vertical-real%20estate-lightgrey.svg)]()
 [![Vertical: rural](https://img.shields.io/badge/vertical-rural-lightgrey.svg)]()
@@ -198,15 +198,17 @@ Cache total: 7 entradas, 1.2 MB
 
 | Metrica | Valor |
 |---|---|
-| Modulos Python | 14 |
+| Modulos Python | 18 |
 | Plantillas de prompts SDXL | 43 |
 | Tipos de caption rioplatenses | 24 |
 | Nichos de hashtags | 17 |
 | Tipos de carruseles | 11 |
-| Subcomandos CLI | 7 |
+| Subcomandos CLI | 11 |
 | Metodos `post_*` en CaptionFactory | 23 |
 | Funciones VerticalLotes | 17 |
 | Funciones VerticalConstruccion | 28 |
+| Tests | 912 |
+| Coverage | 83% |
 | Manual (archivos .md) | 13 |
 
 ---

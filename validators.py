@@ -173,7 +173,7 @@ def validate_hashtags(
             res.agregar_error(f"hashtags en blacklist: {conflictivos}")
 
     if must_include:
-        mi_set = {_slug_municipio(m) for m in must_include}
+        {_slug_municipio(m) for m in must_include}
         tags_set = {_slug_municipio(h.lstrip("#")) for h in hashtags}
         faltan = [m for m in must_include if _slug_municipio(m) not in tags_set]
         if faltan:

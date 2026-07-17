@@ -37,15 +37,17 @@ def _write_auth(tmp_path, cloud_name="test_cloud", api_key="key123", api_secret=
 
 def _raw_auth_with_cloudinary(cloud_name="test_cloud", api_key="key123", api_secret="secret456"):
     """Devuelve el JSON crudo con cloudinary para mockear read_text."""
-    return json.dumps({
-        "access_token": "tok",
-        "instagram_user_id": "uid",
-        "cloudinary": {
-            "cloud_name": cloud_name,
-            "api_key": api_key,
-            "api_secret": api_secret,
-        },
-    })
+    return json.dumps(
+        {
+            "access_token": "tok",
+            "instagram_user_id": "uid",
+            "cloudinary": {
+                "cloud_name": cloud_name,
+                "api_key": api_key,
+                "api_secret": api_secret,
+            },
+        }
+    )
 
 
 class TestCloudinaryConfig:
@@ -66,11 +68,17 @@ class TestCloudinaryConfig:
         auth.cargar()
 
         # Mockear la lectura raw de auth.json para que tenga cloudinary
-        raw_with_cloudinary = json.dumps({
-            "access_token": "tok",
-            "instagram_user_id": "uid",
-            "cloudinary": {"cloud_name": "test_cloud", "api_key": "key123", "api_secret": "secret456"},
-        })
+        raw_with_cloudinary = json.dumps(
+            {
+                "access_token": "tok",
+                "instagram_user_id": "uid",
+                "cloudinary": {
+                    "cloud_name": "test_cloud",
+                    "api_key": "key123",
+                    "api_secret": "secret456",
+                },
+            }
+        )
         with patch.object(Path, "read_text", return_value=raw_with_cloudinary):
             uploader = CloudinaryUploader(auth)
         assert uploader.configurado is True
@@ -86,7 +94,13 @@ class TestCloudinaryConfig:
         auth = InstagramAuth(p)
         auth.cargar()
 
-        raw = json.dumps({"access_token": "tok", "instagram_user_id": "uid", "cloudinary": {"cloud_name": "c", "api_key": "", "api_secret": ""}})
+        raw = json.dumps(
+            {
+                "access_token": "tok",
+                "instagram_user_id": "uid",
+                "cloudinary": {"cloud_name": "c", "api_key": "", "api_secret": ""},
+            }
+        )
         with patch.object(Path, "read_text", return_value=raw):
             uploader = CloudinaryUploader(auth)
         assert uploader.configurado is False
@@ -124,7 +138,7 @@ class TestFirmaSHA1:
         p = _write_auth(tmp_path, api_secret="mi_secret")
         auth = InstagramAuth(p)
         auth.cargar()
-        uploader = CloudinaryUploader(auth)
+        CloudinaryUploader(auth)
 
         carpeta = "realestate_studio"
         public_id = "realestate_studio/foto_1234567890"
@@ -138,7 +152,9 @@ class TestFirmaSHA1:
 
 
 class TestCloudinarySubir:
-    def _make_uploader(self, tmp_path, cloud_name="test_cloud", api_key="key123", api_secret="secret456"):
+    def _make_uploader(
+        self, tmp_path, cloud_name="test_cloud", api_key="key123", api_secret="secret456"
+    ):
         """Crea un CloudinaryUploader configurado con auth.json + mock de cloudinary."""
         from instagram_auth import InstagramAuth
 

@@ -1555,6 +1555,52 @@ class RealestateStudio:
             "hashtags_zona_template": ["#{municipio_sin_espacios}"],
         }
 
+    # ---------------- Cerebro de Prompts ----------------
+
+    def from_cerebro(
+        self,
+        categoria: str | None = None,
+        estilo: str | None = None,
+        momento_dia: str | None = None,
+        n: int = 1,
+    ) -> list[GenerationRequest]:
+        """Obtiene prompts del cerebro (extraídos de videos de IG/TikTok).
+
+        Si el cerebro está vacío o no existe, devuelve lista vacía.
+        """
+        try:
+            from cerebro import Cerebro
+
+            cerebro = Cerebro()
+            entries = cerebro.obtener_prompts(
+                categoria=categoria,
+                estilo=estilo,
+                n=n,
+            )
+
+            results = []
+            for entry in entries:
+                req = GenerationRequest(
+                    prompt=entry.prompt,
+                    negative_prompt=entry.negative_prompt,
+                    aspect_ratio=entry.aspect_ratio,
+                    styles=entry.styles,
+                    metadata={
+                        "fuente_cerebro": True,
+                        "cerebro_id": entry.id,
+                        "categoria": entry.categoria,
+                        "estilo": entry.estilo,
+                        "rating": entry.rating,
+                    },
+                )
+                results.append(req)
+            return results
+
+        except ImportError:
+            return []
+        except Exception:
+            return []
+
 
 def demo() -> None:
     """Demostracion del estudio con un lote de ejemplo en el AMBA."""
